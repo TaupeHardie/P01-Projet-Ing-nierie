@@ -30,6 +30,11 @@ public class Feature {
 		System.out.println(pos + " " + str);
 	}
 	
+	/**
+	 * Setter
+	 * @param pos position
+	 * @param str chaine de caractères
+	 */
 	public void set(int pos, String str) {
 		this.pos = pos;
 		this.str = str;
