@@ -37,12 +37,12 @@ public class Regexp {
 		
 		List<Feature> features = new ArrayList<Feature>();
 		
-		for(String regexp : regexps) {
-			Pattern pattern = Pattern.compile(regexp);
+		for(int i = 0; i < regexps.size(); i++) {
+			Pattern pattern = Pattern.compile(regexps.get(i));
 			Matcher matcher = pattern.matcher(content);
 			while(matcher.find()) {
 				Feature f = new Feature();
-				f.set(matcher.start(), matcher.group());
+				f.set(matcher.start(), matcher.group(), i);
 				features.add(f);
 			}
 		}

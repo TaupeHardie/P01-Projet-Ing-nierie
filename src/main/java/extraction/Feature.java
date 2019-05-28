@@ -1,7 +1,7 @@
 package extraction;
 
 public class Feature {
-	int pos;
+	int pos, type;
 	String str;
 	
 	
@@ -10,6 +10,7 @@ public class Feature {
 	 */
 	public Feature() {
 		pos = -1;
+		type = -1;
 		str = "";
 	}
 	
@@ -17,26 +18,30 @@ public class Feature {
 	 * Contructeur
 	 * @param pos position
 	 * @param str chaine correspondante
+	 * @param type type du regex
 	 */
-	public Feature(int pos, String str) {
+	public Feature(int pos, String str, int type) {
 		this.pos = pos;
 		this.str = str;
+		this.type = type;
 	}
 	
 	/**
 	 * Affiche les informations
 	 */
 	public void print() {
-		System.out.println(pos + " " + str);
+		System.out.println(type + " " + pos + " " + str);
 	}
 	
 	/**
 	 * Setter
 	 * @param pos position
 	 * @param str chaine de caractères
+	 * @param type type du regex
 	 */
-	public void set(int pos, String str) {
+	public void set(int pos, String str, int type) {
 		this.pos = pos;
 		this.str = str;
+		this.type = type;
 	}
 }
