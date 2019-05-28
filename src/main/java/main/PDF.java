@@ -8,6 +8,8 @@ import java.util.regex.Pattern;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
 
+import extraction.Feature;
+
 public class PDF {
 	/**
 	 * Objet PDDocument représentant le fichier PDF

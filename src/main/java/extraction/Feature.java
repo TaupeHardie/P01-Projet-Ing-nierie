@@ -1,4 +1,4 @@
-package main;
+package extraction;
 
 public class Feature {
 	int pos;
