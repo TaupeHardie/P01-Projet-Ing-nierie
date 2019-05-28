@@ -2,6 +2,7 @@ package main;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -16,6 +17,11 @@ public class PDF {
 	 */
 	private PDDocument doc;
 	private String content = "";
+	
+	/**
+	 * liste des feature detectées dans le pdf
+	 */
+	private List<Feature> features = new ArrayList<Feature>();
 	
 	/**
 	 * Constructeur par défaut
@@ -106,12 +112,11 @@ public class PDF {
 	/**
 	 * Recherche toutes les occurences de ... dans le pdf
 	 */
-	public void findMatches() {
-		List<Feature> featureList = Regexp.getAllFeatures(content);
-		
-		for(Feature f:featureList) {
-			System.out.println(f);
-		}
+	public List<Feature> findMatches() {
+		features = Regexp.getAllFeatures(content);
+		return features;
 	}
+	
+	
 
 }
