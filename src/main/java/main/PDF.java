@@ -2,6 +2,8 @@ package main;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
@@ -101,5 +103,18 @@ public class PDF {
 		return content;
 	}
 	
+	/**
+	 * Recherche toutes les occurences de ... dans le pdf
+	 */
+	public void findMatches() {
+		Pattern pattern = Pattern.compile("ETS PAUL LAMBERT");
+		Matcher matcher = pattern.matcher(content);
+		Feature f = new Feature();
+		
+		while(matcher.find()) {
+			f.set(matcher.start(), matcher.group());
+			f.print();
+		}
+	}
 
 }
