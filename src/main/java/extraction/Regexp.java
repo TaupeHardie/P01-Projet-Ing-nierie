@@ -16,7 +16,12 @@ public class Regexp {
 	public static final String addresse = "(?i)[0-9]+ (rue|avenue|boulevard) [a-z ]+";
 	public static final String code = "(?i)([0-9a-z]{0,}[0-9][0-9a-z]{0,}){5,}";
 	
-	public static void init() {	
+	/**
+	 * init permet de remplir la liste des regexp automatiquement
+	 * les regexp sont des atributs de la class (utile pour les Junit test)
+	 * Cela utilise la reflextion : liste les champs de la class, on prend les valeurs de tous sauf la liste
+	 */
+	private static void init() {	
 		if(regexps.isEmpty()) {
 			Field[] fields = Regexp.class.getDeclaredFields();
 			for(Field f : fields) {
@@ -32,6 +37,11 @@ public class Regexp {
 		}
 	}
 	
+	/**
+	 * detecte toutes les features, matchées par nos regexp, dans le texte en parametre
+	 * @param content le texte a traiter
+	 * @return une liste des feature detectées par toutes nos regexp
+	 */
 	public static List<Feature> getAllFeatures(String content) {
 		init();
 		
@@ -46,7 +56,6 @@ public class Regexp {
 				features.add(f);
 			}
 		}
-		
 		return features;
 	}
 }

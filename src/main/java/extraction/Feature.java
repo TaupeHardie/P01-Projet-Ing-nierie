@@ -26,13 +26,11 @@ public class Feature {
 		this.type = type;
 	}
 	
-	/**
-	 * Affiche les informations
-	 */
-	public void print() {
-		System.out.println(type + " " + pos + " " + str);
+	@Override
+	public String toString() {
+		return "Feature [pos=" + pos + ", type=" + type + ", str=" + str + "]";
 	}
-	
+
 	/**
 	 * Setter
 	 * @param pos position

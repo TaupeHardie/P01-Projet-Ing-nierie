@@ -90,13 +90,11 @@ public class PDF {
 		}
 	}
 	
-	/**
-	 * Affiche dans la sortie standard le texte brut du document
-	 */
-	public void print() {
-		System.out.println(content);
+	@Override
+	public String toString() {
+		return "PDF [content=" + content + "]";
 	}
-	
+
 	/**
 	 * Retourne le contenu du document
 	 * @return Contenu du PDF en texte
@@ -112,7 +110,7 @@ public class PDF {
 		List<Feature> featureList = Regexp.getAllFeatures(content);
 		
 		for(Feature f:featureList) {
-			f.print();
+			System.out.println(f);
 		}
 	}
 
