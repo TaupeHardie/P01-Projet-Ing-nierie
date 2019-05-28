@@ -110,7 +110,7 @@ public class PDF {
 	}
 	
 	/**
-	 * Recherche toutes les occurences de ... dans le pdf
+	 * Recherche toutes les occurences de dates, d'addresses, de code et de prix dans le pdf
 	 */
 	public List<Feature> findMatches() {
 		features = Regexp.getAllFeatures(content);

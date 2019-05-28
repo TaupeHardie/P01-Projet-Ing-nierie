@@ -12,9 +12,9 @@ public class Regexp {
 	private static List<String> regexps = new ArrayList<String>();
 	
 	public static final String prix = "[0-9]+,[0-9]{2}";
-	public static final String date = "\\d{2}/\\d{2}/\\d{4}|\\d{2}\\.\\d{2}\\.\\d{4}";
-	public static final String addresse = "(?i)[0-9]+ (rue|avenue|boulevard) [a-z ]+";
-	public static final String code = "(?i)([0-9a-z]{0,}[0-9][0-9a-z]{0,}){5,}";
+	public static final String date = "\\d{2}/\\d{2}/\\d{4}|\\d{2}\\.\\d{2}\\.\\d{4}|\\d{8}";
+	public static final String addresse = "(?i)[0-9]+(b|t){0,1}( bis| ter){0,1} (impasse|rue|avenue|boulevard) [a-z ]+";
+	public static final String code = "(?i)(?=(?:\\w*\\d){1,}\\w*)[\\w\\d]{5,}";
 	
 	/**
 	 * init permet de remplir la liste des regexp automatiquement
@@ -52,7 +52,7 @@ public class Regexp {
 			Matcher matcher = pattern.matcher(content);
 			while(matcher.find()) {
 				Feature f = new Feature();
-				f.set(matcher.start(), matcher.group(), i);
+				f.set(matcher.start(), matcher.group().trim(), i);
 				features.add(f);
 			}
 		}
