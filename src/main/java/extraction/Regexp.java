@@ -11,8 +11,9 @@ public class Regexp {
 	//liste des regexp
 	private static List<String> regexps = new ArrayList<String>();
 	
-	private static String lamber = "ETS PAUL LAMBERT";
-	private static String paul = "ETS PAUL ONLY";
+	public static final String nombre = "[0-9]{5,}";
+	public static final String prix = "[0-9]+,[0-9]{2}";
+	public static final String date = "\\d{2}/\\d{2}/\\d{4}|\\d{2}\\.\\d{2}\\.\\d{4}";
 	
 	public static void init() {	
 		if(regexps.isEmpty()) {

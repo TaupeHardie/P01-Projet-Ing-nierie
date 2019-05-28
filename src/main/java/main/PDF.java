@@ -2,8 +2,7 @@ package main;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.List;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
@@ -110,7 +109,11 @@ public class PDF {
 	 * Recherche toutes les occurences de ... dans le pdf
 	 */
 	public void findMatches() {
+		List<Feature> featureList = Regexp.getAllFeatures(content);
 		
+		for(Feature f:featureList) {
+			f.print();
+		}
 	}
 
 }
