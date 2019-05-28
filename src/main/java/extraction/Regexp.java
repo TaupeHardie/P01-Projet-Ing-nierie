@@ -14,13 +14,24 @@ public class Regexp {
 	private static String lamber = "ETS PAUL LAMBERT";
 	private static String paul = "ETS PAUL ONLY";
 	
-	public static void init() {
-		
-		regexps.add("ETS PAUL LAMBERT");
+	public static void init() {	
+		if(regexps.isEmpty()) {
+			Field[] fields = Regexp.class.getDeclaredFields();
+			for(Field f : fields) {
+				if(f.getName() != "regexps") {
+					try {
+						regexps.add((String) f.get(new Object()));
+					} catch (IllegalArgumentException | IllegalAccessException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
+		}
 	}
 	
 	public static List<Feature> getAllFeatures(String content) {
-		
+		init();
 		
 		List<Feature> features = new ArrayList<Feature>();
 		
