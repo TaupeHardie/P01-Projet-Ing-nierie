@@ -30,20 +30,22 @@ public class TestRegexp {
 	
 	@Test
 	public void testDate() {
-		String s = "Bonjour, êtes vous disponible à la date 12/18/2017. puis 02.03.2009";
+		String s = "Bonjour, êtes vous disponible à la date 12/18/2017. puis 02.03.2009 20191320";
 		List<Feature> featuresList = Regexp.getAllFeatures(s);
 		
 		assertTrue(featuresList.contains(new Feature(40, "12/18/2017", 1)));
 		assertTrue(featuresList.contains(new Feature(57, "02.03.2009", 1)));
+		assertTrue(featuresList.contains(new Feature(68, "20191320", 1)));
 	}
 	
 	@Test
 	public void testAddresse() {
-		String s = "15 rue du poulet frit \n25 AVENUE ALATA \n ceci n'est pas une addresse \n15 euros HT\n";
+		String s = "15 rue du poulet frit \n25b AVENUE ALATA \n ceci n'est pas une addresse \n15 euros HT\n120 bis impasse du lol";
 		List<Feature> featuresList = Regexp.getAllFeatures(s);
 		
-		assertTrue(featuresList.contains(new Feature(0, "15 rue du poulet frit ", 2)));
-		assertTrue(featuresList.contains(new Feature(23, "25 AVENUE ALATA ", 2)));
+		assertTrue(featuresList.contains(new Feature(0, "15 rue du poulet frit", 2)));
+		assertTrue(featuresList.contains(new Feature(23, "25b AVENUE ALATA", 2)));
+		assertTrue(featuresList.contains(new Feature(83, "120 bis impasse du lol", 2)));
 	}
 	
 	@Test
