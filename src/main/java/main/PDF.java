@@ -9,6 +9,7 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
 
 import extraction.Feature;
+import extraction.Regexp;
 
 public class PDF {
 	/**
@@ -109,14 +110,7 @@ public class PDF {
 	 * Recherche toutes les occurences de ... dans le pdf
 	 */
 	public void findMatches() {
-		Pattern pattern = Pattern.compile("ETS PAUL LAMBERT");
-		Matcher matcher = pattern.matcher(content);
-		Feature f = new Feature();
 		
-		while(matcher.find()) {
-			f.set(matcher.start(), matcher.group());
-			f.print();
-		}
 	}
 
 }
