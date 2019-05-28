@@ -14,7 +14,7 @@ public class Regexp {
 	public static final String prix = "[0-9]+,[0-9]{2}";
 	public static final String date = "\\d{2}/\\d{2}/\\d{4}|\\d{2}\\.\\d{2}\\.\\d{4}";
 	public static final String addresse = "(?i)[0-9]+ (rue|avenue|boulevard) [a-z ]+";
-	public static final String code = "(?i)([0-9a-z]{0,}[0-9][0-9a-z]{0,}){5,}";
+	public static final String code = "(?i)(?=(?:\\w*\\d){1,}\\w*)[\\w\\d]{5,}";
 	
 	/**
 	 * init permet de remplir la liste des regexp automatiquement
