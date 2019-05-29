@@ -50,12 +50,12 @@ public class TestRegexp {
 	
 	@Test
 	public void testAddresse() {
-		String s = "15 rue du poulet frit \n25b AVENUE ALATA \n ceci n'est pas une addresse \n15 euros HT\n120 bis impasse du lol";
+		String s = "15 rue du poulet frit \n25, AVENUE ALATA \n ceci n'est pas une addresse \n15 euros HT\n120 bis impasse du lol";
 		List<Feature> featuresList = Regexp.getAllFeatures(s);
-		
 		assertTrue(featuresList.contains(new Feature(0, "15 rue du poulet frit", "FeatureAddresse")));
 		assertTrue(featuresList.contains(new Feature(23, "25b AVENUE ALATA", "FeatureAddresse")));
 		assertTrue(featuresList.contains(new Feature(83, "120 bis impasse du lol", "FeatureAddresse")));
+
 	}
 	
 	@Test

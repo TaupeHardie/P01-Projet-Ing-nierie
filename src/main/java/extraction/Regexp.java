@@ -15,7 +15,7 @@ public class Regexp {
 	
 	public static final String FeaturePrix = "[0-9]+,[0-9]{2}";
 	public static final String FeatureDate = "([0-9]{2}[./ ]?(?:1[0-2]|0?[1-9])[./ ]?(?:[12][0-9]{1,3}|[0-9][1-9]{1,3}))|((?:[12][0-9]{1,3}|[0-9][1-9]{1,3})[./ ]?(?:1[0-2]|0?[1-9])[./ ]?[0-9]{2})";
-	public static final String FeatureAddresse = "(?i)[0-9]+(b|t){0,1}( bis| ter){0,1} (impasse|rue|avenue|boulevard) [a-z ]+";
+	public static final String FeatureAddresse = "(?i)[0-9]+(b|t|d){0,1}(,){0,1}( bis| ter){0,1} (esplanade|impasse|rue|avenue|boulevard) [a-z ]+";
 	public static final String FeatureCode = "(?i)(?=(?:\\w*\\d){1,}\\w*)[\\w\\d]{5,}";
 	
 	/**
