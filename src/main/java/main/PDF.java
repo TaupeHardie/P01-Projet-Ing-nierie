@@ -2,9 +2,14 @@ package main;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
+
+import extraction.Feature;
+import extraction.Regexp;
 
 public class PDF {
 	/**
@@ -12,6 +17,11 @@ public class PDF {
 	 */
 	private PDDocument doc;
 	private String content = "";
+	
+	/**
+	 * liste des feature detectées dans le pdf
+	 */
+	private List<Feature> features = new ArrayList<Feature>();
 	
 	/**
 	 * Constructeur par défaut
@@ -86,13 +96,11 @@ public class PDF {
 		}
 	}
 	
-	/**
-	 * Affiche dans la sortie standard le texte brut du document
-	 */
-	public void print() {
-		System.out.println(content);
+	@Override
+	public String toString() {
+		return "PDF [content=" + content + "]";
 	}
-	
+
 	/**
 	 * Retourne le contenu du document
 	 * @return Contenu du PDF en texte
@@ -100,6 +108,16 @@ public class PDF {
 	public String getText() {
 		return content;
 	}
+	
+	/**
+	 * Recherche toutes les occurences de dates, d'addresses, de code et de prix dans le pdf
+	 */
+	public List<Feature> findMatches() {
+		features = Regexp.getAllFeatures(content);
+		return features;
+	}
+
+	
 	
 
 }
