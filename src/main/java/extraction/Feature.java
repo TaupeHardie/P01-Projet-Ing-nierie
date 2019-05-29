@@ -1,8 +1,9 @@
 package extraction;
 
 public class Feature {
-	int pos, type;
-	String str;
+	private int pos;
+	private String str;
+	private String type;
 	
 	
 	/**
@@ -10,7 +11,7 @@ public class Feature {
 	 */
 	public Feature() {
 		pos = -1;
-		type = -1;
+		type = "UKN";
 		str = "";
 	}
 	
@@ -20,7 +21,7 @@ public class Feature {
 	 * @param str chaine correspondante
 	 * @param type type du regex
 	 */
-	public Feature(int pos, String str, int type) {
+	public Feature(int pos, String str, String type) {
 		this.pos = pos;
 		this.str = str;
 		this.type = type;
@@ -37,7 +38,7 @@ public class Feature {
 	 * @param str chaine de caractères
 	 * @param type type du regex
 	 */
-	public void set(int pos, String str, int type) {
+	public void set(int pos, String str, String type) {
 		this.pos = pos;
 		this.str = str;
 		this.type = type;
@@ -49,7 +50,7 @@ public class Feature {
 		int result = 1;
 		result = prime * result + pos;
 		result = prime * result + ((str == null) ? 0 : str.hashCode());
-		result = prime * result + type;
+		result = prime * result + ((type == null) ? 0 : type.hashCode());
 		return result;
 	}
 
@@ -69,7 +70,10 @@ public class Feature {
 				return false;
 		} else if (!str.equals(other.str))
 			return false;
-		if (type != other.type)
+		if (type == null) {
+			if (other.type != null)
+				return false;
+		} else if (!type.equals(other.type))
 			return false;
 		return true;
 	}
@@ -78,7 +82,7 @@ public class Feature {
 		return pos;
 	}
 
-	public int getType() {
+	public String getType() {
 		return type;
 	}
 

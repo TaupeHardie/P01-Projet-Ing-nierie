@@ -21,21 +21,31 @@ public class TestRegexp {
 	
 	@Test
 	public void testMontant() {
-		String s = "bonjour, voici de l'argent 15,20 € et 1582,98EUR";
+		String s = "bonjour, voici de l'argent 15,20 € et 1582,98EUR. gain de 1000€ et de 15.6USD";
 		List<Feature> featuresList = Regexp.getAllFeatures(s);
 		
-		assertTrue(featuresList.contains(new Feature(27, "15,20", 0)));
-		assertTrue(featuresList.contains(new Feature(38, "1582,98", 0)));
+		assertTrue(featuresList.contains(new Feature(27, "15,20", "FeaturePrix")));
+		assertTrue(featuresList.contains(new Feature(38, "1582,98", "FeaturePrix")));
+		assertTrue(featuresList.contains(new Feature(70, "15.6", "FeaturePrix")));
+		assertTrue(featuresList.contains(new Feature(58, "1000", "FeaturePrix")));
 	}
 	
 	@Test
 	public void testDate() {
-		String s = "Bonjour, êtes vous disponible à la date 12/18/2017. puis 02.03.2009 20191320";
+		String s = "10/12/2017, 02.03.2009, 01 08 1990, 12/10/19, 02.03.19, 02 05 19";
 		List<Feature> featuresList = Regexp.getAllFeatures(s);
 		
-		assertTrue(featuresList.contains(new Feature(40, "12/18/2017", 1)));
-		assertTrue(featuresList.contains(new Feature(57, "02.03.2009", 1)));
-		assertTrue(featuresList.contains(new Feature(68, "20191320", 1)));
+		assertTrue(featuresList.contains(new Feature(0, "10/12/2017", "FeatureDate")));
+		assertTrue(featuresList.contains(new Feature(12, "02.03.2009", "FeatureDate")));
+		assertTrue(featuresList.contains(new Feature(24, "01 08 1990", "FeatureDate")));
+		assertTrue(featuresList.contains(new Feature(36, "12/10/19", "FeatureDate")));
+		assertTrue(featuresList.contains(new Feature(46, "02.03.19", "FeatureDate")));
+		assertTrue(featuresList.contains(new Feature(56, "02 05 19", "FeatureDate")));
+		
+		String s2 = "2019 02 05";
+		List<Feature> featuresList2 = Regexp.getAllFeatures(s2);
+		assertTrue(featuresList2.contains(new Feature(0, "2019 02 05", "FeatureDate")));
+		
 	}
 	
 	@Test
@@ -43,9 +53,9 @@ public class TestRegexp {
 		String s = "15 rue du poulet frit \n25b AVENUE ALATA \n ceci n'est pas une addresse \n15 euros HT\n120 bis impasse du lol";
 		List<Feature> featuresList = Regexp.getAllFeatures(s);
 		
-		assertTrue(featuresList.contains(new Feature(0, "15 rue du poulet frit", 2)));
-		assertTrue(featuresList.contains(new Feature(23, "25b AVENUE ALATA", 2)));
-		assertTrue(featuresList.contains(new Feature(83, "120 bis impasse du lol", 2)));
+		assertTrue(featuresList.contains(new Feature(0, "15 rue du poulet frit", "FeatureAddresse")));
+		assertTrue(featuresList.contains(new Feature(23, "25b AVENUE ALATA", "FeatureAddresse")));
+		assertTrue(featuresList.contains(new Feature(83, "120 bis impasse du lol", "FeatureAddresse")));
 	}
 	
 	@Test
@@ -53,11 +63,11 @@ public class TestRegexp {
 		String s = "R2D2 FR201536F7 dFerRG10235 fdfd7dff 75456d56684 code58 ADSJFJK";
 		List<Feature> featuresList = Regexp.getAllFeatures(s);
 		
-		assertTrue(featuresList.contains(new Feature(5, "FR201536F7", 3)));
-		assertTrue(featuresList.contains(new Feature(16, "dFerRG10235", 3)));
-		assertTrue(featuresList.contains(new Feature(28, "fdfd7dff", 3)));
-		assertTrue(featuresList.contains(new Feature(37, "75456d56684", 3)));
-		assertTrue(featuresList.contains(new Feature(49, "code58", 3)));
+		assertTrue(featuresList.contains(new Feature(5, "FR201536F7", "FeatureCode")));
+		assertTrue(featuresList.contains(new Feature(16, "dFerRG10235", "FeatureCode")));
+		assertTrue(featuresList.contains(new Feature(28, "fdfd7dff", "FeatureCode")));
+		assertTrue(featuresList.contains(new Feature(37, "75456d56684", "FeatureCode")));
+		assertTrue(featuresList.contains(new Feature(49, "code58", "FeatureCode")));
 	}
 
 }

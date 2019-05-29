@@ -10,9 +10,11 @@ import java.util.regex.Pattern;
 public class Regexp {
 	//liste des regexp
 	private static List<String> regexps = new ArrayList<String>();
+	//List des nom des regexp
+	private static List<String> regexpsName = new ArrayList<String>();
 	
 	public static final String FeaturePrix = "[0-9]+,[0-9]{2}";
-	public static final String FeatureDate = "\\d{2}/\\d{2}/\\d{4}|\\d{2}\\.\\d{2}\\.\\d{4}|\\d{8}";
+	public static final String FeatureDate = "([0-9]{2}[./ ]?(?:1[0-2]|0?[1-9])[./ ]?(?:[12][0-9]{1,3}|[0-9][1-9]{1,3}))|((?:[12][0-9]{1,3}|[0-9][1-9]{1,3})[./ ]?(?:1[0-2]|0?[1-9])[./ ]?[0-9]{2})";
 	public static final String FeatureAddresse = "(?i)[0-9]+(b|t){0,1}( bis| ter){0,1} (impasse|rue|avenue|boulevard) [a-z ]+";
 	public static final String FeatureCode = "(?i)(?=(?:\\w*\\d){1,}\\w*)[\\w\\d]{5,}";
 	
@@ -28,6 +30,7 @@ public class Regexp {
 				if(f.getName().contains("Feature")) {
 					try {
 						regexps.add((String) f.get(new Object()));
+						regexpsName.add((String) f.getName());
 					} catch (IllegalArgumentException | IllegalAccessException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -52,7 +55,7 @@ public class Regexp {
 			Matcher matcher = pattern.matcher(content);
 			while(matcher.find()) {
 				Feature f = new Feature();
-				f.set(matcher.start(), matcher.group().trim(), i);
+				f.set(matcher.start(), matcher.group().trim(), regexpsName.get(i));
 				features.add(f);
 			}
 		}
