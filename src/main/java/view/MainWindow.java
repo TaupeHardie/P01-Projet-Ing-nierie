@@ -20,6 +20,11 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JScrollPane;
 
+/**
+ * GUI made with window builder
+ * @author axel
+ *
+ */
 public class MainWindow extends JFrame {
 
 	private JPanel contentPane;
