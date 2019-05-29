@@ -7,21 +7,21 @@ import java.util.List;
 import resources.ResourcesLoader;
 
 /**
- * Contient tous les fichiers à traiter pour l'apprentissage et pour les test
+ * Contient tous les fichiers a� traiter pour l'apprentissage et pour les test
  */
 public class DataManager {
 	List<List<Sample>> data;
 	
 	/**
-	 * Constructeur par défaut
+	 * Constructeur par defaut
 	 */
 	public DataManager() {
 		data = new ArrayList<List<Sample>>();
 	}
 	
 	/**
-	 * Effectue une k-fold cross-validation. Découpe les données en k parties.
-	 * Une partie sera utilisé pour la partie test, le reste pour l'apprentissage
+	 * Effectue une k-fold cross-validation. Decoupe les donnees en k parties.
+	 * Une partie sera utilisee pour la partie test, le reste pour l'apprentissage
 	 * @param k
 	 */
 	public void kfoldCrossValidation(int k) {
@@ -48,8 +48,8 @@ public class DataManager {
 	}
 	
 	/**
-	 * Retourne le nombre de données récupérées
-	 * @return nombre de données récupérées
+	 * Retourne le nombre de donnees recuperees
+	 * @return nombre de donnees recuperees
 	 */
 	public int getSampleNumber() {
 		int n = 0;

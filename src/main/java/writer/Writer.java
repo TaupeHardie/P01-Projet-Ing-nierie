@@ -6,12 +6,12 @@ import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 
 /**
- * Classe statique permetant de gérer les flux de sorties
+ * Classe statique permetant de gerer les flux de sorties
  */
 public class Writer {
 	
 	/**
-	 * efface le fichier specifié et le re-cree pour le remplir avec le texte specifié
+	 * efface le fichier specifie et le re-cree pour le remplir avec le texte specifie
 	 * @param texte le texte a ecrire
 	 * @param fileName le fichier ou ecrire
 	 */

@@ -12,31 +12,31 @@ import extraction.Feature;
 import extraction.Regexp;
 
 /**
- * Classe représentant un fichier PDF
+ * Classe representant un fichier PDF
  *
  */
 public class PDF {
 	/**
-	 * Objet PDDocument représentant le fichier PDF
+	 * Objet PDDocument representant le fichier PDF
 	 */
 	private PDDocument doc;
 	private String content = "";
 	
 	/**
-	 * liste des feature detectées dans le pdf
+	 * liste des feature detectees dans le pdf
 	 */
 	private List<Feature> features = new ArrayList<Feature>();
 	
 	/**
-	 * Constructeur par défaut
+	 * Constructeur par defaut
 	 */
 	public PDF() {
 		super();
 	}
 
 	/**
-	 * Constructeur. Charge le fichier PDF à partir d'un chemin
-	 * @param fileName Chaine de caractère vers le chemin du fichier à ouvrir
+	 * Constructeur. Charge le fichier PDF a� partir d'un chemin
+	 * @param fileName Chaine de caractere vers le chemin du fichier a� ouvrir
 	 */
 	public PDF(String fileName) {
 		super();
@@ -44,8 +44,8 @@ public class PDF {
 	}
 	
 	/**
-	 * Constructeur. Charge le fichier PDF à partir d'un objet
-	 * @param file Objet correspondant au PDF à charger
+	 * Constructeur. Charge le fichier PDF a� partir d'un objet
+	 * @param file Objet correspondant au PDF a charger
 	 */
 	public PDF(File file) {
 		super();
@@ -53,7 +53,7 @@ public class PDF {
 	}
 	
 	/**
-	 * Charge un PDF à partir du chemin
+	 * Charge un PDF a partir du chemin
 	 * @param fileName Chemin du PDF
 	 */
 	public void loadPDFfromString(String fileName) {
@@ -66,8 +66,8 @@ public class PDF {
 	}
 	
 	/**
-	 * Charge un PDF à partir d'un objet File
-	 * @param file Objet correspondant au PDF à charger
+	 * Charge un PDF a partir d'un objet File
+	 * @param file Objet correspondant au PDF a charger
 	 */
 	public void loadPDFfromFile(File file) {
 		try {

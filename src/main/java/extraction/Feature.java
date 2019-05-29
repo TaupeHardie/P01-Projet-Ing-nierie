@@ -1,7 +1,7 @@
 package extraction;
 
 /**
- * Structure qui contient l'information des éléments récupérés
+ * Structure qui contient l'information des elements recuperes
  *
  */
 
@@ -12,7 +12,7 @@ public class Feature {
 	
 	
 	/**
-	 * Constructeur par défaut
+	 * Constructeur par defaut
 	 */
 	public Feature() {
 		pos = -1;
