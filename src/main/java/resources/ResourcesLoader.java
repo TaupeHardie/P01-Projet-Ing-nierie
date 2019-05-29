@@ -51,6 +51,17 @@ public class ResourcesLoader {
     	return files;
     }
     
+    public static List<String> getDirectoriesName(String rootPath){
+    	List<String> names = new ArrayList<String>();
+    	File directory = new File(rootPath);
+    	for (final File fileEntry : directory.listFiles()) {
+    		if (fileEntry.isDirectory()) {
+    			names.add(fileEntry.getName());
+    		}
+    	}
+    	return names;
+    }
+    
     public static void readFile(String fileName) {
     	File f = loadResourceFile(fileName);
     	
