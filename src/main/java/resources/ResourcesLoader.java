@@ -15,6 +15,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * Classe statique regrouppant toutes les fonctions concernant la lecture de fichiers et de dossiers
+ *
+ */
 public class ResourcesLoader {
 	/**
 	 * load a file from resources
@@ -51,6 +55,11 @@ public class ResourcesLoader {
     	return files;
     }
     
+    /**
+     * Get the name of all directories inside the given one
+     * @param rootPath the directory to look at
+     * @return the name of all directories
+     */
     public static List<String> getDirectoriesName(String rootPath){
     	List<String> names = new ArrayList<String>();
     	File directory = new File(rootPath);
@@ -62,6 +71,10 @@ public class ResourcesLoader {
     	return names;
     }
     
+    /**
+     * read a file and output the text in the console
+     * @param fileName the file to be read 
+     */
     public static void readFile(String fileName) {
     	File f = loadResourceFile(fileName);
     	

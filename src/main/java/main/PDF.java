@@ -11,6 +11,10 @@ import org.apache.pdfbox.text.PDFTextStripper;
 import extraction.Feature;
 import extraction.Regexp;
 
+/**
+ * Classe représentant un fichier PDF
+ *
+ */
 public class PDF {
 	/**
 	 * Objet PDDocument représentant le fichier PDF

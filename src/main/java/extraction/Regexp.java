@@ -6,14 +6,17 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
+/**
+ * Classe statique qui regroupe toutes les fonctions concernant les regex
+ *
+ */
 public class Regexp {
 	//liste des regexp
 	private static List<String> regexps = new ArrayList<String>();
 	//List des nom des regexp
 	private static List<String> regexpsName = new ArrayList<String>();
 	
-	public static final String FeaturePrix = "[0-9]+,[0-9]{2}";
+	public static final String FeaturePrix = "([1-9][0-9]+(,[0-9]{2})?[ ]?[â‚¬]?(EUR)?)";
 	public static final String FeatureDate = "([0-9]{2}[./ ]?(?:1[0-2]|0?[1-9])[./ ]?(?:[12][0-9]{1,3}|[0-9][1-9]{1,3}))|((?:[12][0-9]{1,3}|[0-9][1-9]{1,3})[./ ]?(?:1[0-2]|0?[1-9])[./ ]?[0-9]{2})";
 	public static final String FeatureAddresse = "(?i)[0-9]+(b|t|d){0,1}(,){0,1}( bis| ter){0,1} (esplanade|impasse|rue|avenue|boulevard) [a-z ]+";
 	public static final String FeatureCode = "(?i)(?=(?:\\w*\\d){1,}\\w*)[\\w\\d]{5,}";
@@ -41,7 +44,7 @@ public class Regexp {
 	}
 	
 	/**
-	 * detecte toutes les features, matchÃ©es par nos regexp, dans le texte en parametre
+	 * detecte toutes les features, matchées par nos regexp, dans le texte en parametre
 	 * @param content le texte a traiter
 	 * @return une liste des feature detectÃ©es par toutes nos regexp
 	 */
@@ -61,7 +64,11 @@ public class Regexp {
 		}
 		return features;
 	}
-	
+	/** 
+	 * supprime tous les textes entre accolades
+	 * @param textPDF le texte du PDF avec des éléments cachés
+	 * @return le même document sans élément caché
+	 */
 	public static String removeHiddenText(String textPDF) {
 		
 		String clearText = textPDF.replaceAll("\\{.*\\}", "").trim();
