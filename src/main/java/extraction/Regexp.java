@@ -41,7 +41,7 @@ public class Regexp {
 	}
 	
 	/**
-	 * detecte toutes les features, matchÃ©es par nos regexp, dans le texte en parametre
+	 * detecte toutes les features, matchées par nos regexp, dans le texte en parametre
 	 * @param content le texte a traiter
 	 * @return une liste des feature detectÃ©es par toutes nos regexp
 	 */
@@ -61,7 +61,11 @@ public class Regexp {
 		}
 		return features;
 	}
-	
+	/** 
+	 * supprime tous les textes entre accolades
+	 * @param textPDF le texte du PDF avec des éléments cachés
+	 * @return le même document sans élément caché
+	 */
 	public static String removeHiddenText(String textPDF) {
 		
 		String clearText = textPDF.replaceAll("\\{.*\\}", "").trim();
