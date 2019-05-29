@@ -6,28 +6,18 @@ import java.util.List;
 
 import org.junit.Test;
 
-import main.PDF;
-
 public class TestRegexp {
 
-	/*@Test
-	public void testPDF() {
-		PDF testPDF = new PDF("");
-		Regexp.init();
-		List<Feature> featuresList = Regexp.getAllFeatures(testPDF.getText());
-		
-		assertTrue(featuresList.size() == 10);
-	}*/
-	
 	@Test
 	public void testMontant() {
-		String s = "bonjour, voici de l'argent 15,20 € et 1582,98EUR. gain de 1000€ et de 15.6USD";
+		String s = "bonjour, voici de l'argent 15,20 € et 1582,98 EUR. gain de 1000€, 1100,60€, 1230,85";
 		List<Feature> featuresList = Regexp.getAllFeatures(s);
 		
-		assertTrue(featuresList.contains(new Feature(27, "15,20", "FeaturePrix")));
-		assertTrue(featuresList.contains(new Feature(38, "1582,98", "FeaturePrix")));
-		assertTrue(featuresList.contains(new Feature(70, "15.6", "FeaturePrix")));
-		assertTrue(featuresList.contains(new Feature(58, "1000", "FeaturePrix")));
+		assertTrue(featuresList.contains(new Feature(27, "15,20 €", "FeaturePrix")));
+		assertTrue(featuresList.contains(new Feature(38, "1582,98 EUR", "FeaturePrix")));
+		assertTrue(featuresList.contains(new Feature(59, "1000€", "FeaturePrix")));
+		assertTrue(featuresList.contains(new Feature(66, "1100,60€", "FeaturePrix")));
+		assertTrue(featuresList.contains(new Feature(76, "1230,85", "FeaturePrix")));
 	}
 	
 	@Test
@@ -53,7 +43,7 @@ public class TestRegexp {
 		String s = "15 rue du poulet frit \n25, AVENUE ALATA \n ceci n'est pas une addresse \n15 euros HT\n120 bis impasse du lol";
 		List<Feature> featuresList = Regexp.getAllFeatures(s);
 		assertTrue(featuresList.contains(new Feature(0, "15 rue du poulet frit", "FeatureAddresse")));
-		assertTrue(featuresList.contains(new Feature(23, "25b AVENUE ALATA", "FeatureAddresse")));
+		assertTrue(featuresList.contains(new Feature(23, "25, AVENUE ALATA", "FeatureAddresse")));
 		assertTrue(featuresList.contains(new Feature(83, "120 bis impasse du lol", "FeatureAddresse")));
 
 	}
