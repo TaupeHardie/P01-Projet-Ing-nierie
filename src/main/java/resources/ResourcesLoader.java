@@ -7,14 +7,21 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class ResourcesLoader {
 	/**
 	 * load a file from resources
-	 * @param fileName the name of the resource starting at src/main/resources/fileName
+	 * @param fileName the name of the resource under src/main/resources/
 	 * @return the file if present or an exception
 	 */
-    public static File loadFile(String fileName) {
+    public static File loadResourceFile(String fileName) {
         ClassLoader classLoader = ClassLoader.getSystemClassLoader();
         URL resource = classLoader.getResource(fileName);
         if (resource == null) {
@@ -24,8 +31,28 @@ public class ResourcesLoader {
         }
     }
     
+    /**
+     * load all the pdf that are in the folder and the subfolders
+     * @param directoryPath the folder to be loaded
+     * @return a list with all the pdf
+     */
+    public static List<File> loadDirectory(String directoryPath){
+    	List<File> files = new ArrayList<File>();
+    	
+    	File directory = new File(directoryPath);
+    	for (final File fileEntry : directory.listFiles()) {
+            if (fileEntry.isDirectory()) {
+            	files.addAll(loadDirectory(fileEntry.getPath()));
+            } else if(fileEntry.getPath().contains(".pdf")){
+            	files.add(fileEntry);
+            }
+        }
+    	
+    	return files;
+    }
+    
     public static void readFile(String fileName) {
-    	File f = loadFile(fileName);
+    	File f = loadResourceFile(fileName);
     	
     	FileInputStream fis = null;
 		try {
