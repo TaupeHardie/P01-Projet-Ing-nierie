@@ -11,10 +11,10 @@ public class Regexp {
 	//liste des regexp
 	private static List<String> regexps = new ArrayList<String>();
 	
-	public static final String prix = "[0-9]+,[0-9]{2}";
-	public static final String date = "\\d{2}/\\d{2}/\\d{4}|\\d{2}\\.\\d{2}\\.\\d{4}|\\d{8}";
-	public static final String addresse = "(?i)[0-9]+(b|t){0,1}( bis| ter){0,1} (impasse|rue|avenue|boulevard) [a-z ]+";
-	public static final String code = "(?i)(?=(?:\\w*\\d){1,}\\w*)[\\w\\d]{5,}";
+	public static final String FeaturePrix = "[0-9]+,[0-9]{2}";
+	public static final String FeatureDate = "\\d{2}/\\d{2}/\\d{4}|\\d{2}\\.\\d{2}\\.\\d{4}|\\d{8}";
+	public static final String FeatureAddresse = "(?i)[0-9]+(b|t){0,1}( bis| ter){0,1} (impasse|rue|avenue|boulevard) [a-z ]+";
+	public static final String FeatureCode = "(?i)(?=(?:\\w*\\d){1,}\\w*)[\\w\\d]{5,}";
 	
 	/**
 	 * init permet de remplir la liste des regexp automatiquement
@@ -25,7 +25,7 @@ public class Regexp {
 		if(regexps.isEmpty()) {
 			Field[] fields = Regexp.class.getDeclaredFields();
 			for(Field f : fields) {
-				if(f.getName() != "regexps") {
+				if(f.getName().contains("Feature")) {
 					try {
 						regexps.add((String) f.get(new Object()));
 					} catch (IllegalArgumentException | IllegalAccessException e) {
