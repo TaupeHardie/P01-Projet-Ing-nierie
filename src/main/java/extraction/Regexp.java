@@ -6,7 +6,10 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
+/**
+ * Classe statique qui regroupe toutes les fonctions concernant les regex
+ *
+ */
 public class Regexp {
 	//liste des regexp
 	private static List<String> regexps = new ArrayList<String>();

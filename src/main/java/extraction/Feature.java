@@ -1,5 +1,10 @@
 package extraction;
 
+/**
+ * Structure qui contient l'information des éléments récupérés
+ *
+ */
+
 public class Feature {
 	private int pos;
 	private String str;

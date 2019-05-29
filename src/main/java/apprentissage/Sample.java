@@ -1,5 +1,9 @@
 package apprentissage;
 
+/**
+ * Structure qui contient le chemin d'un pdf et de sa classe associée
+ *
+ */
 public class Sample {
 	public String name, category;
 

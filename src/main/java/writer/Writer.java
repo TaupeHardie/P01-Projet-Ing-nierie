@@ -5,6 +5,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 
+/**
+ * Classe statique permetant de gérer les flux de sorties
+ */
 public class Writer {
 	
 	/**

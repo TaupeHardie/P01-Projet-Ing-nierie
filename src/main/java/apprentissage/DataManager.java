@@ -6,15 +6,24 @@ import java.util.List;
 
 import resources.ResourcesLoader;
 
+/**
+ * Contient tous les fichiers à traiter pour l'apprentissage et pour les test
+ */
 public class DataManager {
 	List<List<Sample>> data;
 	
-	
+	/**
+	 * Constructeur par défaut
+	 */
 	public DataManager() {
 		data = new ArrayList<List<Sample>>();
 	}
 	
-	
+	/**
+	 * Effectue une k-fold cross-validation. Découpe les données en k parties.
+	 * Une partie sera utilisé pour la partie test, le reste pour l'apprentissage
+	 * @param k
+	 */
 	public void kfoldCrossValidation(int k) {
 		String root = "src/main/resources/pdf";
 		List<String> directoryName = ResourcesLoader.getDirectoriesName(root);
@@ -38,6 +47,10 @@ public class DataManager {
 		}
 	}
 	
+	/**
+	 * Retourne le nombre de données récupérées
+	 * @return nombre de données récupérées
+	 */
 	public int getSampleNumber() {
 		int n = 0;
 		for(int i = 0; i < data.size(); i++) {
