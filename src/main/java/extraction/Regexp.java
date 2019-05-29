@@ -61,4 +61,10 @@ public class Regexp {
 		}
 		return features;
 	}
+	
+	public static String removeHiddenText(String textPDF) {
+		
+		String clearText = textPDF.replaceAll("\\{.*\\}", "").trim();
+		return clearText;
+	}
 }
