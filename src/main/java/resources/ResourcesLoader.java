@@ -12,8 +12,14 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import view.MainWindow;
+import view.ThreadUpdateProgressBar;
 
 /**
  * Classe statique regrouppant toutes les fonctions concernant la lecture de fichiers et de dossiers
@@ -52,6 +58,22 @@ public class ResourcesLoader {
             }
         }
     	
+    	return files;
+    }
+    
+    /**
+     * load the input witch can be a folder or a file
+     * @param path selected by the user it represent a directory or a file
+     * @return all the files that are in the directory and it's sub directories or the selected file
+     */
+    public static List<File> loadInput(String path){
+    	List<File> files = new ArrayList<File>();
+    	File f = new File(path);
+    	if(!f.isDirectory() && f.getPath().contains(".pdf")) {
+    		files.add(f);
+    	}else {
+    		files = loadDirectory(path);
+    	}
     	return files;
     }
     
