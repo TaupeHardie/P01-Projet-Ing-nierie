@@ -26,7 +26,9 @@ public class PMC {
 		nombreNeuroneEntree = nbEntree;
 		nombreNeuroneSortie = nbSortie;
 		
-		X = new SimpleMatrix(nombreNeuroneEntree, 10);
+		X = new SimpleMatrix(nombreNeuroneEntree, 1);
+		
+		T = new SimpleMatrix(nombreNeuroneSortie, 1);
 		
 		W = SimpleMatrix.random(nombreNeuronesCC, nombreNeuroneEntree, -1, 1, rand);
 		Z = SimpleMatrix.random(nombreNeuroneSortie, nombreNeuronesCC, -1, 1, rand);
