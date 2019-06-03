@@ -19,6 +19,10 @@ public class DataManager {
 		data = new ArrayList<List<Sample>>();
 	}
 	
+	public List<List<Sample>> getData() {
+		return this.data;
+	}
+	
 	/**
 	 * Effectue une k-fold cross-validation. Decoupe les donnees en k parties.
 	 * Une partie sera utilisee pour la partie test, le reste pour l'apprentissage
@@ -41,7 +45,7 @@ public class DataManager {
 				int limit = i == k-1 ? pdf.size():(i+1)*step;
 
 				for(int j = i*step; j < limit; j++) {
-					data.get(i).add(new Sample(pdf.get(j).getPath(), dn));
+					data.get(i).add(new Sample(pdf.get(j).getPath(), dn, directoryName.indexOf(dn)));
 				}
 			}
 		}
