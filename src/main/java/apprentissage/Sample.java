@@ -1,7 +1,7 @@
 package apprentissage;
 
 /**
- * Structure qui contient le chemin d'un pdf et de sa classe associée
+ * Structure qui contient le chemin d'un pdf et de sa classe associee
  *
  */
 public class Sample {
