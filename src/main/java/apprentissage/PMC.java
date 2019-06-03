@@ -1,6 +1,7 @@
 package apprentissage;
 
 import java.util.List;
+import java.util.Random;
 
 import org.ejml.simple.SimpleMatrix;
 
