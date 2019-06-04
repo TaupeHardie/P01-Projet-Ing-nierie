@@ -44,7 +44,7 @@ import java.awt.event.ActionEvent;
  * @author axel
  *
  */
-public class MainWindow extends JFrame {
+public class ClientView extends JFrame {
 
 	private JPanel contentPane;
 	private JTextField txtSelectionezUnDossier;
@@ -74,7 +74,7 @@ public class MainWindow extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					MainWindow frame = new MainWindow();
+					ClientView frame = new ClientView();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -86,7 +86,7 @@ public class MainWindow extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public MainWindow() {
+	public ClientView() {
 		setTitle("Qweeby - Format auto");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 660, 458);
