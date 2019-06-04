@@ -70,5 +70,26 @@ public class TestApprentissage {
 		
 
 	}
+	
+	@Test
+	public void testConfusionMatrix() {
+		ConfusionMatrix matrix = new ConfusionMatrix(2);
+		
+		for(int i = 0; i < 95; i++)
+			matrix.increment(0, 0);
+		
+		for(int i = 0; i < 5; i++)
+			matrix.increment(0, 1);
+		
+		for(int i = 0; i < 3; i++)
+			matrix.increment(1, 0);
+		
+		for(int i = 0; i < 97; i++)
+			matrix.increment(1, 1);
+		
+		assertEquals((95/98 + 97/102)/2, matrix.getPrecision(), 1e-3);
+		assertEquals((95/100 + 97/100)/2, matrix.getRappel(), 1e-3);
+		
+	}
 
 }

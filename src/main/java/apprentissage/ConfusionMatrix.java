@@ -10,9 +10,10 @@ public class ConfusionMatrix {
 	
 	SimpleMatrix confMatrix;
 	int classNb;
+	double rappel, precision;
 	
 	/**
-	 * Constructeur initialisant la matrice de confusion à 0
+	 * Constructeur initialisant la matrice de confusion a 0
 	 * @param numbOfClasses
 	 */
 	
@@ -33,12 +34,10 @@ public class ConfusionMatrix {
 	}
 	
 	/**
-	 * calcul et renvoie le rappel de la matrice de confusion
-	 * @return double rappel
+	 * calcul la precision et le rappel de la matrice de confusion
 	 */
-	
-	public double getRappel() {
-		double rappel=0;
+	public void computeStats() {
+		rappel = 0;
 		for (int i = 0; i<classNb;i++) {
 			double ligne=0;
 			for (int j=0;j<classNb;j++) {
@@ -46,16 +45,8 @@ public class ConfusionMatrix {
 			}
 			rappel+=confMatrix.get(i, i)/ligne;
 		}
-		return rappel/classNb;
-	}
-	
-	/**
-	 * calcul et renvoie la precision de la matrice de confusion
-	 * @return precision
-	 */
-	
-	public double getPrecision() {
-		double precision=0;
+		rappel/=classNb;
+		
 		for (int i = 0; i<classNb;i++) {
 			double col=0;
 			for (int j=0;j<classNb;j++) {
@@ -63,8 +54,25 @@ public class ConfusionMatrix {
 			}
 			precision+=confMatrix.get(i, i)/col;
 		}
-		return precision/classNb;
+		precision/=classNb;
 	}
+	
+	/**
+	 * renvoie le rappel
+	 * @return double rappel
+	 */
+	public double getRappel() {
+		return rappel;
+	}
+	
+	/**
+	 * renvoie la precision 
+	 * @return double precision
+	 */
+	public double getPrecision() {
+		return precision;
+	}
+	
 	
 	/**
 	 * reinitialise la matrice de confusion
