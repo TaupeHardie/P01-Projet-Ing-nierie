@@ -8,6 +8,7 @@ import java.util.Random;
 import org.ejml.simple.SimpleMatrix;
 
 import extraction.Feature;
+import main.PDF;
 
 import com.sun.glass.ui.Size;
 
@@ -19,8 +20,10 @@ import resources.ResourcesLoader;
  */
 public class PMC {
 	private SimpleMatrix T, X, W, Z;
+	private DataManager data;
 	private int nombreNeuroneEntree, nombreNeuronesCC, nombreNeuroneSortie;
 	private final int nbStepMax = 1000;
+	final static int lenmat = 11;
 	
 	/**
 	 * Contructeur par defaut. Cree les differentes matrice et les initialise
@@ -28,16 +31,14 @@ public class PMC {
 	 * @param nbCC Nombre de neuronne dans la couche cachee
 	 * @param nbSortie Nombre de neurone dans la couche de sortie
 	 */
-	public PMC(int nbEntree, int nbCC, int nbSortie) {
+	public PMC(int k, int neuronesCaches) {
 		Random rand = new Random();
+		data = new DataManager();
+		data.kfoldCrossValidation(k);
 		
-		nombreNeuronesCC = nbCC;
-		nombreNeuroneEntree = nbEntree;
-		nombreNeuroneSortie = nbSortie;
-		
-		X = new SimpleMatrix(nombreNeuroneEntree, 1);
-		
-		T = new SimpleMatrix(nombreNeuroneSortie, 1);
+		nombreNeuronesCC = neuronesCaches;
+		nombreNeuroneEntree = lenmat*4;
+		nombreNeuroneSortie = data.numClasses();
 		
 		W = SimpleMatrix.random(nombreNeuronesCC, nombreNeuroneEntree, -1, 1, rand);
 		Z = SimpleMatrix.random(nombreNeuroneSortie, nombreNeuronesCC, -1, 1, rand);
@@ -98,45 +99,89 @@ public class PMC {
 	/**
 	 * Calcule les poids en fonctions des échantillions d'apprentissage
 	 */
-	public void learn() {
+	private void learn(List<Sample> dataset) {
+		Random rand = new Random();
 		
 		double l = 0.01;
 		int nstep = 0;
 		double epsilon = 1e-5, error = 1;
 		
-		while(nstep < nbStepMax && error > epsilon) {
+		W = SimpleMatrix.random(nombreNeuronesCC, nombreNeuroneEntree, -1, 1, rand);
+		Z = SimpleMatrix.random(nombreNeuroneSortie, nombreNeuronesCC, -1, 1, rand);
 		
-			SimpleMatrix Scouche = W.mult(X);
-			SimpleMatrix S = Z.mult(relu(Scouche));
+		while(nstep < nbStepMax && error > epsilon) {
+			error = 0;
+			for(int k = 0; k < dataset.size(); k++) {
+				
+				PDF currentPDF = new PDF(dataset.get(k).name);
+				currentPDF.convertToText();
+				
+				X = FeaturesToNeuron(currentPDF.findMatches());
+				T = getExpectedResultsMatrix(dataset.get(k));
 			
-			// Correct W
-			for(int i = 0; i < W.numRows(); i++) {
-				for(int j = 0; j < W.numCols(); j++) {
-					double s = 0;
-					for(int m = 0; m < Z.numRows(); m++) {
-						s+= -2*(T.get(m) - S.get(m))*Z.get(m, j);
+				SimpleMatrix Scouche = W.mult(X);
+				SimpleMatrix S = Z.mult(relu(Scouche));
+				
+				// Correct W
+				for(int i = 0; i < W.numRows(); i++) {
+					for(int j = 0; j < W.numCols(); j++) {
+						double s = 0;
+						for(int m = 0; m < Z.numRows(); m++) {
+							s+= -2*(T.get(m) - S.get(m))*Z.get(m, j);
+						}
+						double dw = l*drelu(Scouche.get(j))*s;
+						W.set(i, j, W.get(i,j) * dw);
 					}
-					double dw = l*drelu(Scouche.get(j))*s;
-					W.set(i, j, W.get(i,j) * dw);
 				}
-			}
-			
-			// Correct Z
-			for(int i = 0; i < Z.numRows(); i++) {
-				for(int j = 0; j < Z.numCols(); j++) {
-					double dz = -2*l*(T.get(i) - S.get(i))*relu(Scouche.get(j));
-					Z.set(i, j, Z.get(i,j)*dz);
+				
+				// Correct Z
+				for(int i = 0; i < Z.numRows(); i++) {
+					for(int j = 0; j < Z.numCols(); j++) {
+						double dz = -2*l*(T.get(i) - S.get(i))*relu(Scouche.get(j));
+						Z.set(i, j, Z.get(i,j)*dz);
+					}
 				}
+				
+				error += abs(T.minus(S)).elementSum();
 			}
-			
-			error = abs(T.minus(S)).elementSum();
 			nstep++;
 		}
 	}
+	
+	public int compute(String filename) {
+		int res = 0;
+		
+		PDF pdf = new PDF(filename);
+		pdf.convertToText();
+		pdf.findMatches();
+		
+		return res;
+	}
 
-	final static int lenmat = 11;
+	public void learnAndTest() {
+		for(int currentTest = 0; currentTest < data.getK(); currentTest++) {
+			ArrayList<Sample> learningData = new ArrayList<Sample>();
+			
+			for(int i = 0; i < data.getK(); i++) {
+				if(i != currentTest)
+					learningData.addAll(data.getData().get(i));
+			}
+			
+			learn(learningData);
+		}
+	}
+	
+	public void learnOnly() {
+		ArrayList<Sample> alldata = new ArrayList<Sample>();
+		for(List<Sample> l:data.getData()) {
+			alldata.addAll(l);
+		}
+		
+		learn(alldata);
+	}
+	
 
-	public static SimpleMatrix FeaturesToNeuron(List<Feature> Flist) {
+	private SimpleMatrix FeaturesToNeuron(List<Feature> Flist) {
 		SimpleMatrix output = new SimpleMatrix(1, lenmat * 4);
 		String cat = Flist.get(0).getType();
 		int fInd = 0;
@@ -162,13 +207,11 @@ public class PMC {
 
 	}
 	
-	public static SimpleMatrix getExpectedResultsMatrix(Sample echantillon) {
+	private SimpleMatrix getExpectedResultsMatrix(Sample echantillon) {
 		String root = "src/main/resources/pdf";
 
 		List<String> directoryName = ResourcesLoader.getDirectoriesName(root);
 		directoryName.remove("_IGNORE");
-
-		ArrayList<Sample> samplePattern = new ArrayList<Sample>(directoryName.size());
 		
 		SimpleMatrix expectedResult= new SimpleMatrix(directoryName.size(),1);
 		if (echantillon.number!=-1) {
