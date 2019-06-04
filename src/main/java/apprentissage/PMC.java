@@ -19,7 +19,7 @@ import resources.ResourcesLoader;
  *
  */
 public class PMC {
-	private SimpleMatrix T, X, W, Z;
+	private SimpleMatrix T, W, Z;
 	private DataManager data;
 	private int nombreNeuroneEntree, nombreNeuronesCC, nombreNeuroneSortie;
 	private final int nbStepMax = 1000;
@@ -116,7 +116,7 @@ public class PMC {
 				PDF currentPDF = new PDF(dataset.get(k).name);
 				currentPDF.convertToText();
 				
-				X = FeaturesToNeuron(currentPDF.findMatches());
+				SimpleMatrix X = FeaturesToNeuron(currentPDF.findMatches());
 				T = getExpectedResultsMatrix(dataset.get(k));
 			
 				SimpleMatrix Scouche = W.mult(X);
@@ -149,13 +149,22 @@ public class PMC {
 	}
 	
 	public int compute(String filename) {
-		int res = 0;
-		
 		PDF pdf = new PDF(filename);
 		pdf.convertToText();
-		pdf.findMatches();
 		
-		return res;
+		SimpleMatrix X = FeaturesToNeuron(pdf.findMatches());
+		SimpleMatrix S = Z.mult(relu(W.mult(X)));
+		
+		int indMaxi = 0;
+		double maxi = S.get(0, 0);
+		for(int i = 1; i < S.numRows(); i++) {
+			if(S.get(i, 0) > maxi) {
+				maxi = S.get(i, 0);
+				indMaxi = i;
+			}
+		}
+		
+		return indMaxi;
 	}
 
 	public void learnAndTest() {
@@ -168,6 +177,10 @@ public class PMC {
 			}
 			
 			learn(learningData);
+			
+			for(Sample s:data.getData().get(currentTest)) {
+				int res = compute(s.name);
+			}
 		}
 	}
 	
