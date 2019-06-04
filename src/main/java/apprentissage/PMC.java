@@ -197,7 +197,11 @@ public class PMC {
 
 		learn(alldata);
 	}
-
+	/**
+	 * Transforme une liste de feature en une matrice qui sera utilisable pour le reseau de neurones
+	 * @param Flist
+	 * @return SimpleMatrix output
+	 */
 	static public SimpleMatrix FeaturesToNeuron(List<Feature> Flist) {
 		SimpleMatrix output = new SimpleMatrix(1, lenmat * 4);
 		String cat = Flist.get(0).getType();
@@ -228,6 +232,13 @@ public class PMC {
 		return output;
 
 	}
+	
+	/**
+	 * calcul et renvoie une matrice de taille (Nb de classe * 1) correspondant a la matrice des 
+	 * resultats attendus pour un echantillon
+	 * @param echantillon
+	 * @return SimpleMatrix expectedResult
+	 */
 
 	static public SimpleMatrix getExpectedResultsMatrix(Sample echantillon) {
 		String root = "src/main/resources/pdf";
