@@ -119,7 +119,7 @@ public class PMC {
 				SimpleMatrix X = FeaturesToNeuron(currentPDF.findMatches());
 				T = getExpectedResultsMatrix(dataset.get(k));
 			
-				SimpleMatrix Scouche = W.mult(X);
+				SimpleMatrix Scouche = W.mult(X.transpose());
 				SimpleMatrix S = Z.mult(relu(Scouche));
 				
 				// Correct W
@@ -127,9 +127,9 @@ public class PMC {
 					for(int j = 0; j < W.numCols(); j++) {
 						double s = 0;
 						for(int m = 0; m < Z.numRows(); m++) {
-							s+= -2*(T.get(m) - S.get(m))*Z.get(m, j);
+							s+= -2*(T.get(m) - S.get(m))*Z.get(m, i);
 						}
-						double dw = l*drelu(Scouche.get(j))*s;
+						double dw = l*drelu(Scouche.get(i))*s;
 						W.set(i, j, W.get(i,j) * dw);
 					}
 				}
@@ -194,7 +194,7 @@ public class PMC {
 	}
 	
 
-	private SimpleMatrix FeaturesToNeuron(List<Feature> Flist) {
+	static public SimpleMatrix FeaturesToNeuron(List<Feature> Flist) {
 		SimpleMatrix output = new SimpleMatrix(1, lenmat * 4);
 		String cat = Flist.get(0).getType();
 		int fInd = 0;
@@ -220,7 +220,7 @@ public class PMC {
 
 	}
 	
-	private SimpleMatrix getExpectedResultsMatrix(Sample echantillon) {
+	static public SimpleMatrix getExpectedResultsMatrix(Sample echantillon) {
 		String root = "src/main/resources/pdf";
 
 		List<String> directoryName = ResourcesLoader.getDirectoriesName(root);

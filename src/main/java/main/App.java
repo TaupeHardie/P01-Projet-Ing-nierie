@@ -15,8 +15,8 @@ public class App {
 		DataManager dm = new DataManager();
 		dm.kfoldCrossValidation(10);
 		
-		PMC pmc = new PMC(5, 5, 5);
+		PMC pmc = new PMC(10, 10);
 		
-		pmc.learn();
+		pmc.learnOnly();
 	}
 }
