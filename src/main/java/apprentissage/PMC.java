@@ -19,7 +19,7 @@ import resources.ResourcesLoader;
  *
  */
 public class PMC {
-	private SimpleMatrix T, W, Z;
+	private SimpleMatrix T, X, W, Z;
 	private DataManager data;
 	private int nombreNeuroneEntree, nombreNeuronesCC, nombreNeuroneSortie;
 	private final int nbStepMax = 1000;
