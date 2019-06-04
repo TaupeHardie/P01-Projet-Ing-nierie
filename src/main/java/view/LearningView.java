@@ -35,6 +35,10 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JRadioButton;
 
+/**
+ * Gui for QWEEBY, It process pdf to train the algorithm 
+ * @author axel
+ */
 public class LearningView extends JFrame {
 
 	private JPanel contentPane;
@@ -49,7 +53,7 @@ public class LearningView extends JFrame {
 	private SimpleMatrix matrix = new SimpleMatrix() {
 		@Override
 		public String toString() {
-			// TODO Auto-generated method stub
+			//custom toString to print the header (name of the class) of the table
 			List<String> dirNames = ResourcesLoader.getDirectoriesName(txtSelectionezUnDossier.getText());
 			StringBuilder rtn = new StringBuilder();
 			
@@ -134,9 +138,8 @@ public class LearningView extends JFrame {
 		Box horizontalBox = Box.createHorizontalBox();
 		horizontalBox.setAlignmentY(0.5f);
 		verticalBox.add(horizontalBox);
-		
-		
-		
+
+		//file chooser allow to select files and directories, the getSelectedFiles return the path of the directory/file
 		txtSelectionezUnDossier = new JTextField();
 		txtSelectionezUnDossier.addMouseListener(new MouseAdapter() {
 			@Override
@@ -151,19 +154,21 @@ public class LearningView extends JFrame {
 				}
 			}
 		});
+		
 		txtSelectionezUnDossier.setForeground(Color.LIGHT_GRAY);
 		txtSelectionezUnDossier.setText(lblSelectDir);
 		horizontalBox.add(txtSelectionezUnDossier);
 		txtSelectionezUnDossier.setColumns(10);
 		
+		
 		JButton btnTraiterDoc = new JButton(lblBtnTraiter);
 		btnTraiterDoc.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+				//If the text hasn't changed fire an event to open the filechooser dialog
 				if(txtSelectionezUnDossier.getText().equalsIgnoreCase(lblSelectDir)) {
 					txtSelectionezUnDossier.dispatchEvent(new MouseEvent(txtSelectionezUnDossier, MouseEvent.MOUSE_CLICKED, 0, 0, 100, 100, 1, false));
 				}
-				
+				//If one of the radio button hasn't been check show a dialog and cancel the process
 				if(!rdbtnApprentissage.isSelected() && !rdbtnK_fold.isSelected()) {
 					JOptionPane.showMessageDialog(null, "Selectionez une option : Appretissage complet ou K-fold");
 					return;
@@ -261,12 +266,19 @@ public class LearningView extends JFrame {
 		btnExport.setEnabled(false);
 	}
 	
+	/**
+	 * increment the progress bar by one unit 
+	 */
 	public static void incrementProgressBar() {
 		if(progressBar.getValue() < progressBar.getMaximum()) {
 			progressBar.setValue(progressBar.getValue()+1);
 		}
 	}
 	
+	/**
+	 * get the progress bar, for thread utilities
+	 * @return the progressBar
+	 */
 	public static JProgressBar getProgressBar() {
 		return progressBar;
 	}

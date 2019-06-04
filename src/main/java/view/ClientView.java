@@ -40,9 +40,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 /**
- * GUI made with window builder
+ * GUI made with window builder for the clients.
+ * It process pdf and show the pattern and their score sorted from best (top) to worst (bottom)
  * @author axel
- *
  */
 public class ClientView extends JFrame {
 
@@ -123,8 +123,7 @@ public class ClientView extends JFrame {
 		horizontalBox.setAlignmentY(0.5f);
 		verticalBox.add(horizontalBox);
 		
-		
-		
+		//file chooser allow to select files and directories, the getSelectedFiles return the path of the directory/file
 		txtSelectionezUnDossier = new JTextField();
 		txtSelectionezUnDossier.addMouseListener(new MouseAdapter() {
 			@Override
@@ -139,21 +138,24 @@ public class ClientView extends JFrame {
 				}
 			}
 		});
+	
 		txtSelectionezUnDossier.setForeground(Color.LIGHT_GRAY);
 		txtSelectionezUnDossier.setText(lblSelectDir);
 		horizontalBox.add(txtSelectionezUnDossier);
 		txtSelectionezUnDossier.setColumns(10);
 		
+		
 		JButton btnTraiterDoc = new JButton(lblBtnTraiter);
 		btnTraiterDoc.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				//if the text hasn't changed fire an event to open the filechooser dialog
 				if(txtSelectionezUnDossier.getText().equalsIgnoreCase(lblSelectDir)) {
 					txtSelectionezUnDossier.dispatchEvent(new MouseEvent(txtSelectionezUnDossier, MouseEvent.MOUSE_CLICKED, 0, 0, 100, 100, 1, false));
 				}
 				lblTraitement.setVisible(true);
 				lblTraitement.setText(lblEnCours);
 				
-				//get all the file to be processed
+				//get all files to be processed
 				List<File> lst = ResourcesLoader.loadInput(txtSelectionezUnDossier.getText());
 				
 				progressBar.setMinimum(0);
@@ -163,29 +165,10 @@ public class ClientView extends JFrame {
 				
 				//fill the Jtable with result
 				lblTraitement.setText(lblTermine);
-				List<String> results = new ArrayList<String>();
-				results.add("best pattern");
-				results.add("good pattern");
-				results.add("correct pattern");
-				results.add("correct pattern");
-				results.add("correct pattern");
-				results.add("correct pattern");
-				results.add("correct pattern");
-				results.add("correct pattern");
-				results.add("correct pattern");
-				results.add("correct pattern");
-				results.add("correct pattern");
-				results.add("correct pattern");
-				results.add("correct pattern");
-				results.add("correct pattern");
-				results.add("correct pattern");
-				results.add("correct pattern");
-				results.add("correct pattern");
-				results.add("correct pattern");
-				results.add("poop pattern");
-				for(String s : results) {
-					dtm.addRow(new Object[]{s,1});
-				}
+//				List<String> results = new ArrayList<String>();
+//				for(String s : results) {
+//					dtm.addRow(new Object[]{s,1});
+//				}
 			}
 		});
 		horizontalBox.add(btnTraiterDoc);
@@ -232,12 +215,19 @@ public class ClientView extends JFrame {
 		scrollPane.setViewportView(table);
 	}
 	
+	/**
+	 * increment the progress bar by one unit 
+	 */
 	public static void incrementProgressBar() {
 		if(progressBar.getValue() < progressBar.getMaximum()) {
 			progressBar.setValue(progressBar.getValue()+1);
 		}
 	}
 	
+	/**
+	 * get the progress bar, for thread utilities
+	 * @return the progressBar
+	 */
 	public static JProgressBar getProgressBar() {
 		return progressBar;
 	}
