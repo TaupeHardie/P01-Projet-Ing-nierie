@@ -19,8 +19,9 @@ import resources.ResourcesLoader;
  *
  */
 public class PMC {
-	private SimpleMatrix T, X, W, Z;
+	private SimpleMatrix T, W, Z;
 	private DataManager data;
+	private ConfusionMatrix matriceConfusion;
 	private int nombreNeuroneEntree, nombreNeuronesCC, nombreNeuroneSortie;
 	private final int nbStepMax = 1000;
 	final static int lenmat = 11;
@@ -36,7 +37,8 @@ public class PMC {
 		Random rand = new Random();
 		data = new DataManager();
 		data.kfoldCrossValidation(k);
-
+		matriceConfusion = new ConfusionMatrix(data.numClasses());
+		
 		nombreNeuronesCC = neuronesCaches;
 		nombreNeuroneEntree = lenmat * 4;
 		nombreNeuroneSortie = data.numClasses();
@@ -185,8 +187,12 @@ public class PMC {
 
 			for (Sample s : data.getData().get(currentTest)) {
 				int res = compute(s.name);
+				matriceConfusion.increment(s.number, res);
 			}
 		}
+		matriceConfusion.computeStats();
+		System.out.println(matriceConfusion.getRappel());
+		System.out.println(matriceConfusion.getPrecision());
 	}
 
 	public void learnOnly() {

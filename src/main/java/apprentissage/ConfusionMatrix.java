@@ -6,6 +6,7 @@ public class ConfusionMatrix {
 	
 	SimpleMatrix confMatrix;
 	int classNb;
+	double rappel, precision;
 	
 	public ConfusionMatrix(int numbOfClasses) {
 		this.confMatrix=new SimpleMatrix(numbOfClasses,numbOfClasses);
@@ -16,8 +17,8 @@ public class ConfusionMatrix {
 		confMatrix.set(expected, result, confMatrix.get(expected, result)+1);
 	}
 	
-	public double getRappel() {
-		double rappel=0;
+	public void computeStats() {
+		rappel = 0;
 		for (int i = 0; i<classNb;i++) {
 			double ligne=0;
 			for (int j=0;j<classNb;j++) {
@@ -25,11 +26,8 @@ public class ConfusionMatrix {
 			}
 			rappel+=confMatrix.get(i, i)/ligne;
 		}
-		return rappel/classNb;
-	}
-	
-	public double getPrecision() {
-		double precision=0;
+		rappel/=classNb;
+		
 		for (int i = 0; i<classNb;i++) {
 			double col=0;
 			for (int j=0;j<classNb;j++) {
@@ -37,7 +35,15 @@ public class ConfusionMatrix {
 			}
 			precision+=confMatrix.get(i, i)/col;
 		}
-		return precision/classNb;
+		precision/=classNb;
+	}
+	
+	public double getRappel() {
+		return rappel;
+	}
+	
+	public double getPrecision() {
+		return precision;
 	}
 	
 	public void reset() {
