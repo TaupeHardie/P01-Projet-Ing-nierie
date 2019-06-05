@@ -126,23 +126,17 @@ public class PMC {
 			List<Sample> d = dataset;
 			Collections.shuffle(d);
 			
-			long t2 = System.nanoTime();
-			
-			for (int k = 0; k < dataset.size(); k++) {
-
+			for (int k = 0; k < dataset.size(); k++) {//201 x 5ms -> 1sec
 				PDF currentPDF = ResourcesLoader.getPDFbyName((dataset.get(k).name));
 				
-				SimpleMatrix X = FeaturesToNeuron(currentPDF.findMatches());
+				SimpleMatrix X = FeaturesToNeuron(currentPDF.getFeatures());
 				X = X.divide(1000);
 				X.set(4*lenmat, -1);
-				SimpleMatrix T = getExpectedResultsMatrix(dataset.get(k), path);
-				
-				currentPDF.close();
-
+				SimpleMatrix T = getExpectedResultsMatrix(dataset.get(k), path);	
+	
 				SimpleMatrix Scouche = W.mult(X);
 				SimpleMatrix S = Z.mult(relu(Scouche));
-
-
+				
 				// Correct W
 				for (int i = 0; i < W.numRows(); i++) {
 					for (int j = 0; j < W.numCols(); j++) {
@@ -162,8 +156,6 @@ public class PMC {
 						Z.set(i, j, Z.get(i, j) - dz);
 					}
 				}
-				
-				
 
 				error += abs(T.minus(S)).elementSum()/dataset.size();				
 				
@@ -186,14 +178,13 @@ public class PMC {
 			}
 			nstep++;			
 			System.out.println("Step : " + nstep + "/" + nbStepMax + " (" + error +")");
-			System.out.println("load step time : "+(System.nanoTime() - t2)/1000000);
 		}
 	}
 
 	public int compute(String filename) {
 		PDF pdf = new PDF(filename);
 
-		SimpleMatrix X = FeaturesToNeuron(pdf.findMatches());
+		SimpleMatrix X = FeaturesToNeuron(pdf.getFeatures());
 		SimpleMatrix S = Z.mult(relu(W.mult(X)));
 
 		int indMaxi = 0;
@@ -210,6 +201,12 @@ public class PMC {
 	}
 
 	public void learnAndTest(String path) {
+		
+		long t = System.nanoTime();
+		List<File> files = ResourcesLoader.loadDirectory(path);
+		ResourcesLoader.loadAllPdf(files);
+		System.out.println("load all pdf time : "+(System.nanoTime() - t)/1000000000);
+		
 		matriceConfusion.reset();
 		for (int currentTest = 0; currentTest < data.getK(); currentTest++) {
 			long t1 = System.nanoTime();
@@ -218,7 +215,6 @@ public class PMC {
 			ArrayList<Sample> learningData = new ArrayList<Sample>();
 
 			for (int i = 0; i < data.getK(); i++) {
-				
 				if (i != currentTest)
 					learningData.addAll(data.getData().get(i));
 			}
@@ -230,15 +226,22 @@ public class PMC {
 				int res = compute(s.name);
 				matriceConfusion.increment(s.number, res);
 			}
+			long t2 = System.nanoTime();
 			matriceConfusion.computeStats();
+			System.out.println((currentTest+1)+"e confus time : "+(System.nanoTime() - t2)/1000000000 +"s");
 			System.out.println("Rappel :" + matriceConfusion.getRappel());
 			System.out.println("Precision : " + matriceConfusion.getPrecision());
-			System.out.println("big step time : "+(System.nanoTime() - t1)/1000000000);
+			System.out.println((currentTest+1)+"e kfold time : "+(System.nanoTime() - t1)/1000000000 +"s");
 		}
 		
 	}
 
-	public void learnOnly(String path) {
+	public void learnOnly(String path) {	
+		long t = System.nanoTime();
+		List<File> files = ResourcesLoader.loadDirectory(path);
+		ResourcesLoader.loadAllPdf(files);
+		System.out.println("load all pdf time : "+(System.nanoTime() - t)/1000000000);
+		
 		ArrayList<Sample> alldata = new ArrayList<Sample>();
 		for (List<Sample> l : data.getData()) {
 			alldata.addAll(l);

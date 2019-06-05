@@ -24,15 +24,11 @@ public class App {
 		DataManager dm = new DataManager();
 		
 		dm.kfoldCrossValidation(10, MainPath+"pdf");
-		
-		long t1 = System.nanoTime();
-		List<File> files = ResourcesLoader.loadDirectory(MainPath+"pdf");
-		ResourcesLoader.loadAllPdf(files);
-		System.out.println("kfold time : "+(System.nanoTime() - t1)/1000000000);
-		
-		
+
 		PMC pmc = new PMC(10, 50, MainPath+"pdf");
 		
 		pmc.learnAndTest(MainPath+"pdf");
+		
+		ResourcesLoader.closeAllPdf();
 	}
 }
