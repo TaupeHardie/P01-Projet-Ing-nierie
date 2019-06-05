@@ -62,6 +62,7 @@ public class MainPane extends JPanel {
 				fileChooser.setAcceptAllFileFilterUsed(false);
 				if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) { 
 					txtSelectionezUnDossier.setText(fileChooser.getSelectedFile().toString());
+					txtSelectionezUnDossier.setForeground(Color.black);
 				}
 			}
 		});

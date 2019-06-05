@@ -1,5 +1,6 @@
 package view;
 
+import javax.swing.JLabel;
 import javax.swing.JProgressBar;
 
 /**
@@ -10,11 +11,13 @@ import javax.swing.JProgressBar;
  */
 public class ThreadUpdateProgressBar implements Runnable {
 	private JProgressBar progressBar;
+	private JLabel label;
 	
 	
-	public ThreadUpdateProgressBar(JProgressBar progressBar) {
+	public ThreadUpdateProgressBar(JProgressBar progressBar, JLabel label) {
 		super();
 		this.progressBar = progressBar;
+		this.label = label;
 	}
 
 	@Override
@@ -23,7 +26,7 @@ public class ThreadUpdateProgressBar implements Runnable {
 			progressBar.setValue(progressBar.getValue()+1);
 		}else {
 			progressBar.setValue(progressBar.getValue()+1);
-			MainPane.getLabel().setText("Terminé");
+			label.setText("Terminé");
 		}
 		progressBar.getParent().update(progressBar.getParent().getGraphics());
 	}

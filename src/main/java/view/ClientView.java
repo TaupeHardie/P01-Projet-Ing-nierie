@@ -1,71 +1,56 @@
 package view;
 
 import java.awt.BorderLayout;
-import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.JMenuBar;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
-import javax.swing.Box;
-import javax.swing.JTextField;
-import javax.swing.JButton;
-import javax.swing.JFileChooser;
-
 import java.awt.Color;
-import javax.swing.JProgressBar;
 import java.awt.Component;
 import java.awt.Dimension;
-
-import javax.swing.JLabel;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
-
-import resources.ResourcesLoader;
-
-import javax.swing.JScrollPane;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
+import java.awt.EventQueue;
+import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
+
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JProgressBar;
+import javax.swing.JTabbedPane;
+import javax.swing.JTextField;
+import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
+
+import resources.ResourcesLoader;
 
 /**
- * GUI made with window builder for the clients.
- * It process pdf and show the pattern and their score sorted from best (top) to worst (bottom)
+ * Class that group other class to display the client view.
+ * It allow picking files, start the processing, showing the progress, adding the results in separate tabs
  * @author axel
  */
 public class ClientView extends JFrame {
 
-	private JPanel contentPane;
-	private JTextField txtSelectionezUnDossier;
-	private DefaultTableModel dtm;
-	private JTable table;
-	private JFileChooser fileChooser;
-	private JLabel lblTraitement;
-	private static JProgressBar progressBar;
+	private static JTabbedPane tabbedPane;
+	private static MainPane mainPane;
 	
-	private final String lblEnCours = "Veuillez patienter, traitement en cours ...";
-	private final String lblTermine = "Terminé";
-	private final String lblSelectDir = "selectionnez un dossier ...";
-	private final String lblBtnTraiter = "Traiter les documments";
 	private final String lblMenuFichier = "Fichier";
 	private final String lblMenuOption = "Option";
 	private final String lblMenuAide = "Aide";
 	private final String lblMFichierSauvegarder = "sauvegarder";
 	private final String lblMFichierFermer = "fermer";
 	private final String lblMAideAPropos = "A Propos";
-	private final String lblFileChooser = "selectionnez un dossier";
-	
 
 	/**
 	 * Launch the application.
@@ -91,6 +76,7 @@ public class ClientView extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 660, 458);
 		
+		//add the menu
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
 		
@@ -111,125 +97,61 @@ public class ClientView extends JFrame {
 		
 		JMenuItem mntmAPropos = new JMenuItem(lblMAideAPropos);
 		mnAide.add(mntmAPropos);
-		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		contentPane.setLayout(new BorderLayout(0, 0));
-		setContentPane(contentPane);
 		
-		Box verticalBox = Box.createVerticalBox();
-		contentPane.add(verticalBox, BorderLayout.NORTH);
+		//add the tabbedPane to have multiple pane
+		tabbedPane = new JTabbedPane();
+		setContentPane(tabbedPane);
 		
-		Box horizontalBox = Box.createHorizontalBox();
-		horizontalBox.setAlignmentY(0.5f);
-		verticalBox.add(horizontalBox);
+		//add a non-closable pane that start the process
+		mainPane = new MainPane();
+		tabbedPane.addTab("Accueil", mainPane);
+	}
+	
+	/**
+	 * add a new closable tab to the main window
+	 * It display a table with all pattern and their score 
+	 * @param name the name of the pane
+	 * @param results the data in the table
+	 */
+	public static void addPane(String name, List<String> results) {
 		
-		//file chooser allow to select files and directories, the getSelectedFiles return the path of the directory/file
-		txtSelectionezUnDossier = new JTextField();
-		txtSelectionezUnDossier.addMouseListener(new MouseAdapter() {
+		//add the pane to the tabbedPane
+		tabbedPane.addTab(name, new ResultPane(results));
+		
+		//get the index of the inserted pane
+		int index = tabbedPane.indexOfTab(name);
+		
+		//create a panel that contain a label and a click-able label 
+		JPanel pnlTab = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+		pnlTab.setOpaque(false);
+		JLabel lblTitle = new JLabel(name);
+		lblTitle.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
+		pnlTab.add(lblTitle);
+		
+		JLabel lblClose = new JLabel("x");
+		//add mouse listener to change color of the label on mouse over, close the pane on click
+		lblClose.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent e) {
-				fileChooser = new JFileChooser();
-				fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-				fileChooser.setCurrentDirectory(new java.io.File("."));
-				fileChooser.setDialogTitle(lblFileChooser);
-				fileChooser.setAcceptAllFileFilterUsed(false);
-				if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) { 
-					txtSelectionezUnDossier.setText(fileChooser.getSelectedFile().toString());
-				}
+			public void mouseClicked(MouseEvent  e) {
+		        if (index != -1) {
+		        	tabbedPane.remove(index);
+		        }
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				super.mouseEntered(e);
+				lblClose.setForeground(Color.red);
+			}
+			
+			@Override
+			public void mouseExited(MouseEvent e) {
+				super.mouseExited(e);
+				lblClose.setForeground(Color.black);
 			}
 		});
-	
-		txtSelectionezUnDossier.setForeground(Color.LIGHT_GRAY);
-		txtSelectionezUnDossier.setText(lblSelectDir);
-		horizontalBox.add(txtSelectionezUnDossier);
-		txtSelectionezUnDossier.setColumns(10);
+		pnlTab.add(lblClose);
 		
-		
-		JButton btnTraiterDoc = new JButton(lblBtnTraiter);
-		btnTraiterDoc.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				//if the text hasn't changed fire an event to open the filechooser dialog
-				if(txtSelectionezUnDossier.getText().equalsIgnoreCase(lblSelectDir)) {
-					txtSelectionezUnDossier.dispatchEvent(new MouseEvent(txtSelectionezUnDossier, MouseEvent.MOUSE_CLICKED, 0, 0, 100, 100, 1, false));
-				}
-				lblTraitement.setVisible(true);
-				lblTraitement.setText(lblEnCours);
-				
-				//get all files to be processed
-				List<File> lst = ResourcesLoader.loadInput(txtSelectionezUnDossier.getText());
-				
-				progressBar.setMinimum(0);
-				progressBar.setMaximum(lst.size());
-				
-				//launch the logic in a new thread here
-				
-				//fill the Jtable with result
-				lblTraitement.setText(lblTermine);
-//				List<String> results = new ArrayList<String>();
-//				for(String s : results) {
-//					dtm.addRow(new Object[]{s,1});
-//				}
-			}
-		});
-		horizontalBox.add(btnTraiterDoc);
-		
-		Component verticalStrut = Box.createVerticalStrut(10);
-		verticalBox.add(verticalStrut);
-		
-		progressBar = new JProgressBar();
-		progressBar.setStringPainted(true);
-		verticalBox.add(progressBar);
-		
-		Component verticalStrut_1 = Box.createVerticalStrut(10);
-		verticalBox.add(verticalStrut_1);
-		
-		lblTraitement = new JLabel(lblEnCours);
-		lblTraitement.setAlignmentX(Component.CENTER_ALIGNMENT);
-		verticalBox.add(lblTraitement);
-		lblTraitement.setVisible(false);
-		
-		Component verticalStrut_2 = Box.createVerticalStrut(30);
-		verticalBox.add(verticalStrut_2);
-		
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setViewportBorder(null);
-		scrollPane.setPreferredSize(new Dimension(verticalBox.getWidth()-10, 250));
-		verticalBox.add(scrollPane);
-		
-		table = new JTable();
-		dtm = new DefaultTableModel(
-				new Object[][] {
-				},
-				new String[] {
-					"Pattern", "Score"
-				}
-			) {
-				Class[] columnTypes = new Class[] {
-					String.class, Integer.class
-				};
-				public Class getColumnClass(int columnIndex) {
-					return columnTypes[columnIndex];
-				}
-			};
-		table.setModel(dtm);
-		scrollPane.setViewportView(table);
+		//add the panel onto the pane header
+		tabbedPane.setTabComponentAt(index, pnlTab);
 	}
-	
-	/**
-	 * increment the progress bar by one unit 
-	 */
-	public static void incrementProgressBar() {
-		if(progressBar.getValue() < progressBar.getMaximum()) {
-			progressBar.setValue(progressBar.getValue()+1);
-		}
-	}
-	
-	/**
-	 * get the progress bar, for thread utilities
-	 * @return the progressBar
-	 */
-	public static JProgressBar getProgressBar() {
-		return progressBar;
-	}
-
 }
