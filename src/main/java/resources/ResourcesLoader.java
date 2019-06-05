@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import view.MainWindow;
+import view.ClientView;
 import view.ThreadUpdateProgressBar;
 
 /**
