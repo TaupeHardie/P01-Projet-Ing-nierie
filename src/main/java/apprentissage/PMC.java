@@ -240,7 +240,7 @@ public class PMC {
 		for (int n = 0; n < 4; n++) {
 			for (int j = 1 + lenmat * n; j < lenmat * (n + 1); j++) {
 				if (fInd < Flist.size()) {
-					if (cat != Flist.get(fInd).getType()) {
+					if (!cat.equalsIgnoreCase(Flist.get(fInd).getType())) {
 						output.set(j, -1);
 					} else {
 						output.set(n * lenmat, output.get(n * lenmat) + 1);
@@ -251,7 +251,7 @@ public class PMC {
 			}
 			if (fInd < Flist.size()) {
 				if (n < 3) {
-					while ((cat == Flist.get(fInd).getType()) & (fInd < Flist.size() - 1)) {
+					while ((cat.equalsIgnoreCase(Flist.get(fInd).getType())) & (fInd < Flist.size() - 1)) {
 						fInd++;
 					}
 				}
