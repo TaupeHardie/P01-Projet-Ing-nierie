@@ -17,6 +17,7 @@ import javax.swing.border.EmptyBorder;
 
 import org.ejml.simple.SimpleMatrix;
 
+import apprentissage.ConfusionMatrix;
 import resources.ResourcesLoader;
 import writer.Writer;
 
@@ -50,26 +51,7 @@ public class LearningView extends JFrame {
 	private JButton btnExport;
 	private JRadioButton rdbtnApprentissage;
 	private JRadioButton rdbtnK_fold;
-	private SimpleMatrix matrix = new SimpleMatrix() {
-		@Override
-		public String toString() {
-			//custom toString to print the header (name of the class) of the table
-			List<String> dirNames = ResourcesLoader.getDirectoriesName(txtSelectionezUnDossier.getText());
-			StringBuilder rtn = new StringBuilder();
-			
-			for(String dirName : dirNames) {
-				rtn.append(";"+dirName);
-			}
-			rtn.append("\n");
-			for(int l =0; l< this.numRows();l++) {
-				rtn.append(dirNames.get(l));
-				for(int c =0; c< this.numCols();c++) {
-					rtn.append(";"+this.get(l, c));
-				}
-			}
-			return rtn.toString();
-		}
-	};
+	private ConfusionMatrix matrix;
 	
 	private final String lblEnCours = "Veuillez patienter, traitement en cours ...";
 	private final String lblTermine = "Terminé";

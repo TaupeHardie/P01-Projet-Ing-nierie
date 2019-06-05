@@ -1,15 +1,21 @@
 package apprentissage;
 
+import java.util.List;
+
 import org.ejml.simple.SimpleMatrix;
+
+import resources.ResourcesLoader;
 
 public class ConfusionMatrix {
 	
 	SimpleMatrix confMatrix;
+	String path;
 	int classNb;
 	double rappel, precision;
 	
-	public ConfusionMatrix(int numbOfClasses) {
+	public ConfusionMatrix(int numbOfClasses, String path) {
 		this.confMatrix=new SimpleMatrix(numbOfClasses,numbOfClasses);
+		this.path = path;
 		classNb=numbOfClasses;
 	}
 	
@@ -50,6 +56,27 @@ public class ConfusionMatrix {
 	
 	public void reset() {
 		confMatrix=new SimpleMatrix(classNb,classNb);
+	}
+	
+	@Override
+	public String toString() {
+		//custom toString to print the header (name of the class) of the table
+		List<String> dirNames = ResourcesLoader.getDirectoriesName(path);
+		dirNames.remove("_IGNORE");
+		StringBuilder rtn = new StringBuilder();
+		
+		for(String dirName : dirNames) {
+			rtn.append(";"+dirName);
+		}
+		rtn.append("\n");
+		for(int l =0; l< confMatrix.numRows();l++) {
+			rtn.append(dirNames.get(l));
+			for(int c =0; c< confMatrix.numCols();c++) {
+				rtn.append(";"+confMatrix.get(l, c));
+			}
+			rtn.append("\n");
+		}
+		return rtn.toString();
 	}
 	
 }

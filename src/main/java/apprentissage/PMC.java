@@ -15,6 +15,7 @@ import main.PDF;
 import com.sun.glass.ui.Size;
 
 import resources.ResourcesLoader;
+import writer.Writer;
 
 /**
  * Classe representant un perceptron multicouche
@@ -31,15 +32,15 @@ public class PMC {
 	/**
 	 * Contructeur par defaut. Cree les differentes matrice et les initialise
 	 * 
-	 * @param nbEntree Nombre de neuronnes d'entree
-	 * @param nbCC     Nombre de neuronne dans la couche cachee
-	 * @param nbSortie Nombre de neurone dans la couche de sortie
+	 * @param k Paramètre pour la cross validation - 1/k correspond à la proportion de donnée utilisé pour le test
+	 * @param neuronesCaches Nombre de neurones dans la couche cachee
+	 * @param Path Chemin des dossier à récupérer
 	 */
 	public PMC(int k, int neuronesCaches, String Path) {
 		Random rand = new Random();
 		data = new DataManager();
 		data.kfoldCrossValidation(k,Path);
-		matriceConfusion = new ConfusionMatrix(data.numClasses());
+		matriceConfusion = new ConfusionMatrix(data.numClasses(), Path);
 		
 		nombreNeuronesCC = neuronesCaches;
 		nombreNeuroneEntree = lenmat * 4+1;
@@ -231,9 +232,12 @@ public class PMC {
 				matriceConfusion.increment(s.number, res);
 			}
 			matriceConfusion.computeStats();
+			String Path = "confusionMatrix.CSV";
+			Writer.writeTo(matriceConfusion.toString(), Path);
 			System.out.println("Rappel :" + matriceConfusion.getRappel());
 			System.out.println("Precision : " + matriceConfusion.getPrecision());
 			System.out.println("big step time : "+(System.nanoTime() - t1)/1000000000);
+			
 		}
 		
 	}
