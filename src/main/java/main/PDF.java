@@ -21,6 +21,7 @@ public class PDF {
 	 */
 	private PDDocument doc;
 	private String content = "";
+	private String name ="";
 	
 	/**
 	 * liste des feature detectees dans le pdf
@@ -35,21 +36,31 @@ public class PDF {
 	}
 
 	/**
-	 * Constructeur. Charge le fichier PDF a  partir d'un chemin
-	 * @param fileName Chaine de caractere vers le chemin du fichier a  ouvrir
+	 * Constructeur. Charge le fichier PDF aï¿½ partir d'un chemin
+	 * @param fileName Chaine de caractere vers le chemin du fichier aï¿½ ouvrir
 	 */
 	public PDF(String fileName) {
 		super();
 		loadPDFfromString(fileName);
+		this.name = fileName;
 	}
 	
 	/**
-	 * Constructeur. Charge le fichier PDF a  partir d'un objet
+	 * getter pour avoir le nom du pdf
+	 * @return
+	 */
+	public String getName() {
+		return name;
+	}
+	
+	/**
+	 * Constructeur. Charge le fichier PDF aï¿½ partir d'un objet
 	 * @param file Objet correspondant au PDF a charger
 	 */
 	public PDF(File file) {
 		super();
 		loadPDFfromFile(file);
+		this.name = file.getPath();
 	}
 	
 	/**
@@ -95,6 +106,17 @@ public class PDF {
 				String text = stripper.getText(doc);
 				content += text.trim();
 			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Ferme le doucment
+	 */
+	public void close() {
+		try {
+			doc.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
