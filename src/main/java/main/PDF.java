@@ -21,6 +21,7 @@ public class PDF {
 	 */
 	private PDDocument doc;
 	private String content = "";
+	private String name ="";
 	
 	/**
 	 * liste des feature detectees dans le pdf
@@ -41,6 +42,15 @@ public class PDF {
 	public PDF(String fileName) {
 		super();
 		loadPDFfromString(fileName);
+		this.name = fileName;
+	}
+	
+	/**
+	 * getter pour avoir le nom du pdf
+	 * @return
+	 */
+	public String getName() {
+		return name;
 	}
 	
 	/**
@@ -50,6 +60,7 @@ public class PDF {
 	public PDF(File file) {
 		super();
 		loadPDFfromFile(file);
+		this.name = file.getPath();
 	}
 	
 	/**

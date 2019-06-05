@@ -15,11 +15,15 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import main.PDF;
+
 /**
  * Classe statique regrouppant toutes les fonctions concernant la lecture de fichiers et de dossiers
  *
  */
 public class ResourcesLoader {
+	private static List<PDF> pdfs = new ArrayList<PDF>();
+	
 	/**
 	 * load a file from resources
 	 * @param fileName the name of the resource under src/main/resources/
@@ -69,6 +73,27 @@ public class ResourcesLoader {
     		}
     	}
     	return names;
+    }
+    
+    public static void loadAllPdf(List<File> files) {
+    	for(File file : files) {
+    		pdfs.add(new PDF(file));
+    	}
+    }
+    
+    public static PDF getPDFbyName(String name) {
+    	List<PDF> pdflst = pdfs.stream().filter(p->p.getName().equalsIgnoreCase(name)).collect(Collectors.toList());
+    	if(!pdflst.isEmpty()) {
+    		return pdflst.get(0);
+    	}
+    	return null;
+    			
+    }
+    
+    public static void closeAllPdf() {
+    	for(PDF p : pdfs) {
+    		p.close();
+    	}
     }
     
     /**

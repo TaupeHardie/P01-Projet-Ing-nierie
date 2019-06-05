@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 import org.ejml.simple.SimpleMatrix;
 
@@ -124,10 +125,13 @@ public class PMC {
 			error = 0;
 			List<Sample> d = dataset;
 			Collections.shuffle(d);
+			
+			long t2 = System.nanoTime();
+			
 			for (int k = 0; k < dataset.size(); k++) {
 
-				PDF currentPDF = new PDF(dataset.get(k).name);
-
+				PDF currentPDF = ResourcesLoader.getPDFbyName((dataset.get(k).name));
+				
 				SimpleMatrix X = FeaturesToNeuron(currentPDF.findMatches());
 				X = X.divide(1000);
 				X.set(4*lenmat, -1);
@@ -182,6 +186,7 @@ public class PMC {
 			}
 			nstep++;			
 			System.out.println("Step : " + nstep + "/" + nbStepMax + " (" + error +")");
+			System.out.println("load step time : "+(System.nanoTime() - t2)/1000000);
 		}
 	}
 
@@ -207,7 +212,7 @@ public class PMC {
 	public void learnAndTest(String path) {
 		matriceConfusion.reset();
 		for (int currentTest = 0; currentTest < data.getK(); currentTest++) {
-			
+			long t1 = System.nanoTime();
 			System.out.println("------------------------");
 			System.out.println("Kfold : " + (currentTest+1) + "/" + data.getK());
 			ArrayList<Sample> learningData = new ArrayList<Sample>();
@@ -228,6 +233,7 @@ public class PMC {
 			matriceConfusion.computeStats();
 			System.out.println("Rappel :" + matriceConfusion.getRappel());
 			System.out.println("Precision : " + matriceConfusion.getPrecision());
+			System.out.println("big step time : "+(System.nanoTime() - t1)/1000000000);
 		}
 		
 	}
