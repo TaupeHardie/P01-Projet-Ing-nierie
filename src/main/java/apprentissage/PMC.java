@@ -2,6 +2,7 @@ package apprentissage;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -19,11 +20,11 @@ import resources.ResourcesLoader;
  *
  */
 public class PMC {
-	private SimpleMatrix T, W, Z;
+	private SimpleMatrix W, Z;
 	private DataManager data;
 	private ConfusionMatrix matriceConfusion;
 	private int nombreNeuroneEntree, nombreNeuronesCC, nombreNeuroneSortie;
-	private final int nbStepMax = 1000;
+	private final int nbStepMax = 100;
 	final static int lenmat = 11;
 
 	/**
@@ -40,7 +41,7 @@ public class PMC {
 		matriceConfusion = new ConfusionMatrix(data.numClasses());
 		
 		nombreNeuronesCC = neuronesCaches;
-		nombreNeuroneEntree = lenmat * 4;
+		nombreNeuroneEntree = lenmat * 4+1;
 		nombreNeuroneSortie = data.numClasses();
 
 		W = SimpleMatrix.random(nombreNeuronesCC, nombreNeuroneEntree, -1, 1, rand);
@@ -48,17 +49,20 @@ public class PMC {
 	}
 
 	/**
-	 * Calcule le ReLU d'un double
+	 * Calcule le leaky ReLU d'un double
 	 * 
 	 * @param x
 	 * @return ReLU de x
 	 */
 	private double relu(double x) {
-		return Math.max(0, x);
+		if(x < 0)
+			return 0.01*x;
+		else
+			return x;
 	}
 
 	/**
-	 * Calcule le ReLU pour chaque élément de la matrice
+	 * Calcule le leaky ReLU pour chaque élément de la matrice
 	 * 
 	 * @param X matrice d'entrée
 	 * @return matrice de la taille de X
@@ -109,25 +113,31 @@ public class PMC {
 	private void learn(List<Sample> dataset) {
 		Random rand = new Random();
 
-		double l = 0.01;
+		double l = 0.0025;
 		int nstep = 0;
-		double epsilon = 1e-5, error = 1;
+		double epsilon = 1e-3, error = 1;
 
-		W = SimpleMatrix.random(nombreNeuronesCC, nombreNeuroneEntree, -1, 1, rand);
-		Z = SimpleMatrix.random(nombreNeuroneSortie, nombreNeuronesCC, -1, 1, rand);
+		W = SimpleMatrix.random(nombreNeuronesCC, nombreNeuroneEntree, -0.5, 0.5, rand);
+		Z = SimpleMatrix.random(nombreNeuroneSortie, nombreNeuronesCC, -0.5, 0.5, rand);
 
 		while (nstep < nbStepMax && error > epsilon) {
 			error = 0;
+			List<Sample> d = dataset;
+			Collections.shuffle(d);
 			for (int k = 0; k < dataset.size(); k++) {
 
 				PDF currentPDF = new PDF(dataset.get(k).name);
-				currentPDF.convertToText();
 
 				SimpleMatrix X = FeaturesToNeuron(currentPDF.findMatches());
-				T = getExpectedResultsMatrix(dataset.get(k));
+				X = X.divide(1000);
+				X.set(4*lenmat, -1);
+				SimpleMatrix T = getExpectedResultsMatrix(dataset.get(k));
+				
+				currentPDF.close();
 
-				SimpleMatrix Scouche = W.mult(X.transpose());
+				SimpleMatrix Scouche = W.mult(X);
 				SimpleMatrix S = Z.mult(relu(Scouche));
+
 
 				// Correct W
 				for (int i = 0; i < W.numRows(); i++) {
@@ -136,28 +146,39 @@ public class PMC {
 						for (int m = 0; m < Z.numRows(); m++) {
 							s += -2 * (T.get(m) - S.get(m)) * Z.get(m, i);
 						}
-						double dw = l * drelu(Scouche.get(i)) * s;
-						W.set(i, j, W.get(i, j) * dw);
+						double dw = l * drelu(Scouche.get(i)) * s * X.get(j);
+						W.set(i, j, W.get(i, j) - dw);
 					}
 				}
-
+				
 				// Correct Z
 				for (int i = 0; i < Z.numRows(); i++) {
 					for (int j = 0; j < Z.numCols(); j++) {
 						double dz = -2 * l * (T.get(i) - S.get(i)) * relu(Scouche.get(j));
-						Z.set(i, j, Z.get(i, j) * dz);
+						Z.set(i, j, Z.get(i, j) - dz);
 					}
 				}
+				
+				
 
-				error += abs(T.minus(S)).elementSum();
+				error += abs(T.minus(S)).elementSum()/dataset.size();
+				
+				if(k == 0 && nstep == nbStepMax - 1) {
+					for(int i = 0; i < T.numRows(); i++) {
+						System.out.println(T.get(i) + " " + S.get(i));
+					}						
+				}
 			}
 			nstep++;
+			if(Double.isNaN(error))
+				error = Double.MAX_VALUE;
+			
+			System.out.println("Step : " + nstep + "/" + nbStepMax + " (" + error +")");
 		}
 	}
 
 	public int compute(String filename) {
 		PDF pdf = new PDF(filename);
-		pdf.convertToText();
 
 		SimpleMatrix X = FeaturesToNeuron(pdf.findMatches());
 		SimpleMatrix S = Z.mult(relu(W.mult(X)));
@@ -165,34 +186,42 @@ public class PMC {
 		int indMaxi = 0;
 		double maxi = S.get(0, 0);
 		for (int i = 1; i < S.numRows(); i++) {
-			if (S.get(i, 0) > maxi) {
-				maxi = S.get(i, 0);
+			if (S.get(i) > maxi) {
+				maxi = S.get(i);
 				indMaxi = i;
 			}
 		}
-
+		
+		pdf.close();
 		return indMaxi;
 	}
 
 	public void learnAndTest() {
+		matriceConfusion.reset();
 		for (int currentTest = 0; currentTest < data.getK(); currentTest++) {
+			
+			System.out.println("------------------------");
+			System.out.println("Kfold : " + (currentTest+1) + "/" + data.getK());
 			ArrayList<Sample> learningData = new ArrayList<Sample>();
 
 			for (int i = 0; i < data.getK(); i++) {
+				
 				if (i != currentTest)
 					learningData.addAll(data.getData().get(i));
 			}
 
+			System.out.println("Size : " + learningData.size());
 			learn(learningData);
 
 			for (Sample s : data.getData().get(currentTest)) {
 				int res = compute(s.name);
 				matriceConfusion.increment(s.number, res);
+				matriceConfusion.computeStats();
+				System.out.println("Rappel :" + matriceConfusion.getRappel());
+				System.out.println("Precision : " + matriceConfusion.getPrecision());
 			}
 		}
-		matriceConfusion.computeStats();
-		System.out.println(matriceConfusion.getRappel());
-		System.out.println(matriceConfusion.getPrecision());
+		
 	}
 
 	public void learnOnly() {
@@ -203,23 +232,19 @@ public class PMC {
 
 		learn(alldata);
 	}
-	/**
-	 * Transforme une liste de feature en une matrice qui sera utilisable pour le reseau de neurones
-	 * @param Flist
-	 * @return SimpleMatrix output
-	 */
+
 	static public SimpleMatrix FeaturesToNeuron(List<Feature> Flist) {
-		SimpleMatrix output = new SimpleMatrix(1, lenmat * 4);
+		SimpleMatrix output = new SimpleMatrix(lenmat * 4 + 1, 1);
 		String cat = Flist.get(0).getType();
 		int fInd = 0;
 		for (int n = 0; n < 4; n++) {
 			for (int j = 1 + lenmat * n; j < lenmat * (n + 1); j++) {
 				if (fInd < Flist.size()) {
 					if (cat != Flist.get(fInd).getType()) {
-						output.set(0, j, -1);
+						output.set(j, -1);
 					} else {
-						output.set(0, n * lenmat, output.get(0, n * lenmat) + 1);
-						output.set(0, j, Flist.get(fInd).getPos());
+						output.set(n * lenmat, output.get(n * lenmat) + 1);
+						output.set(j, Flist.get(fInd).getPos());
 						fInd++;
 					}
 				}
@@ -235,16 +260,11 @@ public class PMC {
 				}
 			}
 		}
+		
+		output.set(lenmat * 4, -1);
 		return output;
 
 	}
-	
-	/**
-	 * calcul et renvoie une matrice de taille (Nb de classe * 1) correspondant a la matrice des 
-	 * resultats attendus pour un echantillon
-	 * @param echantillon
-	 * @return SimpleMatrix expectedResult
-	 */
 
 	static public SimpleMatrix getExpectedResultsMatrix(Sample echantillon) {
 		String root = "src/main/resources/pdf";

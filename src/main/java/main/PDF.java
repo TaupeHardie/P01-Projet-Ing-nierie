@@ -35,8 +35,8 @@ public class PDF {
 	}
 
 	/**
-	 * Constructeur. Charge le fichier PDF a  partir d'un chemin
-	 * @param fileName Chaine de caractere vers le chemin du fichier a  ouvrir
+	 * Constructeur. Charge le fichier PDF aï¿½ partir d'un chemin
+	 * @param fileName Chaine de caractere vers le chemin du fichier aï¿½ ouvrir
 	 */
 	public PDF(String fileName) {
 		super();
@@ -44,7 +44,7 @@ public class PDF {
 	}
 	
 	/**
-	 * Constructeur. Charge le fichier PDF a  partir d'un objet
+	 * Constructeur. Charge le fichier PDF aï¿½ partir d'un objet
 	 * @param file Objet correspondant au PDF a charger
 	 */
 	public PDF(File file) {
@@ -95,6 +95,17 @@ public class PDF {
 				String text = stripper.getText(doc);
 				content += text.trim();
 			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Ferme le doucment
+	 */
+	public void close() {
+		try {
+			doc.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
