@@ -39,9 +39,12 @@ public class TestPMCFunct {
 		Flist.add(new Feature(5, "FR201536F7", "FeatureCode"));
 		Flist.add(new Feature(5, "FR201536F7", "FeatureCode"));
 		Flist.add(new Feature(5, "FR201536F7", "FeatureCode"));
-		double[][] data= {{1,27,-1,-1,-1,-1,-1,-1,-1,-1,-1,3,0,0,0,-1,-1,-1,-1,-1,-1,-1,5,0,0,0,0,0,-1,-1,-1,-1,-1,10,5,5,5,5,5,5,5,5,5,5}};
+		SimpleMatrix res = PMC.FeaturesToNeuron(Flist);
+		
+		double[][] data= {{1,27,-1,-1,-1,-1,-1,-1,-1,-1,-1,3,0,0,0,-1,-1,-1,-1,-1,-1,-1,5,0,0,0,0,0,-1,-1,-1,-1,-1,10,5,5,5,5,5,5,5,5,5,5,-1}};
 		SimpleMatrix expected= new SimpleMatrix(data);
-		assertTrue(expected.isIdentical(PMC.FeaturesToNeuron(Flist), 1e-5));
+		
+		assertTrue(expected.transpose().isIdentical(res, 1e-5));
 		
 	}
 

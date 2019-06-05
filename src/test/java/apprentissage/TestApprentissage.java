@@ -87,8 +87,10 @@ public class TestApprentissage {
 		for(int i = 0; i < 97; i++)
 			matrix.increment(1, 1);
 		
-		assertEquals((95/98 + 97/102)/2, matrix.getPrecision(), 1e-3);
-		assertEquals((95/100 + 97/100)/2, matrix.getRappel(), 1e-3);
+		matrix.computeStats();
+		
+		assertEquals((95/98. + 97/102.)/2., matrix.getPrecision(), 1e-3);
+		assertEquals((95/100. + 97/100.)/2., matrix.getRappel(), 1e-3);
 		
 	}
 
