@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import main.App;
 import resources.ResourcesLoader;
 
 /**
@@ -37,9 +38,8 @@ public class DataManager {
 	 * Une partie sera utilisee pour la partie test, le reste pour l'apprentissage
 	 * @param k
 	 */
-	public void kfoldCrossValidation(int k) {
-		String root = "src/main/resources/pdf";
-		List<String> directoryName = ResourcesLoader.getDirectoriesName(root);
+	public void kfoldCrossValidation(int k, String path) {
+		List<String> directoryName = ResourcesLoader.getDirectoriesName(path);
 		directoryName.remove("_IGNORE");
 		
 		this.k = k;
@@ -51,7 +51,7 @@ public class DataManager {
 			data.add(new ArrayList<Sample>());
 			
 			for(String dn:directoryName) {
-				List<File> pdf = ResourcesLoader.loadDirectory(root + "/" + dn);
+				List<File> pdf = ResourcesLoader.loadDirectory(path+"/"+ dn);
 				int step = pdf.size()/k;
 				int limit = i == k-1 ? pdf.size():(i+1)*step;
 

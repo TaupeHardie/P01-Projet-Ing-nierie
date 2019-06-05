@@ -34,10 +34,10 @@ public class PMC {
 	 * @param nbCC     Nombre de neuronne dans la couche cachee
 	 * @param nbSortie Nombre de neurone dans la couche de sortie
 	 */
-	public PMC(int k, int neuronesCaches) {
+	public PMC(int k, int neuronesCaches, String Path) {
 		Random rand = new Random();
 		data = new DataManager();
-		data.kfoldCrossValidation(k);
+		data.kfoldCrossValidation(k,Path);
 		matriceConfusion = new ConfusionMatrix(data.numClasses());
 		
 		nombreNeuronesCC = neuronesCaches;
@@ -110,7 +110,7 @@ public class PMC {
 	/**
 	 * Calcule les poids en fonctions des échantillions d'apprentissage
 	 */
-	private void learn(List<Sample> dataset) {
+	private void learn(List<Sample> dataset, String path) {
 		Random rand = new Random();
 
 		double l = 0.0025;
@@ -131,7 +131,7 @@ public class PMC {
 				SimpleMatrix X = FeaturesToNeuron(currentPDF.findMatches());
 				X = X.divide(1000);
 				X.set(4*lenmat, -1);
-				SimpleMatrix T = getExpectedResultsMatrix(dataset.get(k));
+				SimpleMatrix T = getExpectedResultsMatrix(dataset.get(k), path);
 				
 				currentPDF.close();
 
@@ -196,7 +196,7 @@ public class PMC {
 		return indMaxi;
 	}
 
-	public void learnAndTest() {
+	public void learnAndTest(String path) {
 		matriceConfusion.reset();
 		for (int currentTest = 0; currentTest < data.getK(); currentTest++) {
 			
@@ -211,7 +211,7 @@ public class PMC {
 			}
 
 			System.out.println("Size : " + learningData.size());
-			learn(learningData);
+			learn(learningData, path);
 
 			for (Sample s : data.getData().get(currentTest)) {
 				int res = compute(s.name);
@@ -224,13 +224,13 @@ public class PMC {
 		
 	}
 
-	public void learnOnly() {
+	public void learnOnly(String path) {
 		ArrayList<Sample> alldata = new ArrayList<Sample>();
 		for (List<Sample> l : data.getData()) {
 			alldata.addAll(l);
 		}
 
-		learn(alldata);
+		learn(alldata, path);
 	}
 
 	static public SimpleMatrix FeaturesToNeuron(List<Feature> Flist) {
@@ -266,10 +266,9 @@ public class PMC {
 
 	}
 
-	static public SimpleMatrix getExpectedResultsMatrix(Sample echantillon) {
-		String root = "src/main/resources/pdf";
+	static public SimpleMatrix getExpectedResultsMatrix(Sample echantillon, String path) {
 
-		List<String> directoryName = ResourcesLoader.getDirectoriesName(root);
+		List<String> directoryName = ResourcesLoader.getDirectoriesName(path);
 		directoryName.remove("_IGNORE");
 
 		SimpleMatrix expectedResult = new SimpleMatrix(directoryName.size(), 1);

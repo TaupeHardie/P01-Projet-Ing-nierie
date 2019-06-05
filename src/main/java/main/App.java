@@ -20,10 +20,10 @@ public class App {
 	public static void main(String[] args) {
 		
 		DataManager dm = new DataManager();
-		dm.kfoldCrossValidation(10);
+		dm.kfoldCrossValidation(10, MainPath+"pdf");
 		
-		PMC pmc = new PMC(10, 50);
+		PMC pmc = new PMC(10, 50, MainPath+"pdf");
 		
-		pmc.learnAndTest();
+		pmc.learnAndTest(MainPath+"pdf");
 	}
 }
