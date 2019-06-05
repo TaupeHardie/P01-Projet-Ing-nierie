@@ -77,7 +77,7 @@ public class TestApprentissage {
 	
 	@Test
 	public void testConfusionMatrix() {
-		ConfusionMatrix matrix = new ConfusionMatrix(2);
+		ConfusionMatrix matrix = new ConfusionMatrix(2, "");
 		
 		for(int i = 0; i < 95; i++)
 			matrix.increment(0, 0);
