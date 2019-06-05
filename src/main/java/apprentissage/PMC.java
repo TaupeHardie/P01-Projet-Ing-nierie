@@ -24,7 +24,7 @@ public class PMC {
 	private DataManager data;
 	private ConfusionMatrix matriceConfusion;
 	private int nombreNeuroneEntree, nombreNeuronesCC, nombreNeuroneSortie;
-	private final int nbStepMax = 100;
+	private final int nbStepMax = 200;
 	final static int lenmat = 11;
 
 	/**
@@ -113,7 +113,7 @@ public class PMC {
 	private void learn(List<Sample> dataset, String path) {
 		Random rand = new Random();
 
-		double l = 0.0025;
+		double l = 0.002;
 		int nstep = 0;
 		double epsilon = 1e-3, error = 1;
 
@@ -161,7 +161,18 @@ public class PMC {
 				
 				
 
-				error += abs(T.minus(S)).elementSum()/dataset.size();
+				error += abs(T.minus(S)).elementSum()/dataset.size();				
+				
+				if(Double.isNaN(error)) {
+					System.out.println("Error is NaN ! Reset.");
+					
+					W = SimpleMatrix.random(nombreNeuronesCC, nombreNeuroneEntree, -0.5, 0.5, rand);
+					Z = SimpleMatrix.random(nombreNeuroneSortie, nombreNeuronesCC, -0.5, 0.5, rand);
+										
+					nstep = 0;
+					k = 0;
+					error = 1;
+				}
 				
 				if(k == 0 && nstep == nbStepMax - 1) {
 					for(int i = 0; i < T.numRows(); i++) {
@@ -169,10 +180,7 @@ public class PMC {
 					}						
 				}
 			}
-			nstep++;
-			if(Double.isNaN(error))
-				error = Double.MAX_VALUE;
-			
+			nstep++;			
 			System.out.println("Step : " + nstep + "/" + nbStepMax + " (" + error +")");
 		}
 	}
@@ -216,10 +224,10 @@ public class PMC {
 			for (Sample s : data.getData().get(currentTest)) {
 				int res = compute(s.name);
 				matriceConfusion.increment(s.number, res);
-				matriceConfusion.computeStats();
-				System.out.println("Rappel :" + matriceConfusion.getRappel());
-				System.out.println("Precision : " + matriceConfusion.getPrecision());
 			}
+			matriceConfusion.computeStats();
+			System.out.println("Rappel :" + matriceConfusion.getRappel());
+			System.out.println("Precision : " + matriceConfusion.getPrecision());
 		}
 		
 	}
