@@ -16,9 +16,10 @@ import view.LearningView;
  * @author axel
  */
 public class ThreadLearningTesting implements Runnable{
-	private final int nbStepMax = 200;
-	private final static int lenmat = 11;
+	private int nbStepMax = 200;
+	private static int lenmat = 11;
 	private SimpleMatrix W, Z;
+	public double learningSpeed;
 	
 	
 	private List<Sample> dataset;
@@ -30,7 +31,7 @@ public class ThreadLearningTesting implements Runnable{
 	
 	
 	public ThreadLearningTesting(List<Sample> dataset, int nombreNeuroneEntree, int nombreNeuronesCC,
-			int nombreNeuroneSortie, ConfusionMatrix matriceConfusion, int currentTest, DataManager data) {
+			int nombreNeuroneSortie, int nbStepMax, int lenMatrix, double learningSpeed, ConfusionMatrix matriceConfusion, int currentTest, DataManager data) {
 		super();
 		this.dataset = dataset;
 		this.nombreNeuroneEntree = nombreNeuroneEntree;
@@ -39,13 +40,15 @@ public class ThreadLearningTesting implements Runnable{
 		this.matriceConfusion = matriceConfusion;
 		this.currentTest = currentTest;
 		this.data = data;
+		this.learningSpeed = learningSpeed;
+		this.nbStepMax = nbStepMax;
+		ThreadLearningTesting.lenmat = lenMatrix;
 	}
 
 	@Override
 	public void run() {
 		Random rand = new Random();
 
-		double l = 0.002;
 		int nstep = 0;
 		double epsilon = 1e-3, error = 1;
 
@@ -74,7 +77,7 @@ public class ThreadLearningTesting implements Runnable{
 						for (int m = 0; m < Z.numRows(); m++) {
 							s += -2 * (T.get(m) - S.get(m)) * Z.get(m, i);
 						}
-						double dw = l * PMC.drelu(Scouche.get(i)) * s * X.get(j);
+						double dw = learningSpeed * PMC.drelu(Scouche.get(i)) * s * X.get(j);
 						W.set(i, j, W.get(i, j) - dw);
 					}
 				}
@@ -82,7 +85,7 @@ public class ThreadLearningTesting implements Runnable{
 				// Correct Z
 				for (int i = 0; i < Z.numRows(); i++) {
 					for (int j = 0; j < Z.numCols(); j++) {
-						double dz = -2 * l * (T.get(i) - S.get(i)) * PMC.relu(Scouche.get(j));
+						double dz = -2 * learningSpeed * (T.get(i) - S.get(i)) * PMC.relu(Scouche.get(j));
 						Z.set(i, j, Z.get(i, j) - dz);
 					}
 				}

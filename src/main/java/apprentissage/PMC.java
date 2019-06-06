@@ -283,7 +283,7 @@ public class PMC {
 				if (i != currentTest)
 					learningData.addAll(data.getData().get(i));
 			}
-			service.execute(new ThreadLearningTesting(learningData, nombreNeuroneEntree, nombreNeuronesCC, nombreNeuroneSortie, matriceConfusion, currentTest, data));
+			service.execute(new ThreadLearningTesting(learningData, nombreNeuroneEntree, nombreNeuronesCC, nombreNeuroneSortie, nbStepMax, lenmat, learningSpeed, matriceConfusion, currentTest, data));
 		}
 		ShutdownThreads.shutdownAndAwaitTermination(service, 10*60);
 		
