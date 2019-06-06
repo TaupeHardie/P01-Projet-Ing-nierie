@@ -28,12 +28,9 @@ public class ThreadLearnAndTest implements Callable<ConfusionMatrix>{
 	}
 
 	@Override
-	public ConfusionMatrix call() throws Exception {
-		List<File> files = ResourcesLoader.loadDirectory(path);
-		ResourcesLoader.loadAllPdf(files);
-		
+	public ConfusionMatrix call() throws Exception {	
 		PMC pmc = new PMC(path, k, nbCoucheCachee, nbSteps, lenMatrix, learningSpeed);
-		pmc.learnAndTest();
+		pmc.learnAndTestThread();
 		
 		return pmc.getConfusionMatrix();
 	}

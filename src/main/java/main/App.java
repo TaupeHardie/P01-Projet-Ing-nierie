@@ -24,7 +24,7 @@ public class App {
 		
 		dm.kfoldCrossValidation(10, Const.MainPath+"pdf");
 
-		PMC pmc = new PMC(10, 50, Const.MainPath+"pdf");
+		PMC pmc = new PMC(Const.MainPath+"pdf", 10, 50, 200, 10, 0.001);
 		
 		long t = System.nanoTime();
 		pmc.learnAndTestThread();

@@ -8,6 +8,7 @@ import org.ejml.simple.SimpleMatrix;
 
 import misc.PDF;
 import resources.ResourcesLoader;
+import view.LearningView;
 
 /**
  * This class is used to compute one cross-validation 
@@ -106,6 +107,7 @@ public class ThreadLearningTesting implements Runnable{
 				}
 			}
 			nstep++;			
+			LearningView.incrementProgressBar();
 			System.out.println("Step : " + nstep + "/" + nbStepMax + " (" + error +")");
 		}
 		

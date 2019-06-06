@@ -27,6 +27,7 @@ import org.ejml.simple.SimpleMatrix;
 import Controller.ThreadLearnAndTest;
 import apprentissage.ConfusionMatrix;
 import main.App;
+import misc.Const;
 import resources.ResourcesLoader;
 import writer.Writer;
 
@@ -249,7 +250,7 @@ public class LearningView extends JFrame {
 					public void mouseClicked(MouseEvent e) {
 						fileChooser = new JFileChooser();
 						fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-						fileChooser.setCurrentDirectory(new java.io.File(App.MainPath));
+						fileChooser.setCurrentDirectory(new java.io.File(Const.MainPath));
 						fileChooser.setDialogTitle(lblFileChooser);
 						fileChooser.setAcceptAllFileFilterUsed(false);
 						if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) { 
@@ -276,6 +277,8 @@ public class LearningView extends JFrame {
 							JOptionPane.showMessageDialog(null, "Selectionez une option : Appretissage complet ou K-fold");
 							return;
 						}
+						
+						progressBar.setValue(0);
 						
 						btnExport.setEnabled(false);
 						lblTraitement.setVisible(true);

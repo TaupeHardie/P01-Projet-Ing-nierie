@@ -10,6 +10,11 @@ import misc.Const;
 import resources.ResourcesLoader;
 
 public class TestApprentissage {
+	
+	static {
+	    System.setProperty("org.apache.commons.logging.Log",
+	                 "org.apache.commons.logging.impl.NoOpLog");
+	}
 
 	@Test
 	public void testkfoldCR() {
@@ -35,7 +40,6 @@ public class TestApprentissage {
 	@Test
 	public void testResultMatrix() {
 		String path = Const.MainPath+"pdf";
-		PMC pcm = new PMC(0,0,path);
 		
 		DataManager dm = new DataManager();
 		dm.kfoldCrossValidation(10,path);
@@ -101,13 +105,11 @@ public class TestApprentissage {
 	
 	@Test
 	public void testSauvegardeLoadMatrix() {
-		String MainPath = System.getProperty("user.home")+"\\AppData\\Local\\Qweeby\\";
-		
 		DataManager dm = new DataManager();
 		
 		dm.kfoldCrossValidation(10, Const.MainPath+"pdf");
 
-		PMC pmc = new PMC(10, 50, Const.MainPath+"pdf");
+		PMC pmc = new PMC(Const.MainPath+"pdf", 10, 50, 50, 10, 0.002);
 		
 		pmc.learnAndTestThread();
 				
@@ -122,7 +124,6 @@ public class TestApprentissage {
 		
 		assertTrue(test1.isIdentical(pmc.getW(),1e-5) );
 
-		
 	}
 
 }

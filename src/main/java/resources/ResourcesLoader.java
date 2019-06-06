@@ -24,8 +24,6 @@ import misc.ShutdownThreads;
 import view.ClientView;
 import view.ThreadUpdateProgressBar;
 
-import main.PDF;
-
 /**
  * Classe statique regrouppant toutes les fonctions concernant la lecture de fichiers et de dossiers
  *
