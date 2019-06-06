@@ -2,6 +2,7 @@ package view;
 
 import javax.swing.JLabel;
 import javax.swing.JProgressBar;
+import javax.swing.SwingUtilities;
 
 /**
  * this class is used to update the progressBar in the MainPane
@@ -28,7 +29,7 @@ public class ThreadUpdateProgressBar implements Runnable {
 			progressBar.setValue(progressBar.getValue()+1);
 			label.setText("Terminé");
 		}
-		progressBar.getParent().update(progressBar.getParent().getGraphics());
+		progressBar.update(progressBar.getGraphics());
 	}
 	
 }

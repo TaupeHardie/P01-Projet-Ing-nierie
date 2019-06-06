@@ -31,8 +31,8 @@ public class App {
 		System.out.println("kfold time : "+(System.nanoTime() - t1)/1000000000);
 		
 		
-		PMC pmc = new PMC(10, 50, MainPath+"pdf");
+		PMC pmc = new PMC(MainPath+"pdf", 10, 50, 200, 10, 0.002);
 		
-		pmc.learnAndTest(MainPath+"pdf");
+		pmc.learnAndTest();
 	}
 }

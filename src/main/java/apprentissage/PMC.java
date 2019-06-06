@@ -15,6 +15,7 @@ import main.PDF;
 import com.sun.glass.ui.Size;
 
 import resources.ResourcesLoader;
+import view.LearningView;
 import writer.Writer;
 
 /**
@@ -25,9 +26,11 @@ public class PMC {
 	private SimpleMatrix W, Z;
 	private DataManager data;
 	private ConfusionMatrix matriceConfusion;
+	private String path;
 	private int nombreNeuroneEntree, nombreNeuronesCC, nombreNeuroneSortie;
-	private final int nbStepMax = 200;
-	final static int lenmat = 11;
+	private int nbStepMax = 200;
+	private double learningSpeed = 0.002;
+	static int lenmat = 11;
 
 	/**
 	 * Contructeur par defaut. Cree les differentes matrice et les initialise
@@ -36,7 +39,11 @@ public class PMC {
 	 * @param neuronesCaches Nombre de neurones dans la couche cachee
 	 * @param Path Chemin des dossier à récupérer
 	 */
-	public PMC(int k, int neuronesCaches, String Path) {
+	public PMC(String Path, int k, int neuronesCaches, int max, int lenMatrix, double ls) {
+		nbStepMax = max;
+		path = Path;
+		learningSpeed = ls;
+		lenmat = lenMatrix + 1;
 		Random rand = new Random();
 		data = new DataManager();
 		data.kfoldCrossValidation(k,Path);
@@ -112,10 +119,9 @@ public class PMC {
 	/**
 	 * Calcule les poids en fonctions des échantillions d'apprentissage
 	 */
-	private void learn(List<Sample> dataset, String path) {
+	private void learn(List<Sample> dataset) {
 		Random rand = new Random();
 
-		double l = 0.002;
 		int nstep = 0;
 		double epsilon = 1e-3, error = 1;
 
@@ -126,8 +132,6 @@ public class PMC {
 			error = 0;
 			List<Sample> d = dataset;
 			Collections.shuffle(d);
-			
-			long t2 = System.nanoTime();
 			
 			for (int k = 0; k < dataset.size(); k++) {
 
@@ -151,7 +155,7 @@ public class PMC {
 						for (int m = 0; m < Z.numRows(); m++) {
 							s += -2 * (T.get(m) - S.get(m)) * Z.get(m, i);
 						}
-						double dw = l * drelu(Scouche.get(i)) * s * X.get(j);
+						double dw = learningSpeed * drelu(Scouche.get(i)) * s * X.get(j);
 						W.set(i, j, W.get(i, j) - dw);
 					}
 				}
@@ -159,7 +163,7 @@ public class PMC {
 				// Correct Z
 				for (int i = 0; i < Z.numRows(); i++) {
 					for (int j = 0; j < Z.numCols(); j++) {
-						double dz = -2 * l * (T.get(i) - S.get(i)) * relu(Scouche.get(j));
+						double dz = -2 * learningSpeed * (T.get(i) - S.get(i)) * relu(Scouche.get(j));
 						Z.set(i, j, Z.get(i, j) - dz);
 					}
 				}
@@ -187,7 +191,7 @@ public class PMC {
 			}
 			nstep++;			
 			System.out.println("Step : " + nstep + "/" + nbStepMax + " (" + error +")");
-			System.out.println("load step time : "+(System.nanoTime() - t2)/1000000);
+			LearningView.incrementProgressBar();
 		}
 	}
 
@@ -210,7 +214,7 @@ public class PMC {
 		return indMaxi;
 	}
 
-	public void learnAndTest(String path) {
+	public void learnAndTest() {
 		matriceConfusion.reset();
 		for (int currentTest = 0; currentTest < data.getK(); currentTest++) {
 			long t1 = System.nanoTime();
@@ -225,7 +229,7 @@ public class PMC {
 			}
 
 			System.out.println("Size : " + learningData.size());
-			learn(learningData, path);
+			learn(learningData);
 
 			for (Sample s : data.getData().get(currentTest)) {
 				int res = compute(s.name);
@@ -242,13 +246,13 @@ public class PMC {
 		
 	}
 
-	public void learnOnly(String path) {
+	public void learnOnly() {
 		ArrayList<Sample> alldata = new ArrayList<Sample>();
 		for (List<Sample> l : data.getData()) {
 			alldata.addAll(l);
 		}
 
-		learn(alldata, path);
+		learn(alldata);
 	}
 
 	static public SimpleMatrix FeaturesToNeuron(List<Feature> Flist) {
@@ -296,5 +300,9 @@ public class PMC {
 
 		return expectedResult;
 
+	}
+	
+	public ConfusionMatrix getConfusionMatrix() {
+		return matriceConfusion;
 	}
 }
