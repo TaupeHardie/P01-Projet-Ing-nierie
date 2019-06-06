@@ -26,6 +26,8 @@ public class App {
 
 		PMC pmc = new PMC(10, 50, Const.MainPath+"pdf");
 		
+		long t = System.nanoTime();
 		pmc.learnAndTestThread();
+		System.out.println("execution time : "+(System.nanoTime() - t)/1000000000);
 	}
 }
