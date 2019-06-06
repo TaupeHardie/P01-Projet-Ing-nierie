@@ -28,6 +28,7 @@ import misc.ShutdownThreads;
 public class ResourcesLoader {
 	private static List<PDF> pdfs = new ArrayList<PDF>();
 	
+	
 	/**
 	 * load a file from resources
 	 * @param fileName the name of the resource under src/main/resources/
@@ -117,13 +118,7 @@ public class ResourcesLoader {
     	return null;
     			
     }
-    
-    public static void closeAllPdf() {
-    	for(PDF p : pdfs) {
-    		p.close();
-    	}
-    }
-    
+
     /**
      * read a file and output the text in the console
      * @param fileName the file to be read 

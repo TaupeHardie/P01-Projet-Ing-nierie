@@ -6,6 +6,11 @@ import java.util.Vector;
 
 import misc.PDF;
 
+/**
+ * this thread is used to populate the list of PDF of ResourcesLoader 
+ * It take severals PDF to be process
+ * @author axel
+ */
 public class ThreadPDFLoader implements Runnable {
 	 private List<File> files;
  	

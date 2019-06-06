@@ -6,13 +6,12 @@ import java.util.stream.Collectors;
 
 import apprentissage.DataManager;
 import apprentissage.PMC;
+import misc.Const;
 import resources.ResourcesLoader;
 
 
 public class App {
 
-	public static final String MainPath = System.getProperty("user.home")+"\\AppData\\Local\\Qweeby\\";
-	
 	static {
 	    System.setProperty("org.apache.commons.logging.Log",
 	                 "org.apache.commons.logging.impl.NoOpLog");
@@ -23,12 +22,10 @@ public class App {
 		
 		DataManager dm = new DataManager();
 		
-		dm.kfoldCrossValidation(10, MainPath+"pdf");
+		dm.kfoldCrossValidation(10, Const.MainPath+"pdf");
 
-		PMC pmc = new PMC(10, 50, MainPath+"pdf");
+		PMC pmc = new PMC(10, 50, Const.MainPath+"pdf");
 		
-		pmc.learnAndTest(MainPath+"pdf");
-		
-		ResourcesLoader.closeAllPdf();
+		pmc.learnAndTestThread();
 	}
 }

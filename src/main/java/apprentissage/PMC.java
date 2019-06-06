@@ -5,16 +5,21 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 import org.ejml.simple.SimpleMatrix;
 
 import extraction.Feature;
-import main.PDF;
+import misc.Const;
+import misc.PDF;
+import misc.ShutdownThreads;
 
 import com.sun.glass.ui.Size;
 
 import resources.ResourcesLoader;
+import resources.ThreadPDFLoader;
 
 /**
  * Classe representant un perceptron multicouche
@@ -26,7 +31,9 @@ public class PMC {
 	private ConfusionMatrix matriceConfusion;
 	private int nombreNeuroneEntree, nombreNeuronesCC, nombreNeuroneSortie;
 	private final int nbStepMax = 200;
-	final static int lenmat = 11;
+	private final static int lenmat = 11;
+	private static List<String> directoryName;
+	private static String path;
 
 	/**
 	 * Contructeur par defaut. Cree les differentes matrice et les initialise
@@ -47,6 +54,10 @@ public class PMC {
 
 		W = SimpleMatrix.random(nombreNeuronesCC, nombreNeuroneEntree, -1, 1, rand);
 		Z = SimpleMatrix.random(nombreNeuroneSortie, nombreNeuronesCC, -1, 1, rand);
+		directoryName = ResourcesLoader.getDirectoriesName(Path);
+		directoryName.remove("_IGNORE");
+		
+		this.path = Path;
 	}
 
 	/**
@@ -55,7 +66,7 @@ public class PMC {
 	 * @param x
 	 * @return ReLU de x
 	 */
-	private double relu(double x) {
+	public static double relu(double x) {
 		if(x < 0)
 			return 0.01*x;
 		else
@@ -68,7 +79,7 @@ public class PMC {
 	 * @param X matrice d'entrée
 	 * @return matrice de la taille de X
 	 */
-	private SimpleMatrix relu(SimpleMatrix X) {
+	public static SimpleMatrix relu(SimpleMatrix X) {
 		SimpleMatrix res = new SimpleMatrix(X);
 
 		for (int i = 0; i < res.numRows(); i++) {
@@ -86,7 +97,7 @@ public class PMC {
 	 * @param X matrice d'entrée
 	 * @return matrice de la taille de X
 	 */
-	private SimpleMatrix abs(SimpleMatrix X) {
+	public static SimpleMatrix abs(SimpleMatrix X) {
 		SimpleMatrix res = new SimpleMatrix(X);
 
 		for (int i = 0; i < res.numRows(); i++) {
@@ -104,14 +115,14 @@ public class PMC {
 	 * @param x
 	 * @return 0 si x < 0, 1 sinon
 	 */
-	private double drelu(double x) {
+	public static double drelu(double x) {
 		return x < 0 ? 0 : 1;
 	}
 
 	/**
 	 * Calcule les poids en fonctions des échantillions d'apprentissage
 	 */
-	private void learn(List<Sample> dataset, String path) {
+	private void learn(List<Sample> dataset) {
 		Random rand = new Random();
 
 		double l = 0.002;
@@ -132,7 +143,7 @@ public class PMC {
 				SimpleMatrix X = FeaturesToNeuron(currentPDF.getFeatures());
 				X = X.divide(1000);
 				X.set(4*lenmat, -1);
-				SimpleMatrix T = getExpectedResultsMatrix(dataset.get(k), path);	
+				SimpleMatrix T = getExpectedResultsMatrix(dataset.get(k));	
 	
 				SimpleMatrix Scouche = W.mult(X);
 				SimpleMatrix S = Z.mult(relu(Scouche));
@@ -200,16 +211,17 @@ public class PMC {
 		return indMaxi;
 	}
 
-	public void learnAndTest(String path) {
+	public void learnAndTest() {
 		
 		long t = System.nanoTime();
 		List<File> files = ResourcesLoader.loadDirectory(path);
 		ResourcesLoader.loadAllPdf(files);
 		System.out.println("load all pdf time : "+(System.nanoTime() - t)/1000000000);
 		
+		long t1 = System.nanoTime();
 		matriceConfusion.reset();
 		for (int currentTest = 0; currentTest < data.getK(); currentTest++) {
-			long t1 = System.nanoTime();
+			
 			System.out.println("------------------------");
 			System.out.println("Kfold : " + (currentTest+1) + "/" + data.getK());
 			ArrayList<Sample> learningData = new ArrayList<Sample>();
@@ -220,19 +232,47 @@ public class PMC {
 			}
 
 			System.out.println("Size : " + learningData.size());
-			learn(learningData, path);
+			learn(learningData);
 
 			for (Sample s : data.getData().get(currentTest)) {
 				int res = compute(s.name);
 				matriceConfusion.increment(s.number, res);
 			}
-			long t2 = System.nanoTime();
-			matriceConfusion.computeStats();
-			System.out.println((currentTest+1)+"e confus time : "+(System.nanoTime() - t2)/1000000000 +"s");
-			System.out.println("Rappel :" + matriceConfusion.getRappel());
-			System.out.println("Precision : " + matriceConfusion.getPrecision());
-			System.out.println((currentTest+1)+"e kfold time : "+(System.nanoTime() - t1)/1000000000 +"s");
 		}
+		System.out.println("Learning time : "+(System.nanoTime() - t1)/1000000000);
+		matriceConfusion.computeStats();
+		System.out.println("Rappel :" + matriceConfusion.getRappel());
+		System.out.println("Precision : " + matriceConfusion.getPrecision());
+		
+	}
+	
+	public void learnAndTestThread() {
+		
+		long t = System.nanoTime();
+		List<File> files = ResourcesLoader.loadDirectory(path);
+		ResourcesLoader.loadAllPdf(files);
+		System.out.println("load all pdf time : "+(System.nanoTime() - t)/1000000000);
+		
+		System.out.println("start learning");
+		long t1 = System.nanoTime();
+		matriceConfusion.reset();
+		ExecutorService service = Executors.newFixedThreadPool(data.getK());
+		for (int currentTest = 0; currentTest < data.getK(); currentTest++) {
+
+			ArrayList<Sample> learningData = new ArrayList<Sample>();
+
+			for (int i = 0; i < data.getK(); i++) {
+				if (i != currentTest)
+					learningData.addAll(data.getData().get(i));
+			}
+			service.execute(new ThreadLearningTesting(learningData, nombreNeuroneEntree, nombreNeuronesCC, nombreNeuroneSortie, matriceConfusion, currentTest, data));
+		}
+		ShutdownThreads.shutdownAndAwaitTermination(service, 10*60);
+		
+		System.out.println("Learning time : "+(System.nanoTime() - t1)/1000000000);
+		matriceConfusion.computeStats();
+		System.out.println("Rappel :" + matriceConfusion.getRappel());
+		System.out.println("Precision : " + matriceConfusion.getPrecision());
 		
 	}
 
@@ -247,12 +287,15 @@ public class PMC {
 			alldata.addAll(l);
 		}
 
-		learn(alldata, path);
+		learn(alldata);
 	}
 
 	static public SimpleMatrix FeaturesToNeuron(List<Feature> Flist) {
 		SimpleMatrix output = new SimpleMatrix(lenmat * 4 + 1, 1);
 		String cat = Flist.get(0).getType();
+		if(cat == null) {
+			System.out.println("");
+		}
 		int fInd = 0;
 		for (int n = 0; n < 4; n++) {
 			for (int j = 1 + lenmat * n; j < lenmat * (n + 1); j++) {
@@ -283,17 +326,12 @@ public class PMC {
 
 	}
 
-	static public SimpleMatrix getExpectedResultsMatrix(Sample echantillon, String path) {
-
-		List<String> directoryName = ResourcesLoader.getDirectoriesName(path);
-		directoryName.remove("_IGNORE");
-
+	static public SimpleMatrix getExpectedResultsMatrix(Sample echantillon) {
+		
 		SimpleMatrix expectedResult = new SimpleMatrix(directoryName.size(), 1);
 		if (echantillon.number != -1) {
 			expectedResult.set(echantillon.number, 1);
 		}
-
 		return expectedResult;
-
 	}
 }

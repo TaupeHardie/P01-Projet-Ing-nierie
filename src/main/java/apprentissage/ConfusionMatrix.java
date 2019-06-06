@@ -13,7 +13,7 @@ public class ConfusionMatrix {
 		classNb=numbOfClasses;
 	}
 	
-	public void increment(int expected, int result) {
+	public synchronized void increment(int expected, int result) {
 		confMatrix.set(expected, result, confMatrix.get(expected, result)+1);
 	}
 	
