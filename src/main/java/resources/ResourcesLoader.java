@@ -12,10 +12,14 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import main.PDF;
+import misc.Const;
+import misc.PDF;
+import misc.ShutdownThreads;
 
 /**
  * Classe statique regrouppant toutes les fonctions concernant la lecture de fichiers et de dossiers
@@ -75,12 +79,36 @@ public class ResourcesLoader {
     	return names;
     }
     
+    /**
+     * this load all PDF in the list.
+     * It launch cores -1 threads to process the PDF and add it to the list in this class
+     * @param files the list of pdf files 
+     */
     public static void loadAllPdf(List<File> files) {
-    	for(File file : files) {
-    		pdfs.add(new PDF(file));
-    	}
+    	System.out.println("starting PDF loading");
+    	ExecutorService service = Executors.newFixedThreadPool(Const.nbCore);
+    	int chunk = files.size()/Const.nbCore;
+    	for (int i = 0; i < Const.nbCore; i++) {
+    		List<File> subFiles = new ArrayList<File>();
+    		subFiles.addAll(files.subList(chunk*i, chunk*(i+1)));
+			service.execute(new ThreadPDFLoader(subFiles));
+		}
+    	ShutdownThreads.shutdownAndAwaitTermination(service, 5*60);
     }
     
+    /**
+     * this method is used by threads to populate the PDF list
+     * @param p the PDF
+     */
+    public static synchronized void addPdf(PDF p) {
+    	pdfs.add(p);
+    }
+    
+    /**
+     * get the PDF from the PDF list by its name
+     * @param name the name of the PDF
+     * @return the PDF
+     */
     public static PDF getPDFbyName(String name) {
     	List<PDF> pdflst = pdfs.stream().filter(p->p.getName().equalsIgnoreCase(name)).collect(Collectors.toList());
     	if(!pdflst.isEmpty()) {
