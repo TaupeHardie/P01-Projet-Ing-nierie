@@ -1,20 +1,26 @@
 package apprentissage;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 import org.ejml.simple.SimpleMatrix;
 
 import extraction.Feature;
-import main.PDF;
+import misc.Const;
+import misc.PDF;
+import misc.ShutdownThreads;
 
 import com.sun.glass.ui.Size;
 
 import resources.ResourcesLoader;
+import resources.ThreadPDFLoader;
 import view.LearningView;
 import writer.Writer;
 
@@ -24,6 +30,14 @@ import writer.Writer;
  */
 public class PMC {
 	private SimpleMatrix W, Z;
+	public SimpleMatrix getW() {
+		return W;
+	}
+
+	public void setW(SimpleMatrix WM) {
+		W=WM;
+	}
+	
 	private DataManager data;
 	private ConfusionMatrix matriceConfusion;
 	private String path;
@@ -31,6 +45,7 @@ public class PMC {
 	private int nbStepMax = 200;
 	private double learningSpeed = 0.002;
 	static int lenmat = 11;
+	private static List<String> directoryName;
 
 	/**
 	 * Contructeur par defaut. Cree les differentes matrice et les initialise
@@ -55,6 +70,10 @@ public class PMC {
 
 		W = SimpleMatrix.random(nombreNeuronesCC, nombreNeuroneEntree, -1, 1, rand);
 		Z = SimpleMatrix.random(nombreNeuroneSortie, nombreNeuronesCC, -1, 1, rand);
+		directoryName = ResourcesLoader.getDirectoriesName(Path);
+		directoryName.remove("_IGNORE");
+		
+		this.path = Path;
 	}
 
 	/**
@@ -63,7 +82,7 @@ public class PMC {
 	 * @param x
 	 * @return ReLU de x
 	 */
-	private double relu(double x) {
+	public static double relu(double x) {
 		if(x < 0)
 			return 0.01*x;
 		else
@@ -76,7 +95,7 @@ public class PMC {
 	 * @param X matrice d'entrée
 	 * @return matrice de la taille de X
 	 */
-	private SimpleMatrix relu(SimpleMatrix X) {
+	public static SimpleMatrix relu(SimpleMatrix X) {
 		SimpleMatrix res = new SimpleMatrix(X);
 
 		for (int i = 0; i < res.numRows(); i++) {
@@ -94,7 +113,7 @@ public class PMC {
 	 * @param X matrice d'entrée
 	 * @return matrice de la taille de X
 	 */
-	private SimpleMatrix abs(SimpleMatrix X) {
+	public static SimpleMatrix abs(SimpleMatrix X) {
 		SimpleMatrix res = new SimpleMatrix(X);
 
 		for (int i = 0; i < res.numRows(); i++) {
@@ -112,7 +131,7 @@ public class PMC {
 	 * @param x
 	 * @return 0 si x < 0, 1 sinon
 	 */
-	private double drelu(double x) {
+	public static double drelu(double x) {
 		return x < 0 ? 0 : 1;
 	}
 
@@ -133,21 +152,17 @@ public class PMC {
 			List<Sample> d = dataset;
 			Collections.shuffle(d);
 			
-			for (int k = 0; k < dataset.size(); k++) {
-
+			for (int k = 0; k < dataset.size(); k++) {//201 x 5ms -> 1sec
 				PDF currentPDF = ResourcesLoader.getPDFbyName((dataset.get(k).name));
 				
-				SimpleMatrix X = FeaturesToNeuron(currentPDF.findMatches());
+				SimpleMatrix X = FeaturesToNeuron(currentPDF.getFeatures());
 				X = X.divide(1000);
 				X.set(4*lenmat, -1);
-				SimpleMatrix T = getExpectedResultsMatrix(dataset.get(k), path);
-				
-				currentPDF.close();
-
+				SimpleMatrix T = getExpectedResultsMatrix(dataset.get(k));	
+	
 				SimpleMatrix Scouche = W.mult(X);
 				SimpleMatrix S = Z.mult(relu(Scouche));
-
-
+				
 				// Correct W
 				for (int i = 0; i < W.numRows(); i++) {
 					for (int j = 0; j < W.numCols(); j++) {
@@ -167,8 +182,6 @@ public class PMC {
 						Z.set(i, j, Z.get(i, j) - dz);
 					}
 				}
-				
-				
 
 				error += abs(T.minus(S)).elementSum()/dataset.size();				
 				
@@ -198,7 +211,7 @@ public class PMC {
 	public int compute(String filename) {
 		PDF pdf = new PDF(filename);
 
-		SimpleMatrix X = FeaturesToNeuron(pdf.findMatches());
+		SimpleMatrix X = FeaturesToNeuron(pdf.getFeatures());
 		SimpleMatrix S = Z.mult(relu(W.mult(X)));
 
 		int indMaxi = 0;
@@ -215,15 +228,21 @@ public class PMC {
 	}
 
 	public void learnAndTest() {
+		
+		long t = System.nanoTime();
+		List<File> files = ResourcesLoader.loadDirectory(path);
+		ResourcesLoader.loadAllPdf(files);
+		System.out.println("load all pdf time : "+(System.nanoTime() - t)/1000000000);
+		
+		long t1 = System.nanoTime();
 		matriceConfusion.reset();
 		for (int currentTest = 0; currentTest < data.getK(); currentTest++) {
-			long t1 = System.nanoTime();
+			
 			System.out.println("------------------------");
 			System.out.println("Kfold : " + (currentTest+1) + "/" + data.getK());
 			ArrayList<Sample> learningData = new ArrayList<Sample>();
 
 			for (int i = 0; i < data.getK(); i++) {
-				
 				if (i != currentTest)
 					learningData.addAll(data.getData().get(i));
 			}
@@ -235,18 +254,53 @@ public class PMC {
 				int res = compute(s.name);
 				matriceConfusion.increment(s.number, res);
 			}
-			matriceConfusion.computeStats();
-			String Path = "confusionMatrix.CSV";
-			Writer.writeTo(matriceConfusion.toString(), Path);
-			System.out.println("Rappel :" + matriceConfusion.getRappel());
-			System.out.println("Precision : " + matriceConfusion.getPrecision());
-			System.out.println("big step time : "+(System.nanoTime() - t1)/1000000000);
-			
 		}
+		System.out.println("Learning time : "+(System.nanoTime() - t1)/1000000000);
+		matriceConfusion.computeStats();
+		System.out.println("Rappel :" + matriceConfusion.getRappel());
+		System.out.println("Precision : " + matriceConfusion.getPrecision());
+		
+		saveWeightMatrix();
 		
 	}
+	
+	public void learnAndTestThread() {
+		
+		long t = System.nanoTime();
+		List<File> files = ResourcesLoader.loadDirectory(path);
+		ResourcesLoader.loadAllPdf(files);
+		System.out.println("load all pdf time : "+(System.nanoTime() - t)/1000000000);
+		
+		System.out.println("start learning");
+		long t1 = System.nanoTime();
+		matriceConfusion.reset();
+		ExecutorService service = Executors.newFixedThreadPool(data.getK());
+		for (int currentTest = 0; currentTest < data.getK(); currentTest++) {
 
-	public void learnOnly() {
+			ArrayList<Sample> learningData = new ArrayList<Sample>();
+
+			for (int i = 0; i < data.getK(); i++) {
+				if (i != currentTest)
+					learningData.addAll(data.getData().get(i));
+			}
+			service.execute(new ThreadLearningTesting(learningData, nombreNeuroneEntree, nombreNeuronesCC, nombreNeuroneSortie, matriceConfusion, currentTest, data));
+		}
+		ShutdownThreads.shutdownAndAwaitTermination(service, 10*60);
+		
+		System.out.println("Learning time : "+(System.nanoTime() - t1)/1000000000);
+		matriceConfusion.computeStats();
+		System.out.println("Rappel :" + matriceConfusion.getRappel());
+		System.out.println("Precision : " + matriceConfusion.getPrecision());
+		
+		saveWeightMatrix();
+	}
+
+	public void learnOnly(String path) {	
+		long t = System.nanoTime();
+		List<File> files = ResourcesLoader.loadDirectory(path);
+		ResourcesLoader.loadAllPdf(files);
+		System.out.println("load all pdf time : "+(System.nanoTime() - t)/1000000000);
+		
 		ArrayList<Sample> alldata = new ArrayList<Sample>();
 		for (List<Sample> l : data.getData()) {
 			alldata.addAll(l);
@@ -258,6 +312,9 @@ public class PMC {
 	static public SimpleMatrix FeaturesToNeuron(List<Feature> Flist) {
 		SimpleMatrix output = new SimpleMatrix(lenmat * 4 + 1, 1);
 		String cat = Flist.get(0).getType();
+		if(cat == null) {
+			System.out.println("");
+		}
 		int fInd = 0;
 		for (int n = 0; n < 4; n++) {
 			for (int j = 1 + lenmat * n; j < lenmat * (n + 1); j++) {
@@ -288,18 +345,32 @@ public class PMC {
 
 	}
 
-	static public SimpleMatrix getExpectedResultsMatrix(Sample echantillon, String path) {
-
-		List<String> directoryName = ResourcesLoader.getDirectoriesName(path);
-		directoryName.remove("_IGNORE");
-
+	static public SimpleMatrix getExpectedResultsMatrix(Sample echantillon) {
+		
 		SimpleMatrix expectedResult = new SimpleMatrix(directoryName.size(), 1);
 		if (echantillon.number != -1) {
 			expectedResult.set(echantillon.number, 1);
 		}
-
 		return expectedResult;
-
+	}
+	
+	@SuppressWarnings("static-access")
+	public void loadWeightMatrix() {
+		try {
+			W=W.loadCSV("weightMatrix.csv");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public void saveWeightMatrix() {
+		try {
+			W.saveToFileCSV("weightMatrix.csv");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public ConfusionMatrix getConfusionMatrix() {

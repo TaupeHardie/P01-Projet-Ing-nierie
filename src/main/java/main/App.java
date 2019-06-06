@@ -6,13 +6,12 @@ import java.util.stream.Collectors;
 
 import apprentissage.DataManager;
 import apprentissage.PMC;
+import misc.Const;
 import resources.ResourcesLoader;
 
 
 public class App {
 
-	public static final String MainPath = System.getProperty("user.home")+"\\AppData\\Local\\Qweeby\\";
-	
 	static {
 	    System.setProperty("org.apache.commons.logging.Log",
 	                 "org.apache.commons.logging.impl.NoOpLog");
@@ -23,16 +22,12 @@ public class App {
 		
 		DataManager dm = new DataManager();
 		
-		dm.kfoldCrossValidation(10, MainPath+"pdf");
+		dm.kfoldCrossValidation(10, Const.MainPath+"pdf");
+
+		PMC pmc = new PMC(10, 50, Const.MainPath+"pdf");
 		
-		long t1 = System.nanoTime();
-		List<File> files = ResourcesLoader.loadDirectory(MainPath+"pdf");
-		ResourcesLoader.loadAllPdf(files);
-		System.out.println("kfold time : "+(System.nanoTime() - t1)/1000000000);
-		
-		
-		PMC pmc = new PMC(MainPath+"pdf", 10, 50, 200, 10, 0.002);
-		
-		pmc.learnAndTest();
+		long t = System.nanoTime();
+		pmc.learnAndTestThread();
+		System.out.println("execution time : "+(System.nanoTime() - t)/1000000000);
 	}
 }
