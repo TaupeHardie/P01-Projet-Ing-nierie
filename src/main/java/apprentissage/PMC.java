@@ -28,6 +28,14 @@ import resources.ThreadPDFLoader;
  */
 public class PMC {
 	private SimpleMatrix W, Z;
+	public SimpleMatrix getW() {
+		return W;
+	}
+
+	public void setW(SimpleMatrix WM) {
+		W=WM;
+	}
+	
 	private DataManager data;
 	private ConfusionMatrix matriceConfusion;
 	private int nombreNeuroneEntree, nombreNeuronesCC, nombreNeuroneSortie;
@@ -342,7 +350,7 @@ public class PMC {
 	@SuppressWarnings("static-access")
 	public void loadWeightMatrix() {
 		try {
-			W.loadCSV("weightMatrix.csv");
+			W=W.loadCSV("weightMatrix.csv");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

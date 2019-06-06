@@ -98,5 +98,31 @@ public class TestApprentissage {
 		assertEquals((95/100. + 97/100.)/2., matrix.getRappel(), 1e-3);
 		
 	}
+	
+	@Test
+	public void testSauvegardeLoadMatrix() {
+		String MainPath = System.getProperty("user.home")+"\\AppData\\Local\\Qweeby\\";
+		
+		DataManager dm = new DataManager();
+		
+		dm.kfoldCrossValidation(10, Const.MainPath+"pdf");
+
+		PMC pmc = new PMC(10, 50, Const.MainPath+"pdf");
+		
+		pmc.learnAndTestThread();
+				
+		SimpleMatrix test1=pmc.getW();
+		
+		pmc.saveWeightMatrix();
+		SimpleMatrix test2= new SimpleMatrix(50,45);
+		pmc.setW(test2);
+		
+		pmc.loadWeightMatrix();
+		
+		
+		assertTrue(test1.isIdentical(pmc.getW(),1e-5) );
+
+		
+	}
 
 }
