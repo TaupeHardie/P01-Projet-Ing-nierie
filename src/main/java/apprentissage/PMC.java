@@ -1,6 +1,7 @@
 package apprentissage;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -125,7 +126,7 @@ public class PMC {
 	private void learn(List<Sample> dataset) {
 		Random rand = new Random();
 
-		double l = 0.002;
+		double l = 0.001;
 		int nstep = 0;
 		double epsilon = 1e-3, error = 1;
 
@@ -244,6 +245,8 @@ public class PMC {
 		System.out.println("Rappel :" + matriceConfusion.getRappel());
 		System.out.println("Precision : " + matriceConfusion.getPrecision());
 		
+		saveWeightMatrix();
+		
 	}
 	
 	public void learnAndTestThread() {
@@ -274,6 +277,7 @@ public class PMC {
 		System.out.println("Rappel :" + matriceConfusion.getRappel());
 		System.out.println("Precision : " + matriceConfusion.getPrecision());
 		
+		saveWeightMatrix();
 	}
 
 	public void learnOnly(String path) {	
@@ -333,5 +337,24 @@ public class PMC {
 			expectedResult.set(echantillon.number, 1);
 		}
 		return expectedResult;
+	}
+	
+	@SuppressWarnings("static-access")
+	public void loadWeightMatrix() {
+		try {
+			W.loadCSV("weightMatrix.csv");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public void saveWeightMatrix() {
+		try {
+			W.saveToFileCSV("weightMatrix.csv");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }
