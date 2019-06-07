@@ -30,17 +30,10 @@ import writer.Writer;
  */
 public class PMC {
 	private SimpleMatrix W, Z;
-	public SimpleMatrix getW() {
-		return W;
-	}
-
-	public void setW(SimpleMatrix WM) {
-		W=WM;
-	}
-	
 	private DataManager data;
 	private ConfusionMatrix matriceConfusion;
 	private String path;
+	private ArrayList<String> sortie;
 	private int nombreNeuroneEntree, nombreNeuronesCC, nombreNeuroneSortie;
 	private int nbStepMax = 200;
 	private double learningSpeed = 0.002;
@@ -217,24 +210,28 @@ public class PMC {
 
 		int indMaxi = 0;
 		double maxi = S.get(0, 0);
+		
+		sortie.clear();
+		
 		for (int i = 1; i < S.numRows(); i++) {
+			sortie.add(((Double)S.get(i)).toString());
 			if (S.get(i) > maxi) {
 				maxi = S.get(i);
 				indMaxi = i;
 			}
 		}
 		
+		Collections.sort(sortie);
+		Collections.reverse(sortie);
+		
 		pdf.close();
 		return indMaxi;
 	}
 
 	public void learnAndTest() {
-		long t1 = System.nanoTime();
 		matriceConfusion.reset();
 		for (int currentTest = 0; currentTest < data.getK(); currentTest++) {
-			
-			System.out.println("------------------------");
-			System.out.println("Kfold : " + (currentTest+1) + "/" + data.getK());
+
 			ArrayList<Sample> learningData = new ArrayList<Sample>();
 
 			for (int i = 0; i < data.getK(); i++) {
@@ -242,7 +239,6 @@ public class PMC {
 					learningData.addAll(data.getData().get(i));
 			}
 
-			System.out.println("Size : " + learningData.size());
 			learn(learningData);
 
 			for (Sample s : data.getData().get(currentTest)) {
@@ -250,18 +246,12 @@ public class PMC {
 				matriceConfusion.increment(s.number, res);
 			}
 		}
-		System.out.println("Learning time : "+(System.nanoTime() - t1)/1000000000);
 		matriceConfusion.computeStats();
-		System.out.println("Rappel :" + matriceConfusion.getRappel());
-		System.out.println("Precision : " + matriceConfusion.getPrecision());
-		
+
 		saveWeightMatrix();
-		
 	}
 	
 	public void learnAndTestThread() {
-		System.out.println("start learning");
-		long t1 = System.nanoTime();
 		matriceConfusion.reset();
 		ExecutorService service = Executors.newFixedThreadPool(data.getK());
 		for (int currentTest = 0; currentTest < data.getK(); currentTest++) {
@@ -276,21 +266,20 @@ public class PMC {
 		}
 		ShutdownThreads.shutdownAndAwaitTermination(service, 10*60);
 		
-		System.out.println("Learning time : "+(System.nanoTime() - t1)/1000000000);
 		matriceConfusion.computeStats();
-		System.out.println("Rappel :" + matriceConfusion.getRappel());
-		System.out.println("Precision : " + matriceConfusion.getPrecision());
-		
+
 		saveWeightMatrix();
 	}
 
-	public void learnOnly(String path) {	
+	public void learnOnly() {	
 		ArrayList<Sample> alldata = new ArrayList<Sample>();
 		for (List<Sample> l : data.getData()) {
 			alldata.addAll(l);
 		}
 
 		learn(alldata);
+		
+		saveWeightMatrix();
 	}
 
 	static public SimpleMatrix FeaturesToNeuron(List<Feature> Flist) {
@@ -359,5 +348,13 @@ public class PMC {
 	
 	public ConfusionMatrix getConfusionMatrix() {
 		return matriceConfusion;
+	}
+	
+	public SimpleMatrix getW() {
+		return W;
+	}
+
+	public void setW(SimpleMatrix WM) {
+		W=WM;
 	}
 }

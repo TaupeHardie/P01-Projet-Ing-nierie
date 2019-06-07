@@ -25,6 +25,7 @@ import javax.swing.border.EmptyBorder;
 import org.ejml.simple.SimpleMatrix;
 
 import Controller.ThreadLearnAndTest;
+import Controller.ThreadLearnOnly;
 import apprentissage.ConfusionMatrix;
 import main.App;
 import misc.Const;
@@ -78,6 +79,7 @@ public class LearningView extends JFrame {
 	private JSpinner itspinner;
 	private JSpinner lenspinner;
 	private JTextField textField;
+	private static Boolean isMatrixSet = false;
 	
 	private final String lblEnCours = "Veuillez patienter, traitement en cours ...";
 	private final String lblSelectDir = "selectionnez un dossier ...";
@@ -287,6 +289,7 @@ public class LearningView extends JFrame {
 						if(rdbtnK_fold.isSelected()) {							
 							progressBar.setMinimum(0);
 							progressBar.setMaximum((int)kspinner.getValue() * (int)itspinner.getValue());
+							isMatrixSet = true;
 							
 							ExecutorService executor = Executors.newFixedThreadPool(1);
 							Callable<ConfusionMatrix> thread = new ThreadLearnAndTest(txtSelectionezUnDossier.getText(),
@@ -302,6 +305,24 @@ public class LearningView extends JFrame {
 							
 							btnTraiterDoc.setEnabled(false);
 						}
+						else if(rdbtnApprentissage.isSelected()) {
+							progressBar.setMinimum(0);
+							progressBar.setMaximum((int)itspinner.getValue());
+							isMatrixSet = false;
+							
+							Thread thread = new Thread(new ThreadLearnOnly(txtSelectionezUnDossier.getText(),
+									1, 
+									(int)nbspinner.getValue(),
+									(int)itspinner.getValue(),
+									(int)lenspinner.getValue(),
+									Double.parseDouble(textField.getText())));
+							
+							thread.start();
+							
+							
+							btnTraiterDoc.setEnabled(false);
+						}
+						
 					}
 				});
 				horizontalBox.add(btnTraiterDoc);
@@ -373,13 +394,20 @@ public class LearningView extends JFrame {
 					progressBar.setValue(progressBar.getValue()+1);
 				}else {
 					try {
-						NumberFormat formatter = new DecimalFormat("#0.00");
 						progressBar.setValue(progressBar.getValue()+1);
-						lblTraitement.setText("Terminé");
-						lblPrecision.setText("Précision : " + formatter.format(100*matrix.get().getPrecision()) + " %");
-						lblRappel.setText("Rappel : " + formatter.format(100*matrix.get().getRappel()) + " %");
+						
+						if(isMatrixSet) {
+							NumberFormat formatter = new DecimalFormat("#0.00");
+							lblPrecision.setText("Précision : " + formatter.format(100*matrix.get().getPrecision()) + " %");
+							lblRappel.setText("Rappel : " + formatter.format(100*matrix.get().getRappel()) + " %");
+						}
+						else {
+							lblPrecision.setText("Précision : - %");
+							lblRappel.setText("Rappel : - %");
+						}
 						btnExport.setEnabled(true);
 						btnTraiterDoc.setEnabled(true);
+						lblTraitement.setText("Terminé");
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					} catch (ExecutionException e) {
