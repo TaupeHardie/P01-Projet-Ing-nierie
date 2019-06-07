@@ -34,6 +34,7 @@ public class PMC {
 	private ConfusionMatrix matriceConfusion;
 	private String path;
 	private ArrayList<Sortie> sortie;
+	private Boolean isUpdatingProgressBar = true;
 	private int nombreNeuroneEntree, nombreNeuronesCC, nombreNeuroneSortie;
 	private int nbStepMax = 200;
 	private double learningSpeed = 0.002;
@@ -206,7 +207,9 @@ public class PMC {
 			}
 			nstep++;			
 			System.out.println("Step : " + nstep + "/" + nbStepMax + " (" + error +")");
-			LearningView.incrementProgressBar();
+			
+			if(isUpdatingProgressBar)
+				LearningView.incrementProgressBar();
 		}
 	}
 
@@ -272,7 +275,7 @@ public class PMC {
 				if (i != currentTest)
 					learningData.addAll(data.getData().get(i));
 			}
-			service.execute(new ThreadLearningTesting(learningData, nombreNeuroneEntree, nombreNeuronesCC, nombreNeuroneSortie, nbStepMax, lenmat, learningSpeed, matriceConfusion, currentTest, data));
+			service.execute(new ThreadLearningTesting(learningData, nombreNeuroneEntree, nombreNeuronesCC, nombreNeuroneSortie, nbStepMax, lenmat, learningSpeed, isUpdatingProgressBar, matriceConfusion, currentTest, data));
 		}
 		ShutdownThreads.shutdownAndAwaitTermination(service, 10*60);
 		
@@ -368,5 +371,9 @@ public class PMC {
 
 	public void setW(SimpleMatrix WM) {
 		W=WM;
+	}
+	
+	public void setUpdating(Boolean val) {
+		isUpdatingProgressBar = val;
 	}
 }

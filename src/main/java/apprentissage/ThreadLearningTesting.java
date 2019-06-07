@@ -19,7 +19,8 @@ public class ThreadLearningTesting implements Runnable{
 	private int nbStepMax = 200;
 	private static int lenmat = 11;
 	private SimpleMatrix W, Z;
-	public double learningSpeed;
+	private double learningSpeed;
+	private Boolean updatingProgressBar;
 	
 	
 	private List<Sample> dataset;
@@ -31,7 +32,7 @@ public class ThreadLearningTesting implements Runnable{
 	
 	
 	public ThreadLearningTesting(List<Sample> dataset, int nombreNeuroneEntree, int nombreNeuronesCC,
-			int nombreNeuroneSortie, int nbStepMax, int lenMatrix, double learningSpeed, ConfusionMatrix matriceConfusion, int currentTest, DataManager data) {
+			int nombreNeuroneSortie, int nbStepMax, int lenMatrix, double learningSpeed, Boolean update, ConfusionMatrix matriceConfusion, int currentTest, DataManager data) {
 		super();
 		this.dataset = dataset;
 		this.nombreNeuroneEntree = nombreNeuroneEntree;
@@ -42,6 +43,7 @@ public class ThreadLearningTesting implements Runnable{
 		this.data = data;
 		this.learningSpeed = learningSpeed;
 		this.nbStepMax = nbStepMax;
+		this.updatingProgressBar = update;
 		ThreadLearningTesting.lenmat = lenMatrix;
 	}
 
@@ -104,8 +106,9 @@ public class ThreadLearningTesting implements Runnable{
 					error = 1;
 				}
 			}
-			nstep++;			
-			LearningView.incrementProgressBar();
+			nstep++;
+			if(updatingProgressBar)
+				LearningView.incrementProgressBar();
 		}
 		
 		for (Sample s : data.getData().get(currentTest)) {
