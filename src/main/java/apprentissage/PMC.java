@@ -215,6 +215,8 @@ public class PMC {
 
 	public int compute(PDF pdf) {
 		SimpleMatrix X = FeaturesToNeuron(pdf.getFeatures());
+		X = X.divide(1000);
+		X.set(4*lenmat, -1);
 		SimpleMatrix S = Z.mult(relu(W.mult(X)));
 
 		int indMaxi = 0;
