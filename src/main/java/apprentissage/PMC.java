@@ -30,17 +30,10 @@ import writer.Writer;
  */
 public class PMC {
 	private SimpleMatrix W, Z;
-	public SimpleMatrix getW() {
-		return W;
-	}
-
-	public void setW(SimpleMatrix WM) {
-		W=WM;
-	}
-	
 	private DataManager data;
 	private ConfusionMatrix matriceConfusion;
 	private String path;
+	private ArrayList<String> sortie;
 	private int nombreNeuroneEntree, nombreNeuronesCC, nombreNeuroneSortie;
 	private int nbStepMax = 200;
 	private double learningSpeed = 0.002;
@@ -216,12 +209,19 @@ public class PMC {
 
 		int indMaxi = 0;
 		double maxi = S.get(0, 0);
+		
+		sortie.clear();
+		
 		for (int i = 1; i < S.numRows(); i++) {
+			sortie.add(((Double)S.get(i)).toString());
 			if (S.get(i) > maxi) {
 				maxi = S.get(i);
 				indMaxi = i;
 			}
 		}
+		
+		Collections.sort(sortie);
+		Collections.reverse(sortie);
 		
 		pdf.close();
 		return indMaxi;
@@ -377,5 +377,13 @@ public class PMC {
 	
 	public ConfusionMatrix getConfusionMatrix() {
 		return matriceConfusion;
+	}
+	
+	public SimpleMatrix getW() {
+		return W;
+	}
+
+	public void setW(SimpleMatrix WM) {
+		W=WM;
 	}
 }
