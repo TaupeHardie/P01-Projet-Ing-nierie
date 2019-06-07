@@ -295,7 +295,7 @@ public class PMC {
 		saveWeightMatrix();
 	}
 
-	public void learnOnly(String path) {	
+	public void learnOnly() {	
 		long t = System.nanoTime();
 		List<File> files = ResourcesLoader.loadDirectory(path);
 		ResourcesLoader.loadAllPdf(files);
@@ -307,6 +307,8 @@ public class PMC {
 		}
 
 		learn(alldata);
+		
+		saveWeightMatrix();
 	}
 
 	static public SimpleMatrix FeaturesToNeuron(List<Feature> Flist) {
