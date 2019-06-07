@@ -20,6 +20,6 @@ public class App {
 	
 	
 	public static void main(String[] args) {
-		LearningView.main(args);
+		ResourcesLoader.readFile(Const.MainPath+"/input.txt");
 	}
 }

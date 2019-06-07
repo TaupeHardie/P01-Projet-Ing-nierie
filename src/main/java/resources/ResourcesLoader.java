@@ -196,6 +196,7 @@ public class ResourcesLoader {
 			
 			try {
 				ligne = buff.readLine();
+				output.add(ligne);
 			} catch (IOException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
@@ -220,7 +221,6 @@ public class ResourcesLoader {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
 		return output;
 	}
 }
