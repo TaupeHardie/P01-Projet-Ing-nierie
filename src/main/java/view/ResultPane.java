@@ -25,6 +25,8 @@ import javax.swing.plaf.basic.BasicButtonUI;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
+import apprentissage.Sortie;
+
 
 
 /**
@@ -38,7 +40,7 @@ public class ResultPane extends JScrollPane {
 	/**
 	 * Create the panel.
 	 */
-	public ResultPane(List<String> results) {
+	public ResultPane(List<Sortie> results) {
 		
 		setViewportBorder(null);
 		//setPreferredSize(new Dimension(verticalBox.getWidth()-10, 250));
@@ -66,8 +68,8 @@ public class ResultPane extends JScrollPane {
 		
 		setViewportView(table);
 		
-		for(String s : results) {
-			dtm.addRow(new Object[]{s,1});
+		for(Sortie s : results) {
+			dtm.addRow(new Object[]{s.patternName, s.score});
 		}
 	}
 }

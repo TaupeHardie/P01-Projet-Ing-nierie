@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.concurrent.Callable;
 
 import apprentissage.PMC;
+import apprentissage.Sortie;
 import misc.PDF;
 import resources.ResourcesLoader;
 import view.ClientView;
@@ -26,7 +27,7 @@ public class ThreadCompute implements Runnable {
 	@Override
 	public void run() {		
 		pmc.compute(pdf);
-		List<String> s = pmc.getSortie();
+		List<Sortie> s = pmc.getSortie();
 		File f = new File(pdf.getName());
 		ClientView.addPane(f.getName(), s);
 		MainPane.incrementProgressBar();

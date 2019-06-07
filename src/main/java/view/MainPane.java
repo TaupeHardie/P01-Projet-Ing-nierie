@@ -91,9 +91,7 @@ public class MainPane extends JPanel {
 					txtSelectionezUnDossier.dispatchEvent(new MouseEvent(txtSelectionezUnDossier, MouseEvent.MOUSE_CLICKED, 0, 0, 100, 100, 1, false));
 				}
 				lblTraitement.setVisible(true);
-				lblTraitement.setText(lblEnCours);
-				
-				
+				lblTraitement.setText(lblEnCours);				
 				
 				//launch the logic in a new thread here
 								
