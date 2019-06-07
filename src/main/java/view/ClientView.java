@@ -105,6 +105,7 @@ public class ClientView extends JFrame {
 		//add a non-closable pane that start the process
 		mainPane = new MainPane();
 		tabbedPane.addTab("Accueil", mainPane);
+		
 	}
 	
 	/**

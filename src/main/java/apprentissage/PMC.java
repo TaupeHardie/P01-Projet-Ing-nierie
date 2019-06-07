@@ -69,6 +69,12 @@ public class PMC {
 		this.directoryName.remove("_IGNORE");
 
 	}
+	
+	public PMC(String path) {
+		this.path = path;
+		ResourcesLoader.loadResourcesIn(path);
+		loadWeightMatrix();
+	}
 
 	/**
 	 * Calcule le leaky ReLU d'un double
@@ -196,16 +202,14 @@ public class PMC {
 		}
 	}
 
-	public int compute(String filename) {
-		PDF pdf = new PDF(filename);
-
+	public int compute(PDF pdf) {
 		SimpleMatrix X = FeaturesToNeuron(pdf.getFeatures());
 		SimpleMatrix S = Z.mult(relu(W.mult(X)));
 
 		int indMaxi = 0;
 		double maxi = S.get(0, 0);
 		
-		sortie.clear();
+		sortie = new ArrayList<String>();
 		
 		for (int i = 1; i < S.numRows(); i++) {
 			sortie.add(((Double)S.get(i)).toString());
@@ -220,6 +224,10 @@ public class PMC {
 		
 		pdf.close();
 		return indMaxi;
+	}
+	
+	public List<String> getSortie() {
+		return sortie;
 	}
 
 	public void learnAndTest() {
@@ -236,7 +244,7 @@ public class PMC {
 			learn(learningData);
 
 			for (Sample s : data.getData().get(currentTest)) {
-				int res = compute(s.name);
+				int res = compute(ResourcesLoader.getPDFbyName(s.name));
 				matriceConfusion.increment(s.number, res);
 			}
 		}
@@ -324,7 +332,8 @@ public class PMC {
 	@SuppressWarnings("static-access")
 	public void loadWeightMatrix() {
 		try {
-			W=W.loadCSV("weightMatrix.csv");
+			W=W.loadCSV("weightMatrixW.csv");
+			Z=Z.loadCSV("weightMatrixZ.csv");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -333,7 +342,8 @@ public class PMC {
 	
 	public void saveWeightMatrix() {
 		try {
-			W.saveToFileCSV("weightMatrix.csv");
+			W.saveToFileCSV("weightMatrixW.csv");
+			Z.saveToFileCSV("weightMatrixZ.csv");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
