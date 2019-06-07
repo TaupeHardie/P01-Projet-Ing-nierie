@@ -302,6 +302,7 @@ public class LearningView extends JFrame {
 						}
 						
 						progressBar.setValue(0);
+						progressBar.setIndeterminate(true);
 						
 						btnExport.setEnabled(false);
 						lblTraitement.setVisible(true);
@@ -435,6 +436,16 @@ public class LearningView extends JFrame {
 						e.printStackTrace();
 					}
 				}
+			}
+		});
+	}
+	
+	public static void setIndeterminate(boolean b) {
+		SwingUtilities.invokeLater(new Runnable() {
+
+			@Override
+			public void run() {
+				progressBar.setIndeterminate(b);
 			}
 		});
 	}
