@@ -162,4 +162,65 @@ public class ResourcesLoader {
     public static List<PDF> getPDFs(){
     	return pdfs;
     }
+    
+    /**
+     * read a file and return the text
+     * @param fileName the file to be read
+     * @return a list that contain every line read
+     */
+    public static List<String> readFile(String fileName) {
+    	List<String> output = new ArrayList<String>();
+    	
+    	File f = new File(fileName);
+    	
+    	FileInputStream fis = null;
+		try {
+			 fis = new FileInputStream(f);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		InputStreamReader isr = new InputStreamReader(fis);
+		BufferedReader buff = new BufferedReader(isr);
+		
+		String ligne = null;
+		try {
+			ligne = buff.readLine();
+			output.add(ligne);
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		while (ligne != null) {
+			
+			try {
+				ligne = buff.readLine();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+		
+		try {
+			fis.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			isr.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			buff.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return output;
+	}
 }
