@@ -11,6 +11,8 @@ import java.io.File;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.ExecutionException;
 
 import javax.swing.Box;
@@ -23,6 +25,10 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
+import Controller.ThreadCompute;
+import apprentissage.PMC;
+import misc.Const;
+import misc.PDF;
 import resources.ResourcesLoader;
 
 /**
@@ -61,7 +67,7 @@ public class MainPane extends JPanel {
 			public void mouseClicked(MouseEvent e) {
 				fileChooser = new JFileChooser();
 				fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-				fileChooser.setCurrentDirectory(new java.io.File("."));
+				fileChooser.setCurrentDirectory(new java.io.File(Const.MainPath));
 				fileChooser.setDialogTitle(lblFileChooser);
 				fileChooser.setAcceptAllFileFilterUsed(false);
 				if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) { 
@@ -85,16 +91,22 @@ public class MainPane extends JPanel {
 					txtSelectionezUnDossier.dispatchEvent(new MouseEvent(txtSelectionezUnDossier, MouseEvent.MOUSE_CLICKED, 0, 0, 100, 100, 1, false));
 				}
 				lblTraitement.setVisible(true);
-				lblTraitement.setText(lblEnCours);
-				
-				//get all files to be processed
-				List<File> lst = ResourcesLoader.loadFileIn(txtSelectionezUnDossier.getText());
-				
-				progressBar.setMinimum(0);
-				progressBar.setMaximum(lst.size());
+				lblTraitement.setText(lblEnCours);				
 				
 				//launch the logic in a new thread here
-			
+								
+				PMC pmc = new PMC(txtSelectionezUnDossier.getText());
+				
+				progressBar.setMinimum(0);
+				progressBar.setMaximum(ResourcesLoader.getPDFs().size());
+				
+				ExecutorService executor = Executors.newFixedThreadPool(ResourcesLoader.getPDFs().size());
+				
+				for(PDF pdf:ResourcesLoader.getPDFs() ) {
+					executor.execute(new ThreadCompute(pmc, pdf));
+				}
+				
+				executor.shutdown();
 			}
 		});
 		horizontalBox.add(btnTraiterDoc);

@@ -33,7 +33,8 @@ public class PMC {
 	private DataManager data;
 	private ConfusionMatrix matriceConfusion;
 	private String path;
-	private ArrayList<String> sortie;
+	private ArrayList<Sortie> sortie;
+	private Boolean isUpdatingProgressBar = true;
 	private int nombreNeuroneEntree, nombreNeuronesCC, nombreNeuroneSortie;
 	private int nbStepMax = 200;
 	private double learningSpeed = 0.002;
@@ -67,7 +68,21 @@ public class PMC {
 		
 		this.directoryName = ResourcesLoader.getDirectoriesName();
 		this.directoryName.remove("_IGNORE");
-
+		
+		StringBuilder directoryString = new StringBuilder("");
+		
+		for(String s:this.directoryName) {
+			directoryString.append(s + "\n");
+		}
+		
+		Writer.writeTo(directoryString.toString(), Const.MainPath + "directoryName.txt");
+	}
+	
+	public PMC(String path) {
+		this.path = path;
+		ResourcesLoader.loadResourcesIn(path);
+		directoryName = ResourcesLoader.readFile(Const.MainPath + "directoryName.txt");
+		loadWeightMatrix();
 	}
 
 	/**
@@ -192,23 +207,25 @@ public class PMC {
 			}
 			nstep++;			
 			System.out.println("Step : " + nstep + "/" + nbStepMax + " (" + error +")");
-			LearningView.incrementProgressBar();
+			
+			if(isUpdatingProgressBar)
+				LearningView.incrementProgressBar();
 		}
 	}
 
-	public int compute(String filename) {
-		PDF pdf = new PDF(filename);
-
+	public int compute(PDF pdf) {
 		SimpleMatrix X = FeaturesToNeuron(pdf.getFeatures());
+		X = X.divide(1000);
+		X.set(4*lenmat, -1);
 		SimpleMatrix S = Z.mult(relu(W.mult(X)));
 
 		int indMaxi = 0;
 		double maxi = S.get(0, 0);
 		
-		sortie.clear();
+		sortie = new ArrayList<Sortie>();
 		
 		for (int i = 1; i < S.numRows(); i++) {
-			sortie.add(((Double)S.get(i)).toString());
+			sortie.add(new Sortie(directoryName.get(i), S.get(i)));
 			if (S.get(i) > maxi) {
 				maxi = S.get(i);
 				indMaxi = i;
@@ -220,6 +237,10 @@ public class PMC {
 		
 		pdf.close();
 		return indMaxi;
+	}
+	
+	public List<Sortie> getSortie() {
+		return sortie;
 	}
 
 	public void learnAndTest() {
@@ -236,7 +257,7 @@ public class PMC {
 			learn(learningData);
 
 			for (Sample s : data.getData().get(currentTest)) {
-				int res = compute(s.name);
+				int res = compute(ResourcesLoader.getPDFbyName(s.name));
 				matriceConfusion.increment(s.number, res);
 			}
 		}
@@ -256,7 +277,7 @@ public class PMC {
 				if (i != currentTest)
 					learningData.addAll(data.getData().get(i));
 			}
-			service.execute(new ThreadLearningTesting(learningData, nombreNeuroneEntree, nombreNeuronesCC, nombreNeuroneSortie, nbStepMax, lenmat, learningSpeed, matriceConfusion, currentTest, data));
+			service.execute(new ThreadLearningTesting(learningData, nombreNeuroneEntree, nombreNeuronesCC, nombreNeuroneSortie, nbStepMax, lenmat, learningSpeed, isUpdatingProgressBar, matriceConfusion, currentTest, data));
 		}
 		ShutdownThreads.shutdownAndAwaitTermination(service, 10*60);
 		
@@ -324,7 +345,8 @@ public class PMC {
 	@SuppressWarnings("static-access")
 	public void loadWeightMatrix() {
 		try {
-			W=W.loadCSV("weightMatrix.csv");
+			W=W.loadCSV(Const.MainPath + "\\weightMatrixW.csv");
+			Z=Z.loadCSV(Const.MainPath + "\\weightMatrixZ.csv");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -333,7 +355,8 @@ public class PMC {
 	
 	public void saveWeightMatrix() {
 		try {
-			W.saveToFileCSV("weightMatrix.csv");
+			W.saveToFileCSV(Const.MainPath + "\\weightMatrixW.csv");
+			Z.saveToFileCSV(Const.MainPath + "\\weightMatrixZ.csv");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -350,5 +373,9 @@ public class PMC {
 
 	public void setW(SimpleMatrix WM) {
 		W=WM;
+	}
+	
+	public void setUpdating(Boolean val) {
+		isUpdatingProgressBar = val;
 	}
 }

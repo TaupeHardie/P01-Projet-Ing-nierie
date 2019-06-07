@@ -33,6 +33,7 @@ import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 
+import apprentissage.Sortie;
 import resources.ResourcesLoader;
 
 /**
@@ -105,6 +106,7 @@ public class ClientView extends JFrame {
 		//add a non-closable pane that start the process
 		mainPane = new MainPane();
 		tabbedPane.addTab("Accueil", mainPane);
+		
 	}
 	
 	/**
@@ -113,7 +115,7 @@ public class ClientView extends JFrame {
 	 * @param name the name of the pane
 	 * @param results the data in the table
 	 */
-	public static void addPane(String name, List<String> results) {
+	public static void addPane(String name, List<Sortie> results) {
 		
 		//add the pane to the tabbedPane
 		tabbedPane.addTab(name, new ResultPane(results));
