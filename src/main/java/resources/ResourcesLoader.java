@@ -117,10 +117,12 @@ public class ResourcesLoader {
     
     public static void loadResourcesIn(String path) {
     	if(!path.equalsIgnoreCase(directoryOrFileLoaded)) {
-        	System.out.println("starting PDF loading");
+        	System.out.println("start PDF loading");
+        	long t1 = System.nanoTime();
         	pdfs.clear();
         	directoryOrFileLoaded = path;
         	loadAllPdf(loadFileIn(directoryOrFileLoaded));
+        	System.out.println("PDF loading ended in : "+(System.nanoTime()-t1)/1000000000+"s");
     	}
     }
     
@@ -153,6 +155,10 @@ public class ResourcesLoader {
     	return names;
     }
     
+    /**
+     * get All PDF loaded in the class
+     * @return the list of all PDF loaded in the class
+     */
     public static List<PDF> getPDFs(){
     	return pdfs;
     }

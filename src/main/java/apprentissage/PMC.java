@@ -189,12 +189,6 @@ public class PMC {
 					k = 0;
 					error = 1;
 				}
-				
-				if(k == 0 && nstep == nbStepMax - 1) {
-					for(int i = 0; i < T.numRows(); i++) {
-						System.out.println(T.get(i) + " " + S.get(i));
-					}						
-				}
 			}
 			nstep++;			
 			System.out.println("Step : " + nstep + "/" + nbStepMax + " (" + error +")");

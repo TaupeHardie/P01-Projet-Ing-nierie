@@ -28,9 +28,11 @@ public class ThreadLearnAndTest implements Callable<ConfusionMatrix>{
 	}
 
 	@Override
-	public ConfusionMatrix call() throws Exception {	
+	public ConfusionMatrix call() throws Exception {
+    	long t1 = System.nanoTime();
 		PMC pmc = new PMC(path, k, nbCoucheCachee, nbSteps, lenMatrix, learningSpeed);
 		pmc.learnAndTestThread();
+		System.out.println("learning ended in : "+(System.nanoTime()-t1)/1000000000+"s");
 		
 		return pmc.getConfusionMatrix();
 	}

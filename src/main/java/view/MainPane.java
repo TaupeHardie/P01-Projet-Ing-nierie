@@ -8,7 +8,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import javax.swing.Box;
 import javax.swing.JButton;
@@ -17,6 +20,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
 import resources.ResourcesLoader;
@@ -116,28 +120,16 @@ public class MainPane extends JPanel {
 	 * If it reach maxValue set the label to "Terminé"
 	 */
 	public static void incrementProgressBar() {
-		if(progressBar.getValue()+1 < progressBar.getMaximum()) {
-			progressBar.setValue(progressBar.getValue()+1);
-		}else {
-			progressBar.setValue(progressBar.getValue()+1);
-			lblTraitement.setText("Terminé");
-		}
-		progressBar.getParent().update(progressBar.getParent().getGraphics());
-	}
-	
-	/**
-	 * get the progress bar, for thread utilities
-	 * @return the progressBar
-	 */
-	public static JProgressBar getProgressBar() {
-		return progressBar;
-	}
-	
-	/**
-	 * get the label under the progressBar for thread utilities
-	 * @return the label
-	 */
-	public static JLabel getLabel() {
-		return lblTraitement;
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				if(progressBar.getValue()+1 < progressBar.getMaximum()) {
+					progressBar.setValue(progressBar.getValue()+1);
+				}else {
+					progressBar.setValue(progressBar.getValue()+1);
+					lblTraitement.setText("Terminé");
+				}
+			}
+		});
 	}
 }

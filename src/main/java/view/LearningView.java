@@ -154,6 +154,7 @@ public class LearningView extends JFrame {
 		verticalBox.add(horizontalBox_1);
 		
 		rdbtnApprentissage = new JRadioButton("Apprentissage complet");
+		rdbtnApprentissage.setAlignmentX(Component.CENTER_ALIGNMENT);
 		horizontalBox_1.add(rdbtnApprentissage);
 		
 		Component horizontalStrut = Box.createHorizontalStrut(20);
@@ -183,59 +184,79 @@ public class LearningView extends JFrame {
 		Component verticalStrut_5 = Box.createVerticalStrut(20);
 		verticalBox.add(verticalStrut_5);
 		
-		Box horizontalBox_3 = Box.createHorizontalBox();
-		verticalBox.add(horizontalBox_3);
+		Box horizontalBox_5 = Box.createHorizontalBox();
+		verticalBox.add(horizontalBox_5);
 		
-		JLabel lblNewLabel = new JLabel("Nombre de neurones dans la couche cachée : ");
-		horizontalBox_3.add(lblNewLabel);
+		Box verticalBox_1 = Box.createVerticalBox();
+		verticalBox_1.setAlignmentX(Component.CENTER_ALIGNMENT);
+		horizontalBox_5.add(verticalBox_1);
+		
+		Box horizontalBox_6 = Box.createHorizontalBox();
+		horizontalBox_6.setBorder(new EmptyBorder(0, 0, 5, 0));
+		horizontalBox_6.setAlignmentX(Component.RIGHT_ALIGNMENT);
+		horizontalBox_6.setAlignmentY(Component.CENTER_ALIGNMENT);
+		verticalBox_1.add(horizontalBox_6);
+		
+		JLabel label = new JLabel("Nombre de neurones dans la couche cachée : ");
+		horizontalBox_6.add(label);
 		
 		nbspinner = new JSpinner();
-		nbspinner.setModel(new SpinnerNumberModel(50, 1, 1000, 1));
-		nbspinner.setMaximumSize(new Dimension(80, 30));
+		nbspinner.setModel(new SpinnerNumberModel(new Integer(50), new Integer(1), null, new Integer(1)));
+		nbspinner.setMaximumSize(new Dimension(60, 30));
+		horizontalBox_6.add(nbspinner);
 		
-		horizontalBox_3.add(nbspinner);
+		Box horizontalBox_8 = Box.createHorizontalBox();
+		horizontalBox_8.setAlignmentX(Component.RIGHT_ALIGNMENT);
+		horizontalBox_8.setAlignmentY(Component.CENTER_ALIGNMENT);
+		verticalBox_1.add(horizontalBox_8);
+		
+		JLabel label_1 = new JLabel("Vitesse d'apprentissage : ");
+		horizontalBox_8.add(label_1);
+		
+		textField = new JTextField();
+		textField.setText("0.002");
+		textField.setMaximumSize(new Dimension(60, 30));
+		textField.setHorizontalAlignment(SwingConstants.RIGHT);
+		textField.setColumns(10);
+		horizontalBox_8.add(textField);
 		
 		Component horizontalStrut_3 = Box.createHorizontalStrut(20);
-		horizontalBox_3.add(horizontalStrut_3);
+		horizontalBox_5.add(horizontalStrut_3);
 		
-		JLabel lblNombreDitrations = new JLabel("Nombre d'itérations : ");
-		horizontalBox_3.add(lblNombreDitrations);
+		Box verticalBox_2 = Box.createVerticalBox();
+		horizontalBox_5.add(verticalBox_2);
+		
+		Box horizontalBox_7 = Box.createHorizontalBox();
+		horizontalBox_7.setBorder(new EmptyBorder(0, 0, 5, 0));
+		horizontalBox_7.setAlignmentX(Component.RIGHT_ALIGNMENT);
+		horizontalBox_7.setAlignmentY(Component.CENTER_ALIGNMENT);
+		verticalBox_2.add(horizontalBox_7);
+		
+		JLabel label_2 = new JLabel("Nombre d'itérations : ");
+		label_2.setAlignmentX(Component.CENTER_ALIGNMENT);
+		horizontalBox_7.add(label_2);
 		
 		itspinner = new JSpinner();
-		itspinner.setMaximumSize(new Dimension(60, 30));
 		itspinner.setModel(new SpinnerNumberModel(new Integer(200), new Integer(1), null, new Integer(1)));
-		horizontalBox_3.add(itspinner);
+		itspinner.setMaximumSize(new Dimension(60, 30));
+		horizontalBox_7.add(itspinner);
 		
-		Component verticalStrut_3 = Box.createVerticalStrut(10);
-		verticalBox.add(verticalStrut_3);
+		Box horizontalBox_9 = Box.createHorizontalBox();
+		horizontalBox_9.setAlignmentX(Component.RIGHT_ALIGNMENT);
+		horizontalBox_9.setAlignmentY(Component.CENTER_ALIGNMENT);
+		verticalBox_2.add(horizontalBox_9);
+		
+		JLabel label_3 = new JLabel("Taille de l'entrée : ");
+		label_3.setAlignmentX(Component.CENTER_ALIGNMENT);
+		horizontalBox_9.add(label_3);
+		
+		lenspinner = new JSpinner();
+		lenspinner.setModel(new SpinnerNumberModel(new Integer(10), new Integer(1), null, new Integer(1)));
+		lenspinner.setMaximumSize(new Dimension(60, 30));
+		horizontalBox_9.add(lenspinner);
 		
 		Box horizontalBox_4 = Box.createHorizontalBox();
 		verticalBox.add(horizontalBox_4);
-		
-		JLabel lblVitesseDapprentissage = new JLabel("Vitesse d'apprentissage");
-		horizontalBox_4.add(lblVitesseDapprentissage);
-		
-		Component horizontalStrut_4 = Box.createHorizontalStrut(20);
-		horizontalBox_4.add(horizontalStrut_4);
-		
-		textField = new JTextField();
-		textField.setHorizontalAlignment(SwingConstants.RIGHT);
-		textField.setText("0.002");
-		textField.setMaximumSize(new Dimension(80, 30));
-		horizontalBox_4.add(textField);
-		textField.setColumns(10);
-		
-		
-		Component horizontalStrut_5 = Box.createHorizontalStrut(20);
-		horizontalBox_4.add(horizontalStrut_5);
-		
-		JLabel lblTailleEntre = new JLabel("Taille de l'entrée : ");
-		horizontalBox_4.add(lblTailleEntre);
-		
-		lenspinner = new JSpinner();
-		lenspinner.setMaximumSize(new Dimension(80, 30));
-		lenspinner.setModel(new SpinnerNumberModel(10, 1, 10000, 1));
-		horizontalBox_4.add(lenspinner);
 		
 		Component verticalStrut = Box.createVerticalStrut(10);
 		verticalBox.add(verticalStrut);
@@ -382,9 +403,9 @@ public class LearningView extends JFrame {
 		verticalBox.add(btnExport);
 		btnExport.setEnabled(false);
 	}
-	
+
 	/**
-	 * increment the progress bar by one unit 
+	 * increment the progress bar by one unit, set labels when maxValue is reached
 	 */
 	public static void incrementProgressBar() {
 		SwingUtilities.invokeLater(new Runnable() {
