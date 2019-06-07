@@ -18,22 +18,23 @@ public class TestApprentissage {
 
 	@Test
 	public void testkfoldCR() {
-		DataManager dm = new DataManager();
 		String path = Const.MainPath+"pdf";
+		DataManager dm = new DataManager(path);
 		
-		dm.kfoldCrossValidation(10, path);
-		assertEquals(ResourcesLoader.loadDirectory(path).size() 
-				- ResourcesLoader.loadDirectory(path+"/_IGNORE").size(),
+		
+		dm.kfoldCrossValidation(10);
+		assertEquals(ResourcesLoader.loadFileIn(path).size() 
+				- ResourcesLoader.loadFileIn(path+"/_IGNORE").size(),
 				dm.getSampleNumber());
 		
-		dm.kfoldCrossValidation(5,path);
-		assertEquals(ResourcesLoader.loadDirectory(path).size() 
-				- ResourcesLoader.loadDirectory(path+"/_IGNORE").size(),
+		dm.kfoldCrossValidation(5);
+		assertEquals(ResourcesLoader.loadFileIn(path).size() 
+				- ResourcesLoader.loadFileIn(path+"/_IGNORE").size(),
 				dm.getSampleNumber());
 		
-		dm.kfoldCrossValidation(3,path);
-		assertEquals(ResourcesLoader.loadDirectory(path).size() 
-				- ResourcesLoader.loadDirectory(path+"/_IGNORE").size(),
+		dm.kfoldCrossValidation(3);
+		assertEquals(ResourcesLoader.loadFileIn(path).size() 
+				- ResourcesLoader.loadFileIn(path+"/_IGNORE").size(),
 				dm.getSampleNumber());
 	}
 	
@@ -41,8 +42,8 @@ public class TestApprentissage {
 	public void testResultMatrix() {
 		String path = Const.MainPath+"pdf";
 		
-		DataManager dm = new DataManager();
-		dm.kfoldCrossValidation(10,path);
+		DataManager dm = new DataManager(path);
+		dm.kfoldCrossValidation(10);
 
 		SimpleMatrix test1 = new SimpleMatrix(11,1);
 		test1.set(6,1.0);
@@ -82,7 +83,7 @@ public class TestApprentissage {
 	
 	@Test
 	public void testConfusionMatrix() {
-		ConfusionMatrix matrix = new ConfusionMatrix(2, "");
+		ConfusionMatrix matrix = new ConfusionMatrix(2);
 		
 		for(int i = 0; i < 95; i++)
 			matrix.increment(0, 0);
@@ -105,10 +106,6 @@ public class TestApprentissage {
 	
 	@Test
 	public void testSauvegardeLoadMatrix() {
-		DataManager dm = new DataManager();
-		
-		dm.kfoldCrossValidation(10, Const.MainPath+"pdf");
-
 		PMC pmc = new PMC(Const.MainPath+"pdf", 10, 50, 50, 10, 0.002);
 		
 		pmc.learnAndTestThread();

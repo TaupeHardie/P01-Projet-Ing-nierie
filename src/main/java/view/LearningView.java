@@ -373,7 +373,6 @@ public class LearningView extends JFrame {
 					progressBar.setValue(progressBar.getValue()+1);
 				}else {
 					try {
-						matrix.get().computeStats();
 						NumberFormat formatter = new DecimalFormat("#0.00");
 						progressBar.setValue(progressBar.getValue()+1);
 						lblTraitement.setText("Terminé");
@@ -390,13 +389,4 @@ public class LearningView extends JFrame {
 			}
 		});
 	}
-	
-	/**
-	 * get the progress bar, for thread utilities
-	 * @return the progressBar
-	 */
-	public static JProgressBar getProgressBar() {
-		return progressBar;
-	}
-
 }

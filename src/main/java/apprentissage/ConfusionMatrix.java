@@ -8,14 +8,12 @@ import resources.ResourcesLoader;
 
 public class ConfusionMatrix {
 	
-	SimpleMatrix confMatrix;
-	String path;
+	public SimpleMatrix confMatrix;
 	int classNb;
 	double rappel, precision;
 	
-	public ConfusionMatrix(int numbOfClasses, String path) {
+	public ConfusionMatrix(int numbOfClasses) {
 		this.confMatrix=new SimpleMatrix(numbOfClasses,numbOfClasses);
-		this.path = path;
 		classNb=numbOfClasses;
 	}
 	
@@ -61,7 +59,7 @@ public class ConfusionMatrix {
 	@Override
 	public String toString() {
 		//custom toString to print the header (name of the class) of the table
-		List<String> dirNames = ResourcesLoader.getDirectoriesName(path);
+		List<String> dirNames = ResourcesLoader.getDirectoriesName();
 		dirNames.remove("_IGNORE");
 		StringBuilder rtn = new StringBuilder();
 		

@@ -84,7 +84,7 @@ public class MainPane extends JPanel {
 				lblTraitement.setText(lblEnCours);
 				
 				//get all files to be processed
-				List<File> lst = ResourcesLoader.loadInput(txtSelectionezUnDossier.getText());
+				List<File> lst = ResourcesLoader.loadFileIn(txtSelectionezUnDossier.getText());
 				
 				progressBar.setMinimum(0);
 				progressBar.setMaximum(lst.size());

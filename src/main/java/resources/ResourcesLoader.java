@@ -24,12 +24,10 @@ import misc.ShutdownThreads;
 import view.ClientView;
 import view.ThreadUpdateProgressBar;
 
-/**
- * Classe statique regrouppant toutes les fonctions concernant la lecture de fichiers et de dossiers
- *
- */
+
 public class ResourcesLoader {
 	private static List<PDF> pdfs = new ArrayList<PDF>();
+	private static String directoryOrFileLoaded = "";
 	
 	
 	/**
@@ -52,7 +50,7 @@ public class ResourcesLoader {
      * @param directoryPath the folder to be loaded
      * @return a list with all the pdf
      */
-    public static List<File> loadDirectory(String directoryPath){
+    private static List<File> loadDirectory(String directoryPath){
     	List<File> files = new ArrayList<File>();
     	
     	File directory = new File(directoryPath);
@@ -63,7 +61,6 @@ public class ResourcesLoader {
             	files.add(fileEntry);
             }
         }
-    	
     	return files;
     }
     
@@ -72,7 +69,7 @@ public class ResourcesLoader {
      * @param path selected by the user it represent a directory or a file
      * @return all the files that are in the directory and it's sub directories or the selected file
      */
-    public static List<File> loadInput(String path){
+    public static List<File> loadFileIn(String path){
     	List<File> files = new ArrayList<File>();
     	File f = new File(path);
     	if(!f.isDirectory() && f.getPath().contains(".pdf")) {
@@ -84,36 +81,30 @@ public class ResourcesLoader {
     }
     
     /**
-     * Get the name of all directories inside the given one
-     * @param rootPath the directory to look at
-     * @return the name of all directories
-     */
-    public static List<String> getDirectoriesName(String rootPath){
-    	List<String> names = new ArrayList<String>();
-    	File directory = new File(rootPath);
-    	for (final File fileEntry : directory.listFiles()) {
-    		if (fileEntry.isDirectory()) {
-    			names.add(fileEntry.getName());
-    		}
-    	}
-    	return names;
-    }
-    
-    /**
      * this load all PDF in the list.
      * It launch cores -1 threads to process the PDF and add it to the list in this class
      * @param files the list of pdf files 
      */
-    public static void loadAllPdf(List<File> files) {
-    	System.out.println("starting PDF loading");
+    private static void loadAllPdf(List<File> files) {
     	ExecutorService service = Executors.newFixedThreadPool(Const.nbCore);
-    	int chunk = files.size()/Const.nbCore;
-    	for (int i = 0; i < Const.nbCore; i++) {
+    	int max=0;
+    	int chunk=0;
+    	if(files.size()<Const.nbCore) {
+    		max = files.size();
+    		chunk = 1;
+    	}else {
+    		max = Const.nbCore;
+    		chunk = files.size()/Const.nbCore;
+    	}
+    	for (int i = 0; i < max-1; i++) {
     		List<File> subFiles = new ArrayList<File>();
     		subFiles.addAll(files.subList(chunk*i, chunk*(i+1)));
 			service.execute(new ThreadPDFLoader(subFiles));
 		}
-    	ShutdownThreads.shutdownAndAwaitTermination(service, 5*60);
+    	List<File> subFiles = new ArrayList<File>();
+		subFiles.addAll(files.subList(chunk*(max-1), files.size()));
+		service.execute(new ThreadPDFLoader(subFiles));
+		ShutdownThreads.shutdownAndAwaitTermination(service, 5*60);
     }
     
     /**
@@ -122,6 +113,15 @@ public class ResourcesLoader {
      */
     public static synchronized void addPdf(PDF p) {
     	pdfs.add(p);
+    }
+    
+    public static void loadResourcesIn(String path) {
+    	if(!path.equalsIgnoreCase(directoryOrFileLoaded)) {
+        	System.out.println("starting PDF loading");
+        	pdfs.clear();
+        	directoryOrFileLoaded = path;
+        	loadAllPdf(loadFileIn(directoryOrFileLoaded));
+    	}
     }
     
     /**
@@ -134,63 +134,26 @@ public class ResourcesLoader {
     	if(!pdflst.isEmpty()) {
     		return pdflst.get(0);
     	}
-    	return null;
-    			
+    	return null;		
     }
-
-    /**
-     * read a file and output the text in the console
-     * @param fileName the file to be read 
-     */
-    public static void readFile(String fileName) {
-    	File f = loadResourceFile(fileName);
-    	
-    	FileInputStream fis = null;
-		try {
-			 fis = new FileInputStream(f);
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		InputStreamReader isr = new InputStreamReader(fis);
-		BufferedReader buff = new BufferedReader(isr);
-		
-		String ligne = null;
-		try {
-			ligne = buff.readLine();
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		while (ligne != null) {
-			System.out.println(ligne);
-			try {
-				ligne = buff.readLine();
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-		}
-		
-		try {
-			fis.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		try {
-			isr.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		try {
-			buff.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
     
+    /**
+     * Get the name of all directories inside the given one
+     * @param rootPath the directory to look at
+     * @return the name of all directories
+     */
+    public static List<String> getDirectoriesName(){
+    	List<String> names = new ArrayList<String>();
+    	File directory = new File(directoryOrFileLoaded);
+    	for (final File fileEntry : directory.listFiles()) {
+    		if (fileEntry.isDirectory()) {
+    			names.add(fileEntry.getName());
+    		}
+    	}
+    	return names;
+    }
+    
+    public static List<PDF> getPDFs(){
+    	return pdfs;
+    }
 }

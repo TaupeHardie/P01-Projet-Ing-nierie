@@ -13,12 +13,15 @@ import resources.ResourcesLoader;
 public class DataManager {
 	private List<List<Sample>> data;
 	private int k, nbClasses;
+	private String path;
 	
 	/**
 	 * Constructeur par defaut
 	 */
-	public DataManager() {
+	public DataManager(String path) {
 		data = new ArrayList<List<Sample>>();
+		this.path = path;
+		ResourcesLoader.loadResourcesIn(path);
 	}
 	
 	public List<List<Sample>> getData() {
@@ -38,8 +41,8 @@ public class DataManager {
 	 * Une partie sera utilisee pour la partie test, le reste pour l'apprentissage
 	 * @param k
 	 */
-	public void kfoldCrossValidation(int k, String path) {
-		List<String> directoryName = ResourcesLoader.getDirectoriesName(path);
+	public void kfoldCrossValidation(int k) {
+		List<String> directoryName = ResourcesLoader.getDirectoriesName();
 		directoryName.remove("_IGNORE");
 		
 		this.k = k;
@@ -51,7 +54,7 @@ public class DataManager {
 			data.add(new ArrayList<Sample>());
 			
 			for(String dn:directoryName) {
-				List<File> pdf = ResourcesLoader.loadDirectory(path+"/"+ dn);
+				List<File> pdf = ResourcesLoader.loadFileIn(path+"/"+ dn);
 				int step = pdf.size()/k;
 				int limit = i == k-1 ? pdf.size():(i+1)*step;
 

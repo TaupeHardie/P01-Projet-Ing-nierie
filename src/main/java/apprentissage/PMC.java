@@ -44,7 +44,7 @@ public class PMC {
 	private int nombreNeuroneEntree, nombreNeuronesCC, nombreNeuroneSortie;
 	private int nbStepMax = 200;
 	private double learningSpeed = 0.002;
-	static int lenmat = 11;
+	private static int lenmat = 11;
 	private static List<String> directoryName;
 
 	/**
@@ -55,25 +55,26 @@ public class PMC {
 	 * @param Path Chemin des dossier à récupérer
 	 */
 	public PMC(String Path, int k, int neuronesCaches, int max, int lenMatrix, double ls) {
-		nbStepMax = max;
-		path = Path;
-		learningSpeed = ls;
-		lenmat = lenMatrix + 1;
-		Random rand = new Random();
-		data = new DataManager();
-		data.kfoldCrossValidation(k,Path);
-		matriceConfusion = new ConfusionMatrix(data.numClasses(), Path);
-		
-		nombreNeuronesCC = neuronesCaches;
-		nombreNeuroneEntree = lenmat * 4+1;
-		nombreNeuroneSortie = data.numClasses();
-
-		W = SimpleMatrix.random(nombreNeuronesCC, nombreNeuroneEntree, -1, 1, rand);
-		Z = SimpleMatrix.random(nombreNeuroneSortie, nombreNeuronesCC, -1, 1, rand);
-		directoryName = ResourcesLoader.getDirectoriesName(Path);
-		directoryName.remove("_IGNORE");
-		
+		this.nbStepMax = max;
 		this.path = Path;
+		this.learningSpeed = ls;
+		this.lenmat = lenMatrix + 1;
+		
+		this.data = new DataManager(Path);
+		this.data.kfoldCrossValidation(k);
+		this.matriceConfusion = new ConfusionMatrix(data.numClasses());
+		
+		this.nombreNeuronesCC = neuronesCaches;
+		this.nombreNeuroneEntree = lenmat * 4+1;
+		this.nombreNeuroneSortie = data.numClasses();
+
+		Random rand = new Random();
+		this.W = SimpleMatrix.random(nombreNeuronesCC, nombreNeuroneEntree, -1, 1, rand);
+		this.Z = SimpleMatrix.random(nombreNeuroneSortie, nombreNeuronesCC, -1, 1, rand);
+		
+		this.directoryName = ResourcesLoader.getDirectoriesName();
+		this.directoryName.remove("_IGNORE");
+
 	}
 
 	/**
@@ -228,12 +229,6 @@ public class PMC {
 	}
 
 	public void learnAndTest() {
-		
-		long t = System.nanoTime();
-		List<File> files = ResourcesLoader.loadDirectory(path);
-		ResourcesLoader.loadAllPdf(files);
-		System.out.println("load all pdf time : "+(System.nanoTime() - t)/1000000000);
-		
 		long t1 = System.nanoTime();
 		matriceConfusion.reset();
 		for (int currentTest = 0; currentTest < data.getK(); currentTest++) {
@@ -265,12 +260,6 @@ public class PMC {
 	}
 	
 	public void learnAndTestThread() {
-		
-		long t = System.nanoTime();
-		List<File> files = ResourcesLoader.loadDirectory(path);
-		ResourcesLoader.loadAllPdf(files);
-		System.out.println("load all pdf time : "+(System.nanoTime() - t)/1000000000);
-		
 		System.out.println("start learning");
 		long t1 = System.nanoTime();
 		matriceConfusion.reset();
@@ -296,11 +285,6 @@ public class PMC {
 	}
 
 	public void learnOnly(String path) {	
-		long t = System.nanoTime();
-		List<File> files = ResourcesLoader.loadDirectory(path);
-		ResourcesLoader.loadAllPdf(files);
-		System.out.println("load all pdf time : "+(System.nanoTime() - t)/1000000000);
-		
 		ArrayList<Sample> alldata = new ArrayList<Sample>();
 		for (List<Sample> l : data.getData()) {
 			alldata.addAll(l);

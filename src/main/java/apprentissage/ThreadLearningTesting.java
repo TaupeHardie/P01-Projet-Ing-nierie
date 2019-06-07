@@ -61,7 +61,9 @@ public class ThreadLearningTesting implements Runnable{
 			
 			for (int k = 0; k < dataset.size(); k++) {//201 x 5ms -> 1sec
 				PDF currentPDF = ResourcesLoader.getPDFbyName((dataset.get(k).name));
-				
+				if(currentPDF == null) {
+					System.out.println("");
+				}
 				SimpleMatrix X = PMC.FeaturesToNeuron(currentPDF.getFeatures());
 				X = X.divide(1000);
 				X.set(4*lenmat, -1);
@@ -93,7 +95,6 @@ public class ThreadLearningTesting implements Runnable{
 				error += PMC.abs(T.minus(S)).elementSum()/dataset.size();				
 				
 				if(Double.isNaN(error)) {
-					System.out.println("Error is NaN ! Reset.");
 					
 					W = SimpleMatrix.random(nombreNeuronesCC, nombreNeuroneEntree, -0.5, 0.5, rand);
 					Z = SimpleMatrix.random(nombreNeuroneSortie, nombreNeuronesCC, -0.5, 0.5, rand);
@@ -111,7 +112,6 @@ public class ThreadLearningTesting implements Runnable{
 			}
 			nstep++;			
 			LearningView.incrementProgressBar();
-			System.out.println("Step : " + nstep + "/" + nbStepMax + " (" + error +")");
 		}
 		
 		for (Sample s : data.getData().get(currentTest)) {
