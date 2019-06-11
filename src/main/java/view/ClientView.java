@@ -40,9 +40,9 @@ import misc.Const;
 import resources.ResourcesLoader;
 
 /**
- * Class qui regroupe plusiseur composant pour faire le vue client.
- * Cette vue permet de trouver le meilleur pattern pour les pdf selectionnés.
- * Les resulats sont affichés dans des onglets séparés.
+ * Classe qui regroupe plusieurs composants pour faire le vue client.
+ * Cette vue permet de trouver le meilleur pattern pour les pdf selectionnes.
+ * Les resulats sont affiches dans des onglets separes.
  */
 public class ClientView extends JFrame {
 
@@ -128,10 +128,10 @@ public class ClientView extends JFrame {
 	}
 	
 	/**
-	 * Ajoute un nouvel onglets a la vue
-	 * Cela montre le pdf avec les patterns et leur scores respectifs. 
+	 * Ajoute un nouvel onglet a la vue
+	 * Cela montre le pdf avec les patterns et leurs scores respectifs. 
 	 * @param name le nom de l'onglet 
-	 * @param results les données a afficher
+	 * @param results les donnees a afficher
 	 */
 	public static void addPane(String name, List<Sortie> results) {
 		

@@ -3,7 +3,7 @@ package Controller;
 import apprentissage.PMC;
 
 /**
- * Thread lancant la logique de l'application pour améliorer l'algorithme.
+ * Thread lancant la logique de l'application pour ameliorer l'algorithme.
  */
 public class ThreadLearnOnly implements Runnable{
 	private int k, nbCoucheCachee, nbSteps, lenMatrix;
@@ -12,10 +12,10 @@ public class ThreadLearnOnly implements Runnable{
 
 	/**
 	 * Lance l'apprentissage de tous les PDF
-	 * @param path Chemin des pdf à apprendre
+	 * @param path Chemin des pdf a apprendre
 	 * @param k nombre de partition pour le k-fold
-	 * @param nbCoucheCachee nombre de neurones dans la couche cachée
-	 * @param nbSteps nombre d'étapes maximales par étapes
+	 * @param nbCoucheCachee nombre de neurones dans la couche cachee
+	 * @param nbSteps nombre d'etapes maximales par etapes
 	 * @param lenMatrix taille neurones par type de features
 	 * @param learningSpeed vitesse d'apprentissage
 	 */

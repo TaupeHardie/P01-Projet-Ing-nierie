@@ -40,7 +40,7 @@ public class Feature {
 	/**
 	 * Setter
 	 * @param pos position
-	 * @param str chaine de caractères
+	 * @param str chaine de caracteres
 	 * @param type type du regex
 	 */
 	public void set(int pos, String str, String type) {

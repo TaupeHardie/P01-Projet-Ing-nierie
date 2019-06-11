@@ -46,7 +46,7 @@ public class Regexp {
 	/**
 	 * detecte toutes les features, matchees par nos regexp, dans le texte en parametre
 	 * @param content le texte a traiter
-	 * @return une liste des feature detectees par toutes nos regexp
+	 * @return une liste des features detectees par toutes nos regexp
 	 */
 	public static List<Feature> getAllFeatures(String content) {
 		init();
@@ -67,7 +67,7 @@ public class Regexp {
 	/** 
 	 * supprime tous les textes entre accolades
 	 * @param textPDF le texte du PDF avec des elements caches
-	 * @return le m�me document sans element cache
+	 * @return le meme document sans element cache
 	 */
 	public static String removeHiddenText(String textPDF) {
 		

@@ -10,7 +10,7 @@ import resources.ResourcesLoader;
 import view.LearningView;
 
 /**
- * Lance la version non threadé de l'apprentissage en fonction des différents paramètres avec la méthode k-fold cross-validation
+ * Lance la version non threadee de l'apprentissage en fonction des differents parametres avec la methode k-fold cross-validation
  */
 public class ThreadlessLearnAndTest implements Callable<ConfusionMatrix>{
 	
@@ -20,10 +20,10 @@ public class ThreadlessLearnAndTest implements Callable<ConfusionMatrix>{
 
 	/**
 	 * Lance l'apprentissage de tous les PDF
-	 * @param path Chemin des pdf à apprendre
+	 * @param path Chemin des pdf a apprendre
 	 * @param k nombre de partition pour le k-fold
-	 * @param nbCoucheCachee nombre de neurones dans la couche cachée
-	 * @param nbSteps nombre d'étapes maximales par étapes
+	 * @param nbCoucheCachee nombre de neurones dans la couche cachee
+	 * @param nbSteps nombre d'etapes maximales par etapes
 	 * @param lenMatrix taille neurones par type de features
 	 * @param learningSpeed vitesse d'apprentissage
 	 */

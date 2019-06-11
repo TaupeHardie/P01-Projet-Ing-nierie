@@ -15,7 +15,7 @@ import view.MainPane;
 import view.ResultPane;
 
 /**
- * Thread qui lance l'estimation des pdf selectionnés
+ * Thread qui lance l'estimation des pdf selectionnes
  */
 public class ThreadCompute implements Runnable {
 	

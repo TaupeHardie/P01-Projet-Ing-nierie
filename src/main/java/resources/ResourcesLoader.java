@@ -66,9 +66,9 @@ public class ResourcesLoader {
     }
     
     /**
-     * Charge le(s) fichier(s) selectionné(s) ou ceux dans le dossier selectionné.
+     * Charge le(s) fichier(s) selectionne(s) ou ceux dans le dossier selectionne.
      * @param path un fichier ou un dossier
-     * @return tous les fichiers dans le dossier ou selectionné. 
+     * @return tous les fichiers dans le dossier ou selectionne. 
      */
     public static List<File> loadFileIn(String path){
     	List<File> files = new ArrayList<File>();
@@ -82,7 +82,7 @@ public class ResourcesLoader {
     }
     
     /**
-     * Charge tous les pdfs dans la class.
+     * Charge tous les pdfs dans la classe.
      * lance des threads pour ce faire.
      * @param files la liste des fichiers a charger. 
      */
@@ -109,7 +109,7 @@ public class ResourcesLoader {
     }
     
     /**
-     * Cette methode permet d'ajouté les PDF dans la liste depuis un thread
+     * Cette methode permet d'ajouter les PDF dans la liste depuis un thread
      * @param p le PDF
      */
     public static synchronized void addPdf(PDF p) {
@@ -117,7 +117,7 @@ public class ResourcesLoader {
     }
     
     /**
-     * Charge tous les pdf dans le dossier et ces sous dossier
+     * Charge tous les pdf dans le dossier et ses sous dossier
      * @param path le chemin du dossier
      */
     public static void loadResourcesIn(String path) {
@@ -145,8 +145,8 @@ public class ResourcesLoader {
     }
     
     /**
-     * Recupère le nom de tous les sous dossiers (de niveau 1) du dossier selectioné. 
-     * @param rootPath le dossier où chercher
+     * Recupere le nom de tous les sous dossiers (de niveau 1) du dossier selectione. 
+     * @param rootPath le dossier a chercher
      * @return le nom des sous dossiers
      */
     public static List<String> getDirectoriesName(){
@@ -161,8 +161,8 @@ public class ResourcesLoader {
     }
     
     /**
-     * Retourne tous les PDF charger dans la class
-     * @return tous les PDF charger dans la class
+     * Retourne tous les PDF charge dans la classe
+     * @return tous les PDF charge dans la classe
      */
     public static List<PDF> getPDFs(){
     	return pdfs;

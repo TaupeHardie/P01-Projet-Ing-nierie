@@ -32,8 +32,8 @@ import misc.PDF;
 import resources.ResourcesLoader;
 
 /**
- * class qui affiche l'onglet principal de la vue client, permet de selectioné des fichier et de voir la progression.
- * Cette class lance la logique dans un thread séparé.
+ * classe qui affiche l'onglet principal de la vue client, permet de selectionner des fichiers et de voir la progression.
+ * Cette classe lance la logique dans un thread separe.
  */
 public class MainPane extends JPanel {
 	private JTextField txtSelectionezUnDossier;
@@ -128,8 +128,8 @@ public class MainPane extends JPanel {
 	}
 	
 	/**
-	 * incremente la progress bar d'une unité
-	 * Si 100% est atteint met le texte du label à "Terminé".
+	 * incremente la progress bar d'une unite
+	 * Si 100% est atteint met le texte du label à "Termine".
 	 */
 	public static void incrementProgressBar() {
 		SwingUtilities.invokeLater(new Runnable() {
@@ -139,7 +139,7 @@ public class MainPane extends JPanel {
 					progressBar.setValue(progressBar.getValue()+1);
 				}else {
 					progressBar.setValue(progressBar.getValue()+1);
-					lblTraitement.setText("Terminé");
+					lblTraitement.setText("Termine");
 				}
 			}
 		});
