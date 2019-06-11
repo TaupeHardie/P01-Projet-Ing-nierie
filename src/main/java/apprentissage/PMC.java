@@ -45,12 +45,12 @@ public class PMC {
 	/**
 	 * Contructeur par defaut. Cree les differentes matrice et les initialise
 	 * 
-	 * @param k Paramètre pour la cross validation - 1/k correspond à la proportion de donnée utilisé pour le test
+	 * @param k Parametre pour la cross validation - 1/k correspond a la proportion de donnee utilise pour le test
 	 * @param neuronesCaches Nombre de neurones dans la couche cachee
-	 * @param max Nombre maximum d'itérations
+	 * @param max Nombre maximum d'iterations
 	 * @param lenMatrix taille du vecteur de features
 	 * @param ls Vitesse d'apprentissage
-	 * @param Path Chemin des dossier à récupérer
+	 * @param Path Chemin des dossier a recuperer
 	 */
 	public PMC(String Path, int k, int neuronesCaches, int max, int lenMatrix, double ls) {
 		this.nbStepMax = max;
@@ -107,9 +107,9 @@ public class PMC {
 	}
 
 	/**
-	 * Calcule le leaky ReLU pour chaque élément de la matrice
+	 * Calcule le leaky ReLU pour chaque element de la matrice
 	 * 
-	 * @param X matrice d'entrée
+	 * @param X matrice d'entree
 	 * @return matrice de la taille de X
 	 */
 	public static SimpleMatrix relu(SimpleMatrix X) {
@@ -125,9 +125,9 @@ public class PMC {
 	}
 
 	/**
-	 * Retourne la valeur absolue de la matrice d'entrée
+	 * Retourne la valeur absolue de la matrice d'entree
 	 * 
-	 * @param X matrice d'entrée
+	 * @param X matrice d'entree
 	 * @return matrice de la taille de X
 	 */
 	public static SimpleMatrix abs(SimpleMatrix X) {
@@ -143,7 +143,7 @@ public class PMC {
 	}
 
 	/**
-	 * Calcule la dérivé de la fonction ReLU. Renvoie 1 en 0
+	 * Calcule la derive de la fonction ReLU. Renvoie 1 en 0
 	 * 
 	 * @param x
 	 * @return 0 si x < 0, 1 sinon
@@ -153,8 +153,8 @@ public class PMC {
 	}
 
 	/**
-	 * Calcule les poids en fonctions des échantillions d'apprentissage
-	 * @param dataset Liste des samples correspondant aux pdf à apprendre
+	 * Calcule les poids en fonctions des echantillions d'apprentissage
+	 * @param dataset Liste des samples correspondant aux pdf a apprendre
 	 */
 	private void learn(List<Sample> dataset) {
 		Random rand = new Random();
@@ -222,8 +222,8 @@ public class PMC {
 	}
 
 	/**
-	 * calcule le score pour chaque partern en fonction du pdf d'entrée
-	 * @param pdf PDF à calculer
+	 * calcule le score pour chaque partern en fonction du pdf d'entree
+	 * @param pdf PDF a calculer
 	 * @return index du meilleur pattern
 	 */
 	public int compute(PDF pdf) {
@@ -300,7 +300,7 @@ public class PMC {
 	}
 
 	/**
-	 * Transforme une liste de features en vecteur d'entrée
+	 * Transforme une liste de features en vecteur d'entree
 	 * @param Flist 
 	 * @return Matrice exploitable pour les calculs
 	 */
@@ -341,7 +341,7 @@ public class PMC {
 	}
 
 	/**
-	 * Crée la matrice des resultats attendu en fonction de l'échantillion d'entrée 
+	 * Cree la matrice des resultats attendu en fonction de l'echantillion d'entree 
 	 * @param echantillon
 	 * @return Matrice exploitable pour les calculs
 	 */

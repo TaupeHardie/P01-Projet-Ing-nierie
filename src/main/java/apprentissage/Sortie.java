@@ -8,6 +8,11 @@ public class Sortie implements Comparable<Sortie>{
 	public String patternName;
 	public double score;
 	
+	/**
+	 * Constructeur par defaut
+	 * @param patternName
+	 * @param score
+	 */
 	public Sortie(String patternName, double score) {
 		super();
 		this.patternName = patternName;
@@ -15,6 +20,10 @@ public class Sortie implements Comparable<Sortie>{
 	}
 
 	@Override
+	/**
+	 * compare le score au score de la sortie
+	 * @return 1 ou -1
+	 */
 	public int compareTo(Sortie o) {
 		if(score == o.score)
 			return 0;
