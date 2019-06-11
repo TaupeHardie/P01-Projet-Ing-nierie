@@ -8,6 +8,7 @@ import apprentissage.DataManager;
 import apprentissage.PMC;
 import misc.Const;
 import resources.ResourcesLoader;
+import view.ClientView;
 import view.LearningView;
 
 
@@ -20,6 +21,7 @@ public class App {
 	
 	
 	public static void main(String[] args) {
-		LearningView.main(args);
+		//LearningView.main(args);
+		ClientView.main(args);
 	}
 }

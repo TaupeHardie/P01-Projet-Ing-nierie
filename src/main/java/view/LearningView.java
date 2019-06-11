@@ -26,6 +26,7 @@ import org.ejml.simple.SimpleMatrix;
 
 import Controller.ThreadLearnAndTest;
 import Controller.ThreadLearnOnly;
+import Controller.ThreadlessLearnAndTest;
 import apprentissage.ConfusionMatrix;
 import main.App;
 import misc.Const;
@@ -313,7 +314,7 @@ public class LearningView extends JFrame {
 							isMatrixSet = true;
 							
 							ExecutorService executor = Executors.newFixedThreadPool(1);
-							Callable<ConfusionMatrix> thread = new ThreadLearnAndTest(txtSelectionezUnDossier.getText(),
+							Callable<ConfusionMatrix> thread = new ThreadlessLearnAndTest(txtSelectionezUnDossier.getText(),
 									(int)kspinner.getValue(), 
 									(int)nbspinner.getValue(),
 									(int)itspinner.getValue(),
