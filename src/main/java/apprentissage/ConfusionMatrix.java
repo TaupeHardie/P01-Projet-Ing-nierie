@@ -7,7 +7,8 @@ import org.ejml.simple.SimpleMatrix;
 import resources.ResourcesLoader;
 
 /**
- * Classe représentant la matrice de confusion
+ * 
+ * Classe gerant une matrice de confusion
  *
  */
 public class ConfusionMatrix {
@@ -17,7 +18,7 @@ public class ConfusionMatrix {
 	double rappel, precision;
 	
 	/**
-	 * Constructeur par défaut
+	 * Constructeur par defaut
 	 * @param numbOfClasses Nombre de classes
 	 */
 	public ConfusionMatrix(int numbOfClasses) {
@@ -26,7 +27,7 @@ public class ConfusionMatrix {
 	}
 	
 	/**
-	 * Incrémente une case de la matrice
+	 * Incremente une case de la matrice
 	 * @param expected ligne de la matrice
 	 * @param result colone de la matrice
 	 */
@@ -35,7 +36,7 @@ public class ConfusionMatrix {
 	}
 	
 	/**
-	 * Calcule la précision et le rappel
+	 * Calcule la precision et le rappel
 	 */
 	public void computeStats() {
 		rappel = 0;
@@ -69,7 +70,7 @@ public class ConfusionMatrix {
 	}
 	
 	/**
-	 * Réinitialise la matrice de confusion
+	 * Reinitialise la matrice de confusion
 	 */
 	public void reset() {
 		confMatrix=new SimpleMatrix(classNb,classNb);
