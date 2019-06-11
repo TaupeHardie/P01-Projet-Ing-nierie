@@ -13,6 +13,10 @@ import view.ClientView;
 import view.MainPane;
 import view.ResultPane;
 
+/**
+ * Thread qui lance l'estimation des pdf selectionnés
+ *
+ */
 public class ThreadCompute implements Runnable {
 	
 	private PDF pdf;

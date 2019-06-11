@@ -46,6 +46,9 @@ public class PMC {
 	 * 
 	 * @param k Paramètre pour la cross validation - 1/k correspond à la proportion de donnée utilisé pour le test
 	 * @param neuronesCaches Nombre de neurones dans la couche cachee
+	 * @param max Nombre maximum d'itérations
+	 * @param lenMatrix taille du vecteur de features
+	 * @param ls Vitesse d'apprentissage
 	 * @param Path Chemin des dossier à récupérer
 	 */
 	public PMC(String Path, int k, int neuronesCaches, int max, int lenMatrix, double ls) {
@@ -78,6 +81,10 @@ public class PMC {
 		Writer.writeTo(directoryString.toString(), Const.MainPath + "directoryName.txt");
 	}
 	
+	/**
+	 * Contructeur d'un PMC si l'apprentissage n'est pas necessaire
+	 * @param path Chemin des pdf
+	 */
 	public PMC(String path) {
 		this.path = path;
 		ResourcesLoader.loadResourcesIn(path);
@@ -146,6 +153,7 @@ public class PMC {
 
 	/**
 	 * Calcule les poids en fonctions des échantillions d'apprentissage
+	 * @param dataset Liste des samples correspondant aux pdf à apprendre
 	 */
 	private void learn(List<Sample> dataset) {
 		Random rand = new Random();
@@ -212,6 +220,11 @@ public class PMC {
 		}
 	}
 
+	/**
+	 * calcule le score pour chaque partern en fonction du pdf d'entrée
+	 * @param pdf PDF à calculer
+	 * @return index du meilleur pattern
+	 */
 	public int compute(PDF pdf) {
 		SimpleMatrix X = FeaturesToNeuron(pdf.getFeatures());
 		X = X.divide(1000);
@@ -237,10 +250,17 @@ public class PMC {
 		return indMaxi;
 	}
 	
+	/**
+	 * Renvoie la liste des sorties
+	 * @return liste de sortie
+	 */
 	public List<Sortie> getSortie() {
 		return sortie;
 	}
 
+	/**
+	 * Effectue l'apprentissage suivant la méthode k-fold cross-validation
+	 */
 	public void learnAndTest() {
 		matriceConfusion.reset();
 		for (int currentTest = 0; currentTest < data.getK(); currentTest++) {
@@ -264,6 +284,9 @@ public class PMC {
 		saveWeightMatrix();
 	}
 	
+	/**
+	 * Version threadé de l'apprentissage suivant la méthode k-fold cross-validation
+	 */
 	public void learnAndTestThread() {
 		matriceConfusion.reset();
 		ExecutorService service = Executors.newFixedThreadPool(data.getK());
@@ -284,6 +307,9 @@ public class PMC {
 		saveWeightMatrix();
 	}
 
+	/**
+	 * Effectue l'apprentissage sur tous les pdf
+	 */
 	public void learnOnly() {	
 		ArrayList<Sample> alldata = new ArrayList<Sample>();
 		for (List<Sample> l : data.getData()) {
@@ -295,6 +321,11 @@ public class PMC {
 		saveWeightMatrix();
 	}
 
+	/**
+	 * Transforme une liste de features en vecteur d'entrée
+	 * @param Flist 
+	 * @return Matrice exploitable pour les calculs
+	 */
 	static public SimpleMatrix FeaturesToNeuron(List<Feature> Flist) {
 		SimpleMatrix output = new SimpleMatrix(lenmat * 4 + 1, 1);
 		String cat = Flist.get(0).getType();
@@ -331,6 +362,11 @@ public class PMC {
 
 	}
 
+	/**
+	 * Crée la matrice des resultats attendu en fonction de l'échantillion d'entrée 
+	 * @param echantillon
+	 * @return Matrice exploitable pour les calculs
+	 */
 	static public SimpleMatrix getExpectedResultsMatrix(Sample echantillon) {
 		
 		SimpleMatrix expectedResult = new SimpleMatrix(directoryName.size(), 1);
@@ -340,6 +376,9 @@ public class PMC {
 		return expectedResult;
 	}
 	
+	/**
+	 * Charge les matrices de poids
+	 */
 	@SuppressWarnings("static-access")
 	public void loadWeightMatrix() {
 		try {
@@ -351,6 +390,9 @@ public class PMC {
 		}
 	}
 	
+	/**
+	 * Sauvegarde les matrices de poids
+	 */
 	public void saveWeightMatrix() {
 		try {
 			W.saveToFileCSV(Const.MainPath + "\\weightMatrixW.csv");

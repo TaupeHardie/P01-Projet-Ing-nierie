@@ -6,21 +6,37 @@ import org.ejml.simple.SimpleMatrix;
 
 import resources.ResourcesLoader;
 
+/**
+ * Classe représentant la matrice de confusion
+ *
+ */
 public class ConfusionMatrix {
 	
 	public SimpleMatrix confMatrix;
 	int classNb;
 	double rappel, precision;
 	
+	/**
+	 * Constructeur par défaut
+	 * @param numbOfClasses Nombre de classes
+	 */
 	public ConfusionMatrix(int numbOfClasses) {
 		this.confMatrix=new SimpleMatrix(numbOfClasses,numbOfClasses);
 		classNb=numbOfClasses;
 	}
 	
+	/**
+	 * Incrémente une case de la matrice
+	 * @param expected ligne de la matrice
+	 * @param result colone de la matrice
+	 */
 	public synchronized void increment(int expected, int result) {
 		confMatrix.set(expected, result, confMatrix.get(expected, result)+1);
 	}
 	
+	/**
+	 * Calcule la précision et le rappel
+	 */
 	public void computeStats() {
 		rappel = 0;
 		for (int i = 0; i<classNb;i++) {
@@ -52,6 +68,9 @@ public class ConfusionMatrix {
 		return precision;
 	}
 	
+	/**
+	 * Réinitialise la matrice de confusion
+	 */
 	public void reset() {
 		confMatrix=new SimpleMatrix(classNb,classNb);
 	}
