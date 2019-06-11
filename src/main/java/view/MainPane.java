@@ -67,7 +67,7 @@ public class MainPane extends JPanel {
 			public void mouseClicked(MouseEvent e) {
 				fileChooser = new JFileChooser();
 				fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-				fileChooser.setCurrentDirectory(new java.io.File(Const.MainPath));
+				fileChooser.setCurrentDirectory(new java.io.File(Const.DesktopPath));
 				fileChooser.setDialogTitle(lblFileChooser);
 				fileChooser.setAcceptAllFileFilterUsed(false);
 				if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) { 

@@ -7,6 +7,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -87,7 +89,7 @@ public class LearningView extends JFrame {
 	private final String lblMAideAPropos = "A Propos";
 	private final String lblFileChooser = "selectionnez un dossier";
 	
-	
+	//disable error from pdfBox
 	static {
 	    System.setProperty("org.apache.commons.logging.Log",
 	                 "org.apache.commons.logging.impl.NoOpLog");
@@ -97,6 +99,15 @@ public class LearningView extends JFrame {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
+		File f = new File(Const.MainPath);
+		if(!f.exists()) {
+			try {
+				Files.createDirectories(f.toPath());
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -268,7 +279,7 @@ public class LearningView extends JFrame {
 					public void mouseClicked(MouseEvent e) {
 						fileChooser = new JFileChooser();
 						fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-						fileChooser.setCurrentDirectory(new java.io.File(Const.MainPath));
+						fileChooser.setCurrentDirectory(new java.io.File(Const.DesktopPath));
 						fileChooser.setDialogTitle(lblFileChooser);
 						fileChooser.setAcceptAllFileFilterUsed(false);
 						if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) { 

@@ -14,6 +14,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +36,7 @@ import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 
 import apprentissage.Sortie;
+import misc.Const;
 import resources.ResourcesLoader;
 
 /**
@@ -52,11 +55,26 @@ public class ClientView extends JFrame {
 	private final String lblMFichierSauvegarder = "sauvegarder";
 	private final String lblMFichierFermer = "fermer";
 	private final String lblMAideAPropos = "A Propos";
-
+	
+	//disable error from pdfBox
+	static {
+	    System.setProperty("org.apache.commons.logging.Log",
+	                 "org.apache.commons.logging.impl.NoOpLog");
+	}
+	
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
+		File f = new File(Const.MainPath);
+		if(!f.exists()) {
+			try {
+				Files.createDirectories(f.toPath());
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
