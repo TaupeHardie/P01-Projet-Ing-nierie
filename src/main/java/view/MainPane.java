@@ -32,8 +32,8 @@ import misc.PDF;
 import resources.ResourcesLoader;
 
 /**
- * class that display the filechooser, a progressBar, and launch the logic in a separate thread
- * @author axel
+ * class qui affiche l'onglet principal de la vue client, permet de selectioné des fichier et de voir la progression.
+ * Cette class lance la logique dans un thread séparé.
  */
 public class MainPane extends JPanel {
 	private JTextField txtSelectionezUnDossier;
@@ -128,8 +128,8 @@ public class MainPane extends JPanel {
 	}
 	
 	/**
-	 * increment the progress bar by one unit
-	 * If it reach maxValue set the label to "Terminé"
+	 * incremente la progress bar d'une unité
+	 * Si 100% est atteint met le texte du label à "Terminé".
 	 */
 	public static void incrementProgressBar() {
 		SwingUtilities.invokeLater(new Runnable() {

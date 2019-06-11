@@ -22,18 +22,19 @@ import misc.Const;
 import misc.PDF;
 import misc.ShutdownThreads;
 import view.ClientView;
-import view.ThreadUpdateProgressBar;
 
-
+/**
+ * Class qui charge les resources, le plus souvent des pdf
+ */
 public class ResourcesLoader {
 	private static List<PDF> pdfs = new ArrayList<PDF>();
 	private static String directoryOrFileLoaded = "";
 	
 	
 	/**
-	 * load a file from resources
-	 * @param fileName the name of the resource under src/main/resources/
-	 * @return the file if present or an exception
+	 * Charge un fichier
+	 * @param fileName le nom du fichier
+	 * @return le fichier si present
 	 */
     public static File loadResourceFile(String fileName) {
         ClassLoader classLoader = ClassLoader.getSystemClassLoader();
@@ -46,9 +47,9 @@ public class ResourcesLoader {
     }
     
     /**
-     * load all the pdf that are in the folder and the subfolders
-     * @param directoryPath the folder to be loaded
-     * @return a list with all the pdf
+     * Charge tout les pdfs dans le dossier et dans les sous dossiers
+     * @param directoryPath le dossier ou charger
+     * @returnla liste des pdf
      */
     private static List<File> loadDirectory(String directoryPath){
     	List<File> files = new ArrayList<File>();
@@ -65,9 +66,9 @@ public class ResourcesLoader {
     }
     
     /**
-     * load the input witch can be a folder or a file
-     * @param path selected by the user it represent a directory or a file
-     * @return all the files that are in the directory and it's sub directories or the selected file
+     * Charge le(s) fichier(s) selectionné(s) ou ceux dans le dossier selectionné.
+     * @param path un fichier ou un dossier
+     * @return tous les fichiers dans le dossier ou selectionné. 
      */
     public static List<File> loadFileIn(String path){
     	List<File> files = new ArrayList<File>();
@@ -81,9 +82,9 @@ public class ResourcesLoader {
     }
     
     /**
-     * this load all PDF in the list.
-     * It launch cores -1 threads to process the PDF and add it to the list in this class
-     * @param files the list of pdf files 
+     * Charge tous les pdfs dans la class.
+     * lance des threads pour ce faire.
+     * @param files la liste des fichiers a charger. 
      */
     private static void loadAllPdf(List<File> files) {
     	ExecutorService service = Executors.newFixedThreadPool(Const.nbCore);
@@ -108,13 +109,17 @@ public class ResourcesLoader {
     }
     
     /**
-     * this method is used by threads to populate the PDF list
-     * @param p the PDF
+     * Cette methode permet d'ajouté les PDF dans la liste depuis un thread
+     * @param p le PDF
      */
     public static synchronized void addPdf(PDF p) {
     	pdfs.add(p);
     }
     
+    /**
+     * Charge tous les pdf dans le dossier et ces sous dossier
+     * @param path le chemin du dossier
+     */
     public static void loadResourcesIn(String path) {
     	if(!path.equalsIgnoreCase(directoryOrFileLoaded)) {
         	System.out.println("start PDF loading");
@@ -127,9 +132,9 @@ public class ResourcesLoader {
     }
     
     /**
-     * get the PDF from the PDF list by its name
-     * @param name the name of the PDF
-     * @return the PDF
+     * Recupere le PDF avec son nom.
+     * @param name le nom du PDF
+     * @return le PDF
      */
     public static PDF getPDFbyName(String name) {
     	List<PDF> pdflst = pdfs.stream().filter(p->p.getName().equalsIgnoreCase(name)).collect(Collectors.toList());
@@ -140,9 +145,9 @@ public class ResourcesLoader {
     }
     
     /**
-     * Get the name of all directories inside the given one
-     * @param rootPath the directory to look at
-     * @return the name of all directories
+     * Recupère le nom de tous les sous dossiers (de niveau 1) du dossier selectioné. 
+     * @param rootPath le dossier où chercher
+     * @return le nom des sous dossiers
      */
     public static List<String> getDirectoriesName(){
     	List<String> names = new ArrayList<String>();
@@ -156,17 +161,17 @@ public class ResourcesLoader {
     }
     
     /**
-     * get All PDF loaded in the class
-     * @return the list of all PDF loaded in the class
+     * Retourne tous les PDF charger dans la class
+     * @return tous les PDF charger dans la class
      */
     public static List<PDF> getPDFs(){
     	return pdfs;
     }
     
     /**
-     * read a file and return the text
-     * @param fileName the file to be read
-     * @return a list that contain every line read
+     * lit un fichier et retourne le texte
+     * @param fileName le fichier a lire
+     * @return une liste de ligne
      */
     public static List<String> readFile(String fileName) {
     	List<String> output = new ArrayList<String>();

@@ -22,15 +22,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import org.ejml.simple.SimpleMatrix;
-
-import Controller.ThreadLearnAndTest;
 import Controller.ThreadLearnOnly;
 import Controller.ThreadlessLearnAndTest;
 import apprentissage.ConfusionMatrix;
-import main.App;
 import misc.Const;
-import resources.ResourcesLoader;
 import writer.Writer;
 
 import javax.swing.JMenuBar;
@@ -57,8 +52,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.SwingConstants;
 
 /**
- * Gui for QWEEBY, It process pdf to train the algorithm 
- * @author axel
+ * GUI pour l'apprentissage destiné a QWEEBY, on peut y parametrer l'apprentissage.
  */
 public class LearningView extends JFrame {
 
@@ -407,7 +401,7 @@ public class LearningView extends JFrame {
 	}
 
 	/**
-	 * increment the progress bar by one unit, set labels when maxValue is reached
+	 * incremente la progressBar d'une unité, change le label quand 100% est atteint
 	 */
 	public static void incrementProgressBar() {
 		SwingUtilities.invokeLater(new Runnable() {
@@ -441,6 +435,10 @@ public class LearningView extends JFrame {
 		});
 	}
 	
+	/**
+	 * permet de changer l'etat de la progressBar (indeterminé ou %)
+	 * @param b vrais pour indeterminé
+	 */
 	public static void setIndeterminate(boolean b) {
 		SwingUtilities.invokeLater(new Runnable() {
 

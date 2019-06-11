@@ -4,11 +4,10 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import main.App;
 import resources.ResourcesLoader;
 
 /**
- * Contient tous les fichiers a� traiter pour l'apprentissage et pour les test
+ * Contient tous les fichiers a� traiter pour l'apprentissage et pour les tests
  */
 public class DataManager {
 	private List<List<Sample>> data;

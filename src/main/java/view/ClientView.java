@@ -37,9 +37,9 @@ import apprentissage.Sortie;
 import resources.ResourcesLoader;
 
 /**
- * Class that group other class to display the client view.
- * It allow picking files, start the processing, showing the progress, adding the results in separate tabs
- * @author axel
+ * Class qui regroupe plusiseur composant pour faire le vue client.
+ * Cette vue permet de trouver le meilleur pattern pour les pdf selectionnés.
+ * Les resulats sont affichés dans des onglets séparés.
  */
 public class ClientView extends JFrame {
 
@@ -110,10 +110,10 @@ public class ClientView extends JFrame {
 	}
 	
 	/**
-	 * add a new closable tab to the main window
-	 * It display a table with all pattern and their score 
-	 * @param name the name of the pane
-	 * @param results the data in the table
+	 * Ajoute un nouvel onglets a la vue
+	 * Cela montre le pdf avec les patterns et leur scores respectifs. 
+	 * @param name le nom de l'onglet 
+	 * @param results les données a afficher
 	 */
 	public static void addPane(String name, List<Sortie> results) {
 		

@@ -108,7 +108,7 @@ public class TestApprentissage {
 	public void testSauvegardeLoadMatrix() {
 		PMC pmc = new PMC(Const.MainPath+"pdf", 10, 50, 50, 10, 0.002);
 		pmc.setUpdating(false);
-		pmc.learnAndTestThread();
+		pmc.learnAndTest();
 				
 		SimpleMatrix test1=pmc.getW();
 		

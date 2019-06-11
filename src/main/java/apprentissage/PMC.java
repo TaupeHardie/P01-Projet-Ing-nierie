@@ -263,26 +263,6 @@ public class PMC {
 
 		saveWeightMatrix();
 	}
-	
-	public void learnAndTestThread() {
-		matriceConfusion.reset();
-		ExecutorService service = Executors.newFixedThreadPool(data.getK());
-		for (int currentTest = 0; currentTest < data.getK(); currentTest++) {
-
-			ArrayList<Sample> learningData = new ArrayList<Sample>();
-
-			for (int i = 0; i < data.getK(); i++) {
-				if (i != currentTest)
-					learningData.addAll(data.getData().get(i));
-			}
-			service.execute(new ThreadLearningTesting(learningData, nombreNeuroneEntree, nombreNeuronesCC, nombreNeuroneSortie, nbStepMax, lenmat, learningSpeed, isUpdatingProgressBar, matriceConfusion, currentTest, data));
-		}
-		ShutdownThreads.shutdownAndAwaitTermination(service, 10*60);
-		
-		matriceConfusion.computeStats();
-
-		saveWeightMatrix();
-	}
 
 	public void learnOnly() {	
 		ArrayList<Sample> alldata = new ArrayList<Sample>();

@@ -9,7 +9,9 @@ import apprentissage.PMC;
 import resources.ResourcesLoader;
 import view.LearningView;
 
-
+/**
+ * Thread lancant la logique de l'application pour améliorer l'algorithme.
+ */
 public class ThreadlessLearnAndTest implements Callable<ConfusionMatrix>{
 	
 	private int k, nbCoucheCachee, nbSteps, lenMatrix;

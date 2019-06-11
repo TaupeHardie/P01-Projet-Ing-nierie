@@ -4,10 +4,11 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class ShutdownThreads {
+	
 	/**
 	 * Good practice: code imported from Oracle example
-	 * 
-	 * @param pool
+	 * @param service the ExecutorService that handle threads
+	 * @param timeOutInSec the time to wait until interrupt threads. 
 	 */
 	public static void shutdownAndAwaitTermination(ExecutorService service, int timeOutInSec) {
 		service.shutdown(); // Disable new tasks from being submitted

@@ -13,6 +13,9 @@ import view.ClientView;
 import view.MainPane;
 import view.ResultPane;
 
+/**
+ * Thread lancant la logique de l'application pour determiner le meilleur pattern pour un PDF donné.
+ */
 public class ThreadCompute implements Runnable {
 	
 	private PDF pdf;

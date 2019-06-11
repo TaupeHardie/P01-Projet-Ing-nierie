@@ -7,7 +7,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Classe statique qui regroupe toutes les fonctions concernant les regex
+ * Classe statique qui regroupe toutes les fonctions concernant les regexp
  *
  */
 public class Regexp {
@@ -67,7 +67,7 @@ public class Regexp {
 	/** 
 	 * supprime tous les textes entre accolades
 	 * @param textPDF le texte du PDF avec des elements caches
-	 * @return le même document sans element cache
+	 * @return le mï¿½me document sans element cache
 	 */
 	public static String removeHiddenText(String textPDF) {
 		

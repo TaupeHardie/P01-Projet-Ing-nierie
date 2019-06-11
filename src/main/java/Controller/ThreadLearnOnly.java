@@ -2,6 +2,9 @@ package Controller;
 
 import apprentissage.PMC;
 
+/**
+ * Thread lancant la logique de l'application pour améliorer l'algorithme.
+ */
 public class ThreadLearnOnly implements Runnable{
 	private int k, nbCoucheCachee, nbSteps, lenMatrix;
 	private double learningSpeed;
