@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+import java.util.Vector;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
@@ -33,7 +34,7 @@ public class PMC {
 	private DataManager data;
 	private ConfusionMatrix matriceConfusion;
 	private String path;
-	private ArrayList<Sortie> sortie;
+	private Vector<Sortie> sortie;
 	private Boolean isUpdatingProgressBar = true;
 	private int nombreNeuroneEntree, nombreNeuronesCC, nombreNeuroneSortie;
 	private int nbStepMax = 200;
@@ -234,7 +235,7 @@ public class PMC {
 		int indMaxi = 0;
 		double maxi = S.get(0, 0);
 		
-		sortie = new ArrayList<Sortie>();
+		sortie = new Vector<Sortie>();
 		
 		for (int i = 0; i < S.numRows(); i++) {
 			sortie.add(new Sortie(directoryName.get(i), S.get(i)));
@@ -254,7 +255,7 @@ public class PMC {
 	 * Renvoie la liste des sorties
 	 * @return liste de sortie
 	 */
-	public List<Sortie> getSortie() {
+	public Vector<Sortie> getSortie() {
 		return sortie;
 	}
 

@@ -3,6 +3,7 @@ package Controller;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 import java.util.concurrent.Callable;
 
 import apprentissage.PMC;
@@ -31,7 +32,7 @@ public class ThreadCompute implements Runnable {
 	@Override
 	public void run() {		
 		pmc.compute(pdf);
-		List<Sortie> s = pmc.getSortie();
+		Vector<Sortie> s = pmc.getSortie();
 		File f = new File(pdf.getName());
 		ClientView.addPane(f.getName(), s);
 		MainPane.incrementProgressBar();
