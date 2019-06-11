@@ -273,6 +273,7 @@ public class LearningView extends JFrame {
 						fileChooser.setAcceptAllFileFilterUsed(false);
 						if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) { 
 							txtSelectionezUnDossier.setText(fileChooser.getSelectedFile().toString());
+							txtSelectionezUnDossier.setForeground(Color.black);
 						}
 					}
 				});

@@ -119,10 +119,7 @@ public class ClientView extends JFrame {
 		
 		//add the pane to the tabbedPane
 		tabbedPane.addTab(name, new ResultPane(results));
-		
-		//get the index of the inserted pane
-		int index = tabbedPane.indexOfTab(name);
-		
+
 		//create a panel that contain a label and a click-able label 
 		JPanel pnlTab = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
 		pnlTab.setOpaque(false);
@@ -131,10 +128,13 @@ public class ClientView extends JFrame {
 		pnlTab.add(lblTitle);
 		
 		JLabel lblClose = new JLabel("x");
+		lblClose.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 2));
 		//add mouse listener to change color of the label on mouse over, close the pane on click
 		lblClose.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent  e) {
+				//get the index of the inserted pane
+				int index = tabbedPane.indexOfTab(name);
 		        if (index != -1) {
 		        	tabbedPane.remove(index);
 		        }
@@ -152,6 +152,9 @@ public class ClientView extends JFrame {
 			}
 		});
 		pnlTab.add(lblClose);
+		
+		//get the index of the inserted pane
+		int index = tabbedPane.indexOfTab(name);
 		
 		//add the panel onto the pane header
 		tabbedPane.setTabComponentAt(index, pnlTab);

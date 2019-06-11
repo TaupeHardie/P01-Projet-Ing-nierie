@@ -4,6 +4,10 @@
   <artifactId>2018-2019</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <name>QWEEBE</name>
+  <properties>
+	<maven.compiler.source>1.8</maven.compiler.source>
+	<maven.compiler.target>1.8</maven.compiler.target>
+  </properties>
   <dependencies>
 	  	<!-- https://mvnrepository.com/artifact/org.apache.pdfbox/pdfbox -->
 		<dependency>
@@ -26,7 +30,50 @@
 		    <artifactId>ejml</artifactId>
 		    <version>0.25</version>
 		</dependency>
-		
-	  
   </dependencies>
+  <build>
+<plugins>
+    <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>build-a</id>
+            <phase>package</phase>
+		    <goals>
+		      <goal>single</goal>
+		    </goals>   
+            <configuration>
+              <archive>
+                <manifest>
+                  <mainClass>view.LearningView</mainClass>
+                </manifest>
+              </archive>
+              <descriptorRefs>
+                <descriptorRef>jar-with-dependencies</descriptorRef>
+              </descriptorRefs>
+              <finalName>Learning.jar</finalName>
+            </configuration>
+          </execution>
+          <execution>
+            <id>build-b</id>
+            <phase>package</phase>
+		    <goals>
+		      <goal>single</goal>
+		    </goals> 
+            <configuration>
+              <archive>
+                <manifest>
+                  <mainClass>view.ClientView</mainClass>
+                </manifest>
+              </archive>
+              <descriptorRefs>
+                <descriptorRef>jar-with-dependencies</descriptorRef>
+              </descriptorRefs>
+              <finalName>Client.jar</finalName>
+            </configuration>
+          </execution>
+        </executions>
+    </plugin>
+</plugins>
+</build>
 </project>
