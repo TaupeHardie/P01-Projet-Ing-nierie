@@ -206,7 +206,6 @@ public class PMC {
 				}
 			}
 			nstep++;			
-			System.out.println("Step : " + nstep + "/" + nbStepMax + " (" + error +")");
 			
 			if(isUpdatingProgressBar)
 				LearningView.incrementProgressBar();

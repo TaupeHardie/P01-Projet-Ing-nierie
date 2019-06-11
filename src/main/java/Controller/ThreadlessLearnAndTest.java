@@ -7,6 +7,7 @@ import java.util.concurrent.Callable;
 import apprentissage.ConfusionMatrix;
 import apprentissage.PMC;
 import resources.ResourcesLoader;
+import view.LearningView;
 
 
 public class ThreadlessLearnAndTest implements Callable<ConfusionMatrix>{
@@ -32,6 +33,7 @@ public class ThreadlessLearnAndTest implements Callable<ConfusionMatrix>{
 	public ConfusionMatrix call() throws Exception {
     	long t1 = System.nanoTime();
 		PMC pmc = new PMC(path, k, nbCoucheCachee, nbSteps, lenMatrix, learningSpeed);
+		LearningView.setIndeterminate(false);
 		pmc.learnAndTest();
 		System.out.println("learning ended in : "+(System.nanoTime()-t1)/1000000000+"s");
 		
