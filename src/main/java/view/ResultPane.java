@@ -30,7 +30,7 @@ import apprentissage.Sortie;
 
 
 /**
- * class qui affcihe un onglet disposant d'un tableau scrollable
+ * class qui affiche un onglet disposant d'un tableau scrollable
  */
 public class ResultPane extends JScrollPane {
 	private JTable table;

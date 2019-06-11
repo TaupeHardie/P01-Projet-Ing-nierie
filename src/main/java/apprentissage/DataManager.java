@@ -7,7 +7,7 @@ import java.util.List;
 import resources.ResourcesLoader;
 
 /**
- * Contient tous les fichiers a� traiter pour l'apprentissage et pour les tests
+ * Contient tous les fichiers a traiter pour l'apprentissage et pour les tests
  */
 public class DataManager {
 	private List<List<Sample>> data;

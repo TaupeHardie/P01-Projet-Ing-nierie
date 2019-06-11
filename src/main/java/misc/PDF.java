@@ -31,8 +31,8 @@ public class PDF {
 	}
 
 	/**
-	 * Constructeur. Charge le fichier PDF a� partir d'un chemin
-	 * @param fileName Chaine de caractere vers le chemin du fichier a� ouvrir
+	 * Constructeur. Charge le fichier PDF a partir d'un chemin
+	 * @param fileName Chaine de caractere vers le chemin du fichier a ouvrir
 	 */
 	public PDF(String fileName) {
 		super();
@@ -42,7 +42,7 @@ public class PDF {
 	}
 	
 	/**
-	 * Constructeur. Charge le fichier PDF a� partir d'un objet
+	 * Constructeur. Charge le fichier PDF a partir d'un objet
 	 * @param file Objet correspondant au PDF a charger
 	 */
 	public PDF(File file) {

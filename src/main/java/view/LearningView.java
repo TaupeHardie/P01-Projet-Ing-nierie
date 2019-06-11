@@ -192,7 +192,7 @@ public class LearningView extends JFrame {
 		horizontalBox_6.setAlignmentY(Component.CENTER_ALIGNMENT);
 		verticalBox_1.add(horizontalBox_6);
 		
-		JLabel label = new JLabel("Nombre de neurones dans la couche cachée : ");
+		JLabel label = new JLabel("Nombre de neurones dans la couche cachee : ");
 		horizontalBox_6.add(label);
 		
 		nbspinner = new JSpinner();
@@ -227,7 +227,7 @@ public class LearningView extends JFrame {
 		horizontalBox_7.setAlignmentY(Component.CENTER_ALIGNMENT);
 		verticalBox_2.add(horizontalBox_7);
 		
-		JLabel label_2 = new JLabel("Nombre d'itérations : ");
+		JLabel label_2 = new JLabel("Nombre d'iterations : ");
 		label_2.setAlignmentX(Component.CENTER_ALIGNMENT);
 		horizontalBox_7.add(label_2);
 		
@@ -241,7 +241,7 @@ public class LearningView extends JFrame {
 		horizontalBox_9.setAlignmentY(Component.CENTER_ALIGNMENT);
 		verticalBox_2.add(horizontalBox_9);
 		
-		JLabel label_3 = new JLabel("Taille de l'entrée : ");
+		JLabel label_3 = new JLabel("Taille de l'entree : ");
 		label_3.setAlignmentX(Component.CENTER_ALIGNMENT);
 		horizontalBox_9.add(label_3);
 		
@@ -293,7 +293,7 @@ public class LearningView extends JFrame {
 						}
 						//If one of the radio button hasn't been check show a dialog and cancel the process
 						if(!rdbtnApprentissage.isSelected() && !rdbtnK_fold.isSelected()) {
-							JOptionPane.showMessageDialog(null, "Selectionez une option : Appretissage complet ou K-fold");
+							JOptionPane.showMessageDialog(null, "Selectionnez une option : Apprentissage complet ou K-fold");
 							return;
 						}
 						
@@ -402,7 +402,7 @@ public class LearningView extends JFrame {
 	}
 
 	/**
-	 * incremente la progressBar d'une unité, change le label quand 100% est atteint
+	 * incremente la progressBar d'une unite, change le label quand 100% est atteint
 	 */
 	public static void incrementProgressBar() {
 		SwingUtilities.invokeLater(new Runnable() {
@@ -416,16 +416,16 @@ public class LearningView extends JFrame {
 						
 						if(isMatrixSet) {
 							NumberFormat formatter = new DecimalFormat("#0.00");
-							lblPrecision.setText("Précision : " + formatter.format(100*matrix.get().getPrecision()) + " %");
+							lblPrecision.setText("Precision : " + formatter.format(100*matrix.get().getPrecision()) + " %");
 							lblRappel.setText("Rappel : " + formatter.format(100*matrix.get().getRappel()) + " %");
 						}
 						else {
-							lblPrecision.setText("Précision : - %");
+							lblPrecision.setText("Precision : - %");
 							lblRappel.setText("Rappel : - %");
 						}
 						btnExport.setEnabled(true);
 						btnTraiterDoc.setEnabled(true);
-						lblTraitement.setText("Terminé");
+						lblTraitement.setText("Termine");
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					} catch (ExecutionException e) {
@@ -437,8 +437,8 @@ public class LearningView extends JFrame {
 	}
 	
 	/**
-	 * permet de changer l'etat de la progressBar (indeterminé ou %)
-	 * @param b vrais pour indeterminé
+	 * permet de changer l'etat de la progressBar (indetermine ou %)
+	 * @param b vrai pour indetermine
 	 */
 	public static void setIndeterminate(boolean b) {
 		SwingUtilities.invokeLater(new Runnable() {

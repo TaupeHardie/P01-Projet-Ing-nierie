@@ -222,7 +222,7 @@ public class PMC {
 	}
 
 	/**
-	 * calcule le score pour chaque partern en fonction du pdf d'entree
+	 * calcule le score pour chaque pattern en fonction du pdf d'entree
 	 * @param pdf PDF a calculer
 	 * @return index du meilleur pattern
 	 */
@@ -260,7 +260,7 @@ public class PMC {
 	}
 
 	/**
-	 * Effectue l'apprentissage suivant la méthode k-fold cross-validation
+	 * Effectue l'apprentissage suivant la methode k-fold cross-validation
 	 */
 	public void learnAndTest() {
 		matriceConfusion.reset();
@@ -301,7 +301,7 @@ public class PMC {
 
 	/**
 	 * Transforme une liste de features en vecteur d'entree
-	 * @param Flist 
+	 * @param Flist liste de feature
 	 * @return Matrice exploitable pour les calculs
 	 */
 	static public SimpleMatrix FeaturesToNeuron(List<Feature> Flist) {

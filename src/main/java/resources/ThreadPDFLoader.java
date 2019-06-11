@@ -8,7 +8,7 @@ import misc.PDF;
 
 /**
  * Cette class permet de charger les pdfs dans la resourcesLoader
- * Elle prend en entrée une liste de fichier a charger.
+ * Elle prend en entree une liste de fichier a charger.
  */
 public class ThreadPDFLoader implements Runnable {
 	 private List<File> files;
