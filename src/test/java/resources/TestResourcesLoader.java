@@ -19,13 +19,11 @@ public class TestResourcesLoader {
 	
 	@Test
 	public void testRead() {
-		String text = "pdf1\n pdf2\n pdf3";
-		Writer.writeTo(text, Const.MainPath+"input.txt");
 		List<String> lst = ResourcesLoader.readFile(Const.MainPath+"input.txt");
 		
-		assertEquals("pdf1", lst.get(0));
-		assertEquals("pdf2", lst.get(0));
-		assertEquals("pdf3", lst.get(0));
+		assertEquals("aaa", lst.get(0));
+		assertEquals("bbb", lst.get(1));
+		assertEquals("ccc", lst.get(2));
 		
 	}
 

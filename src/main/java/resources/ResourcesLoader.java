@@ -187,16 +187,14 @@ public class ResourcesLoader {
 		String ligne = null;
 		try {
 			ligne = buff.readLine();
-			output.add(ligne);
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		while (ligne != null) {
-			
+			output.add(ligne);
 			try {
 				ligne = buff.readLine();
-				output.add(ligne);
 			} catch (IOException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();

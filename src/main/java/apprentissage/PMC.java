@@ -234,8 +234,7 @@ public class PMC {
 		
 		Collections.sort(sortie);
 		Collections.reverse(sortie);
-		
-		pdf.close();
+	
 		return indMaxi;
 	}
 	
