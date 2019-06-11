@@ -1,5 +1,9 @@
 package apprentissage;
 
+/**
+ * Structure qui garde le score associé au pattern
+ * 
+ */
 public class Sortie implements Comparable<Sortie>{
 	public String patternName;
 	public double score;

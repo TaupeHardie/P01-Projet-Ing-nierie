@@ -3,6 +3,7 @@ package Controller;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 import java.util.concurrent.Callable;
 
 import apprentissage.PMC;
@@ -14,7 +15,7 @@ import view.MainPane;
 import view.ResultPane;
 
 /**
- * Thread lancant la logique de l'application pour determiner le meilleur pattern pour un PDF donné.
+ * Thread qui lance l'estimation des pdf selectionnés
  */
 public class ThreadCompute implements Runnable {
 	
@@ -30,7 +31,7 @@ public class ThreadCompute implements Runnable {
 	@Override
 	public void run() {		
 		pmc.compute(pdf);
-		List<Sortie> s = pmc.getSortie();
+		Vector<Sortie> s = pmc.getSortie();
 		File f = new File(pdf.getName());
 		ClientView.addPane(f.getName(), s);
 		MainPane.incrementProgressBar();
