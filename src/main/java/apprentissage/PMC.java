@@ -223,7 +223,7 @@ public class PMC {
 		
 		sortie = new ArrayList<Sortie>();
 		
-		for (int i = 1; i < S.numRows(); i++) {
+		for (int i = 0; i < S.numRows(); i++) {
 			sortie.add(new Sortie(directoryName.get(i), S.get(i)));
 			if (S.get(i) > maxi) {
 				maxi = S.get(i);
