@@ -12,6 +12,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -22,6 +24,8 @@ import misc.Const;
 import misc.PDF;
 import misc.ShutdownThreads;
 import view.ClientView;
+import writer.ThreadPdfWriter;
+import writer.Writer;
 
 /**
  * Class qui charge les resources, le plus souvent des pdf
@@ -29,6 +33,8 @@ import view.ClientView;
 public class ResourcesLoader {
 	private static List<PDF> pdfs = new ArrayList<PDF>();
 	private static String directoryOrFileLoaded = "";
+	private static BlockingQueue<PDF> queue = new ArrayBlockingQueue<PDF>(300);
+	private static int nbpoison =0;
 	
 	
 	/**
@@ -109,6 +115,36 @@ public class ResourcesLoader {
     }
     
     /**
+     * Lit les pdf et les ajoute dans la file de traitement.
+     * lance des threads pour ce faire.
+     * @param files la liste des fichiers a charger. 
+     */
+    private static void ReadAllPdf(List<File> files) {
+    	ExecutorService service = Executors.newFixedThreadPool(Const.nbCore+1);
+    	int max=0;
+    	int chunk=0;
+    	if(files.size()<Const.nbCore) {
+    		max = files.size();
+    		chunk = 1;
+    	}else {
+    		max = Const.nbCore;
+    		chunk = files.size()/Const.nbCore;
+    	}
+    	for (int i = 0; i < max-1; i++) {
+    		List<File> subFiles = new ArrayList<File>();
+    		subFiles.addAll(files.subList(chunk*i, chunk*(i+1)));
+			service.execute(new ThreadPDFReader(subFiles, queue));
+		}
+    	List<File> subFiles = new ArrayList<File>();
+		subFiles.addAll(files.subList(chunk*(max-1), files.size()));
+		service.execute(new ThreadPDFReader(subFiles, queue));
+		
+		service.execute(new ThreadPdfWriter(queue, Const.StorePath));
+		
+		ShutdownThreads.shutdownAndAwaitTermination(service, 5*60);
+    }
+    
+    /**
      * Cette methode permet d'ajouter les PDF dans la liste depuis un thread
      * @param p le PDF
      */
@@ -168,62 +204,53 @@ public class ResourcesLoader {
     	return pdfs;
     }
     
-    /**
-     * lit un fichier et retourne le texte
-     * @param fileName le fichier a lire
-     * @return une liste de ligne
-     */
-    public static List<String> readFile(String fileName) {
-    	List<String> output = new ArrayList<String>();
-    	
-    	File f = new File(fileName);
-    	
-    	FileInputStream fis = null;
-		try {
-			 fis = new FileInputStream(f);
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		InputStreamReader isr = new InputStreamReader(fis);
-		BufferedReader buff = new BufferedReader(isr);
-		
-		String ligne = null;
-		try {
-			ligne = buff.readLine();
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		while (ligne != null) {
-			output.add(ligne);
-			try {
-				ligne = buff.readLine();
-			} catch (IOException e1) {
+    public static void turnPdfIntoFeatureFile(String path) {
+    	if(!path.equalsIgnoreCase(directoryOrFileLoaded)) {
+    		System.out.println("start PDF loading");
+        	long t1 = System.nanoTime();
+        	
+        	directoryOrFileLoaded = path;
+        	Writer.clearFile(Const.StorePath);
+        	ReadAllPdf(loadFileIn(directoryOrFileLoaded));
+        	
+        	System.out.println("PDF loading ended in : "+(System.nanoTime()-t1)/1000000000+"s");
+    	}
+    }
+    
+    public static synchronized void poisonQueue() {
+    	nbpoison++;
+    	if(nbpoison ==4) {
+    		try {
+				queue.put(new PDF("END", null));
+			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
-				e1.printStackTrace();
+				e.printStackTrace();
+			}
+    	}
+    }
+    
+    /**
+     * Cree si besoin les dossiers et fichiers pour travailler
+     */
+    public static void createWorkingDirectory() {
+    	File f = new File(Const.MainPath);
+		if(!f.exists()) {
+			try {
+				Files.createDirectories(f.toPath());
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
 		
-		try {
-			fis.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		File f2 = new File(Const.StorePath) ;
+		if(!f2.exists()) {
+			try {
+				Files.createFile(f2.toPath());
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
-		try {
-			isr.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		try {
-			buff.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return output;
-	}
+    }
 }
