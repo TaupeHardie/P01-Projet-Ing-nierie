@@ -49,7 +49,12 @@ public class Reader {
 		return output;
 	}
     
-    
+    /**
+     * get a pdf by it's name 
+     * @param name the name of the pdf
+     * @param fileName the file to be searched
+     * @return the PDF with features and name only
+     */
     public static PDF getPdfNamed(String name, String fileName) {
     	long t1 = System.nanoTime();
     	List<Feature> features = new ArrayList<Feature>();
@@ -95,7 +100,7 @@ public class Reader {
     	System.out.println("finding pdf : "+(System.nanoTime()-t1)/1000000);
     	return p;
     }
-    
+
     /**
      * ouvre les flux pour lire le fichier
      * @param f le fichier a lire

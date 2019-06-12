@@ -204,6 +204,10 @@ public class ResourcesLoader {
     	return pdfs;
     }
     
+    /**
+     * transforme les pfds en liste de features dans un fichier texte
+     * @param path le fichier ou ecrire
+     */
     public static void turnPdfIntoFeatureFile(String path) {
     	if(!path.equalsIgnoreCase(directoryOrFileLoaded)) {
     		System.out.println("start PDF loading");
@@ -217,9 +221,12 @@ public class ResourcesLoader {
     	}
     }
     
+    /**
+     * Quand les n thread ont fini leur travail met un element indiquant au thread d'ecriture de s'arreter
+     */
     public static synchronized void poisonQueue() {
     	nbpoison++;
-    	if(nbpoison ==4) {
+    	if(nbpoison ==Const.nbCore) {
     		try {
 				queue.put(new PDF("END", null));
 			} catch (InterruptedException e) {

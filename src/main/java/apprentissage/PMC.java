@@ -170,10 +170,9 @@ public class PMC {
 			error = 0;
 			List<Sample> d = dataset;
 			Collections.shuffle(d);
-			
-			long t = System.nanoTime();
+
 			for (int k = 0; k < dataset.size(); k++) {//201 x 35ms -> 7sec
-				PDF currentPDF = Reader.getPdfNamed((dataset.get(k).name), Const.StorePath);
+				PDF currentPDF = Reader.getPdfNamed(dataset.get(k).name, Const.StorePath);
 				
 				SimpleMatrix X = FeaturesToNeuron(currentPDF.getFeatures());
 				X = X.divide(1000);
@@ -216,7 +215,6 @@ public class PMC {
 					error = 1;
 				}
 			}
-			System.out.println("time : "+(System.nanoTime()-t)/1000000);
 			nstep++;			
 			
 			if(isUpdatingProgressBar)
