@@ -7,16 +7,32 @@ import java.util.List;
 import resources.ResourcesLoader;
 
 /**
- * Contient tous les fichiers a  traiter pour l'apprentissage et pour les test
+ * Contient tous les fichiers a traiter pour l'apprentissage et pour les tests
  */
 public class DataManager {
-	List<List<Sample>> data;
+	private List<List<Sample>> data;
+	private int k, nbClasses;
+	private String path;
 	
 	/**
 	 * Constructeur par defaut
 	 */
-	public DataManager() {
+	public DataManager(String path) {
 		data = new ArrayList<List<Sample>>();
+		this.path = path;
+		ResourcesLoader.loadResourcesIn(path);
+	}
+	
+	public List<List<Sample>> getData() {
+		return this.data;
+	}
+	
+	public int getK() {
+		return k;
+	}
+	
+	public int numClasses() {
+		return nbClasses;
 	}
 	
 	/**
@@ -25,23 +41,24 @@ public class DataManager {
 	 * @param k
 	 */
 	public void kfoldCrossValidation(int k) {
-		String root = "src/main/resources/pdf";
-		List<String> directoryName = ResourcesLoader.getDirectoriesName(root);
+		List<String> directoryName = ResourcesLoader.getDirectoriesName();
+		directoryName.remove("_IGNORE");
+		
+		this.k = k;
+		this.nbClasses = directoryName.size();
 		
 		data.clear();
-		
-		directoryName.remove("_IGNORE");
 		
 		for(int i = 0; i < k; i++) {
 			data.add(new ArrayList<Sample>());
 			
 			for(String dn:directoryName) {
-				List<File> pdf = ResourcesLoader.loadDirectory(root + "/" + dn);
+				List<File> pdf = ResourcesLoader.loadFileIn(path+"/"+ dn);
 				int step = pdf.size()/k;
 				int limit = i == k-1 ? pdf.size():(i+1)*step;
 
 				for(int j = i*step; j < limit; j++) {
-					data.get(i).add(new Sample(pdf.get(j).getPath(), dn));
+					data.get(i).add(new Sample(pdf.get(j).getPath(), dn, directoryName.indexOf(dn)));
 				}
 			}
 		}

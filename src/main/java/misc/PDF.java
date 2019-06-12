@@ -1,4 +1,4 @@
-package main;
+package misc;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,12 +20,8 @@ public class PDF {
 	 * Objet PDDocument representant le fichier PDF
 	 */
 	private PDDocument doc;
-	private String content = "";
-	
-	/**
-	 * liste des feature detectees dans le pdf
-	 */
-	private List<Feature> features = new ArrayList<Feature>();
+	private String name ="";
+	private List<Feature> features =null;
 	
 	/**
 	 * Constructeur par defaut
@@ -35,31 +31,42 @@ public class PDF {
 	}
 
 	/**
-	 * Constructeur. Charge le fichier PDF a  partir d'un chemin
-	 * @param fileName Chaine de caractere vers le chemin du fichier a  ouvrir
+	 * Constructeur. Charge le fichier PDF a partir d'un chemin
+	 * @param fileName Chaine de caractere vers le chemin du fichier a ouvrir
 	 */
 	public PDF(String fileName) {
 		super();
-		loadPDFfromString(fileName);
+		loadPDF(fileName);
+		compute();
+		this.name = fileName;
 	}
 	
 	/**
-	 * Constructeur. Charge le fichier PDF a  partir d'un objet
+	 * Constructeur. Charge le fichier PDF a partir d'un objet
 	 * @param file Objet correspondant au PDF a charger
 	 */
 	public PDF(File file) {
 		super();
-		loadPDFfromFile(file);
+		loadPDF(file);
+		compute();
+		this.name = file.getPath();
+	}
+	
+	/**
+	 * getter pour avoir le nom du pdf
+	 * @return
+	 */
+	public String getName() {
+		return name;
 	}
 	
 	/**
 	 * Charge un PDF a partir du chemin
 	 * @param fileName Chemin du PDF
 	 */
-	public void loadPDFfromString(String fileName) {
+	public void loadPDF(String fileName) {
 		try {
 			doc = PDDocument.load(new File(fileName));
-			convertToText();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -69,10 +76,9 @@ public class PDF {
 	 * Charge un PDF a partir d'un objet File
 	 * @param file Objet correspondant au PDF a charger
 	 */
-	public void loadPDFfromFile(File file) {
+	public void loadPDF(File file) {
 		try {
 			doc = PDDocument.load(file);
-			convertToText();
 		}
 		catch (IOException e) {
 			e.printStackTrace();
@@ -80,10 +86,19 @@ public class PDF {
 	}
 	
 	/**
+	 * extract the feature from the pdf and close the document
+	 */
+	public void compute() {
+		findMatches(convertToText());
+		close();
+	}
+	
+	/**
 	 * Convertit le contenu du PDF en texte brut
 	 */
-	public void convertToText() {
+	public String convertToText() {
 		PDFTextStripper stripper;
+		String content = "";
 		try {
 			stripper = new PDFTextStripper();
 			stripper.setSortByPosition(true);
@@ -98,29 +113,33 @@ public class PDF {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}
-	
-	@Override
-	public String toString() {
-		return "PDF [content=" + content + "]";
-	}
-
-	/**
-	 * Retourne le contenu du document
-	 * @return Contenu du PDF en texte
-	 */
-	public String getText() {
 		return content;
 	}
 	
 	/**
-	 * Recherche toutes les occurences de dates, d'addresses, de code et de prix dans le pdf
+	 * Ferme le doucment
 	 */
-	public List<Feature> findMatches() {
-		features = Regexp.getAllFeatures(content);
-		return features;
+	public void close() {
+		try {
+			doc.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
+	/**
+	 * Recherche toutes les occurences de dates, d'addresses, de code et de prix dans le pdf
+	 */
+	public void findMatches(String content) {
+		features = Regexp.getAllFeatures(content);
+	}
+	
+	/**
+	 * Retourne toutes les occurences de dates, d'addresses, de code et de prix dans le pdf
+	 */
+	public List<Feature> getFeatures() {
+		return features;
+	}
 	
 	
 
