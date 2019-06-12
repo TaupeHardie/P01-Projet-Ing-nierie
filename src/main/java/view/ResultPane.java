@@ -68,7 +68,7 @@ public class ResultPane extends JScrollPane {
 		setViewportView(table);
 		
 		for(Sortie s : results) {
-			dtm.addRow(new Object[]{s.patternName, ((int)(s.score*1000))/1000.0});
+			dtm.addRow(new Object[]{s.patternName, ((int)(s.score*1000))/1000});
 		}
 	}
 }

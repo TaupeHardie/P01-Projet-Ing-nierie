@@ -94,7 +94,7 @@ public class MainPane extends JPanel {
 				lblTraitement.setText(lblEnCours);				
 				
 				//launch the logic in a new thread here
-				ResourcesLoader.loadResourcesIn(txtSelectionezUnDossier.getText());			
+								
 				PMC pmc = new PMC(txtSelectionezUnDossier.getText());
 				
 				progressBar.setMinimum(0);

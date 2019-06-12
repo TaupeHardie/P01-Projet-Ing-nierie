@@ -66,7 +66,15 @@ public class ClientView extends JFrame {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
-		ResourcesLoader.createWorkingDirectory();
+		File f = new File(Const.MainPath);
+		if(!f.exists()) {
+			try {
+				Files.createDirectories(f.toPath());
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {

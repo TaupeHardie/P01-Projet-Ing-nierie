@@ -29,11 +29,6 @@ public class PDF {
 	public PDF() {
 		super();
 	}
-	
-	public PDF(String name, List<Feature> features) {
-		this.name = name;
-		this.features = features;
-	}
 
 	/**
 	 * Constructeur. Charge le fichier PDF a partir d'un chemin

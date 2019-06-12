@@ -28,7 +28,6 @@ import Controller.ThreadLearnOnly;
 import Controller.ThreadlessLearnAndTest;
 import apprentissage.ConfusionMatrix;
 import misc.Const;
-import resources.ResourcesLoader;
 import writer.Writer;
 
 import javax.swing.JMenuBar;
@@ -100,7 +99,15 @@ public class LearningView extends JFrame {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
-		ResourcesLoader.createWorkingDirectory();
+		File f = new File(Const.MainPath);
+		if(!f.exists()) {
+			try {
+				Files.createDirectories(f.toPath());
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -414,7 +421,6 @@ public class LearningView extends JFrame {
 			public void run() {
 				if(progressBar.getValue()+1 < progressBar.getMaximum()) {
 					progressBar.setValue(progressBar.getValue()+1);
-					System.out.println("+1");
 				}else {
 					try {
 						progressBar.setValue(progressBar.getValue()+1);

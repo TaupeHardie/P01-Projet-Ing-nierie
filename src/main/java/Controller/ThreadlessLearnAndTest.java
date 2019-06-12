@@ -2,13 +2,10 @@ package Controller;
 
 import java.io.File;
 import java.util.List;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Callable;
 
 import apprentissage.ConfusionMatrix;
 import apprentissage.PMC;
-import misc.PDF;
 import resources.ResourcesLoader;
 import view.LearningView;
 
@@ -16,6 +13,7 @@ import view.LearningView;
  * Lance la version non threadee de l'apprentissage en fonction des differents parametres avec la methode k-fold cross-validation
  */
 public class ThreadlessLearnAndTest implements Callable<ConfusionMatrix>{
+	
 	private int k, nbCoucheCachee, nbSteps, lenMatrix;
 	private double learningSpeed;
 	String path;
@@ -45,7 +43,6 @@ public class ThreadlessLearnAndTest implements Callable<ConfusionMatrix>{
 	@Override
 	public ConfusionMatrix call() throws Exception {
     	long t1 = System.nanoTime();
-    	ResourcesLoader.turnPdfIntoFeatureFile(path);
 		PMC pmc = new PMC(path, k, nbCoucheCachee, nbSteps, lenMatrix, learningSpeed);
 		LearningView.setIndeterminate(false);
 		pmc.learnAndTest();

@@ -1,8 +1,6 @@
 package Controller;
 
 import apprentissage.PMC;
-import resources.ResourcesLoader;
-import view.LearningView;
 
 /**
  * Thread lancant la logique de l'application pour ameliorer l'algorithme.
@@ -36,9 +34,7 @@ public class ThreadLearnOnly implements Runnable{
 
 	@Override
 	public void run() {	
-		ResourcesLoader.turnPdfIntoFeatureFile(path);
 		PMC pmc = new PMC(path, k, nbCoucheCachee, nbSteps, lenMatrix, learningSpeed);
-		LearningView.setIndeterminate(false);
 		pmc.learnOnly();
 	}
 }
