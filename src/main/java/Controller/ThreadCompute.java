@@ -21,15 +21,17 @@ public class ThreadCompute implements Callable<Vector<Sortie>> {
 	
 	private PDF pdf;
 	private String texte;
+	private List<String> dirName;
 	
-	public ThreadCompute(String texte, PDF pdf) {
+	public ThreadCompute(String texte, PDF pdf, List<String> dirName) {
 		this.pdf = pdf;
 		this.texte = texte;
+		this.dirName = dirName;
 	}
 
 	@Override
 	public Vector<Sortie> call() throws Exception {
-		PMC pmc = new PMC(texte);
+		PMC pmc = new PMC(texte, dirName);
 		pmc.compute(pdf);
 		Vector<Sortie> s = pmc.getSortie();
 		MainPane.incrementProgressBar();

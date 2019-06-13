@@ -51,7 +51,6 @@ import misc.PDF;
 
 
      public static PDF getPdfNamed(String name, String fileName) {
-    	long t1 = System.nanoTime();
     	List<Feature> features = new ArrayList<Feature>();
 
      	File f = new File(fileName);
@@ -92,7 +91,6 @@ import misc.PDF;
 		}
 		PDF p = new PDF(name, features);
     	close();
-    	System.out.println("finding pdf : "+(System.nanoTime()-t1)/1000000);
     	return p;
     }
 

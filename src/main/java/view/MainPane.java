@@ -37,6 +37,7 @@ import apprentissage.PMC;
 import apprentissage.Sortie;
 import misc.Const;
 import misc.PDF;
+import reader.Reader;
 import resources.ResourcesLoader;
 
 /**
@@ -107,7 +108,8 @@ public class MainPane extends JPanel {
 				
 				//launch the logic in a new thread here
 				ResourcesLoader.loadFileIn(txtSelectionezUnDossier.getText());
-				PMC pmc = new PMC(txtSelectionezUnDossier.getText());
+				List<String> dirName = Reader.readFile(Const.WorkingDir + "\\directoryName.txt");
+				PMC pmc = new PMC(txtSelectionezUnDossier.getText(), dirName);
 				String texte = txtSelectionezUnDossier.getText();
 				
 				progressBar.setMinimum(0);
@@ -118,7 +120,7 @@ public class MainPane extends JPanel {
 				
 				sortieListe.clear();
 				for(PDF pdf:ResourcesLoader.getPDFs() ) {
-					sortieListe.add(executor.submit(new ThreadCompute(texte, pdf)));
+					sortieListe.add(executor.submit(new ThreadCompute(texte, pdf, dirName)));
 				}
 				
 				executor.shutdown();

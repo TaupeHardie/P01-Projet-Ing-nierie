@@ -87,10 +87,10 @@ public class PMC {
 	 * Contructeur d'un PMC si l'apprentissage n'est pas necessaire
 	 * @param path Chemin des pdf
 	 */
-	public PMC(String path) {
+	public PMC(String path, List<String> directoryName) {
 		this.path = path;
 		ResourcesLoader.loadResourcesIn(path);
-		directoryName = Reader.readFile(Const.WorkingDir + "\\directoryName.txt");
+		this.directoryName = directoryName;
 		loadWeightMatrix();
 	}
 
