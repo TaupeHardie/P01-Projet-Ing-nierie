@@ -10,9 +10,14 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
+import java.util.Vector;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.ExecutionException;
 
 import javax.swing.Box;
@@ -27,6 +32,7 @@ import javax.swing.border.EmptyBorder;
 
 import Controller.ThreadCompute;
 import apprentissage.PMC;
+import apprentissage.Sortie;
 import misc.Const;
 import misc.PDF;
 import resources.ResourcesLoader;
@@ -40,6 +46,7 @@ public class MainPane extends JPanel {
 	private JFileChooser fileChooser;
 	private static JLabel lblTraitement;
 	private static JProgressBar progressBar;
+	private static Vector<Future<Vector<Sortie>>> sortieListe;
 	
 	private final String lblEnCours = "Veuillez patienter, traitement en cours ...";
 	private final String lblSelectDir = "selectionnez un dossier ...";
@@ -50,6 +57,8 @@ public class MainPane extends JPanel {
 	 * Create the panel.
 	 */
 	public MainPane() {
+		sortieListe = new Vector<Future<Vector<Sortie>>>();
+		
 		setBorder(new EmptyBorder(5, 5, 5, 5));
 		setLayout(new BorderLayout(0, 0));
 		
@@ -99,10 +108,12 @@ public class MainPane extends JPanel {
 				String texte = txtSelectionezUnDossier.getText();
 				
 				progressBar.setMinimum(0);
+				progressBar.setValue(0);
 				progressBar.setMaximum(ResourcesLoader.getPDFs().size());
 				
 				ExecutorService executor = Executors.newFixedThreadPool(ResourcesLoader.getPDFs().size());
 				
+				sortieListe.clear();
 				for(PDF pdf:ResourcesLoader.getPDFs() ) {
 					executor.execute(new ThreadCompute(texte, pdf));
 				}
@@ -141,6 +152,44 @@ public class MainPane extends JPanel {
 				}else {
 					progressBar.setValue(progressBar.getValue()+1);
 					lblTraitement.setText("Termine");
+					HashMap<String, Vector<Sortie>> sortieParDossier = new HashMap<String, Vector<Sortie>>();
+					HashMap<String, Integer> count = new HashMap<String, Integer>();
+					
+					for(Future<Vector<Sortie>> s:sortieListe) {
+						try {
+							Vector<Sortie> vecteur = s.get();
+							File f = vecteur.get(0).pdf;
+							if(sortieParDossier.containsKey(f.getParent())) {
+								Vector<Sortie> currVec = sortieParDossier.get(f.getParent());
+								if(vecteur.size() != currVec.size())
+									System.out.println("prout");
+								for(int i = 0; i < currVec.size(); i++) {
+									currVec.set(i, currVec.get(i).add(vecteur.get(i)));
+								}
+								
+								count.put(f.getPath(), count.get(f.getParent()) + 1);
+							}
+							else {
+								sortieParDossier.put(f.getParent(), vecteur);
+								count.put(f.getPath(), 0);
+							}
+						} catch (InterruptedException | ExecutionException e) {
+							e.printStackTrace();
+						}
+					}
+					
+					Set<String> keyset = sortieParDossier.keySet();
+					
+					for(String key:keyset) {
+						
+						for(int i = 0; i < sortieParDossier.get(key).size(); i++) {
+							sortieParDossier.get(key).set(i, sortieParDossier.get(key).get(i).norm((double) count.get(key)));
+						}
+						
+						Collections.sort(sortieParDossier.get(key));
+						Collections.reverse(sortieParDossier.get(key));
+						ClientView.addPane(sortieParDossier.get(key).get(0).pdf.getParentFile().getName(), sortieParDossier.get(key));
+					}
 				}
 			}
 		});

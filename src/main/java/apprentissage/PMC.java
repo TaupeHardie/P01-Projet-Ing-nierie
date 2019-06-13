@@ -238,15 +238,12 @@ public class PMC {
 		sortie = new Vector<Sortie>();
 		
 		for (int i = 0; i < S.numRows(); i++) {
-			sortie.add(new Sortie(directoryName.get(i), S.get(i)));
+			sortie.add(new Sortie(new File(pdf.getName()), directoryName.get(i), S.get(i)));
 			if (S.get(i) > maxi) {
 				maxi = S.get(i);
 				indMaxi = i;
 			}
 		}
-		
-		Collections.sort(sortie);
-		Collections.reverse(sortie);
 	
 		return indMaxi;
 	}
