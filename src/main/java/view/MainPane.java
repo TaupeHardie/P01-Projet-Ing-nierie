@@ -96,6 +96,7 @@ public class MainPane extends JPanel {
 				
 				//launch the logic in a new thread here			
 				PMC pmc = new PMC(txtSelectionezUnDossier.getText());
+				String texte = txtSelectionezUnDossier.getText();
 				
 				progressBar.setMinimum(0);
 				progressBar.setMaximum(ResourcesLoader.getPDFs().size());
@@ -103,7 +104,7 @@ public class MainPane extends JPanel {
 				ExecutorService executor = Executors.newFixedThreadPool(ResourcesLoader.getPDFs().size());
 				
 				for(PDF pdf:ResourcesLoader.getPDFs() ) {
-					executor.execute(new ThreadCompute(pmc, pdf));
+					executor.execute(new ThreadCompute(texte, pdf));
 				}
 				
 				executor.shutdown();

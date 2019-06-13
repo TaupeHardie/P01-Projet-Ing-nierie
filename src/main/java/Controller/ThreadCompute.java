@@ -20,16 +20,16 @@ import view.ResultPane;
 public class ThreadCompute implements Runnable {
 	
 	private PDF pdf;
-	private PMC pmc;
+	private String texte;
 	
-	
-	public ThreadCompute(PMC pmc, PDF pdf) {
+	public ThreadCompute(String texte, PDF pdf) {
 		this.pdf = pdf;
-		this.pmc = pmc;
+		this.texte = texte;
 	}
 
 	@Override
 	public void run() {		
+		PMC pmc = new PMC(texte);
 		pmc.compute(pdf);
 		Vector<Sortie> s = pmc.getSortie();
 		File f = new File(pdf.getName());
