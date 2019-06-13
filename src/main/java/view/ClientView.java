@@ -49,11 +49,9 @@ public class ClientView extends JFrame {
 	private static JTabbedPane tabbedPane;
 	private static MainPane mainPane;
 	
-	private final String lblMenuFichier = "Fichier";
-	private final String lblMenuOption = "Option";
+	private final String lblMenu= "Menu";
 	private final String lblMenuAide = "Aide";
-	private final String lblMFichierSauvegarder = "sauvegarder";
-	private final String lblMFichierFermer = "fermer";
+	private final String lblMenuClose = "Fermer tous";;
 	private final String lblMAideAPropos = "A Propos";
 	
 	//disable error from pdfBox
@@ -99,17 +97,20 @@ public class ClientView extends JFrame {
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
 		
-		JMenu mnFichier = new JMenu(lblMenuFichier);
-		menuBar.add(mnFichier);
+		JMenu mnMenu = new JMenu(lblMenu);
+		menuBar.add(mnMenu);
 		
-		JMenuItem mntmClose = new JMenuItem(lblMFichierFermer);
-		mnFichier.add(mntmClose);
-		
-		JMenuItem mntmSauvegarder = new JMenuItem(lblMFichierSauvegarder);
-		mnFichier.add(mntmSauvegarder);
-		
-		JMenu mnOption = new JMenu(lblMenuOption);
-		menuBar.add(mnOption);
+		JMenuItem mntmFermerTous = new JMenuItem(lblMenuClose);
+		mntmFermerTous.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				tabbedPane.removeAll();
+				//add a non-closable pane that start the process
+				mainPane = new MainPane();
+				tabbedPane.addTab("Accueil", mainPane);
+				
+			}
+		});
+		mnMenu.add(mntmFermerTous);
 		
 		JMenu mnAide = new JMenu(lblMenuAide);
 		menuBar.add(mnAide);
