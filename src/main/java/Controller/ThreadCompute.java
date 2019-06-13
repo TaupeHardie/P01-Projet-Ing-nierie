@@ -17,25 +17,25 @@ import view.ResultPane;
 /**
  * Thread qui lance l'estimation des pdf selectionnes
  */
-public class ThreadCompute implements Runnable {
+public class ThreadCompute implements Callable<Vector<Sortie>> {
 	
 	private PDF pdf;
-	private PMC pmc;
+	private String texte;
+	private List<String> dirName;
 	
-	
-	public ThreadCompute(PMC pmc, PDF pdf) {
+	public ThreadCompute(String texte, PDF pdf, List<String> dirName) {
 		this.pdf = pdf;
-		this.pmc = pmc;
+		this.texte = texte;
+		this.dirName = dirName;
 	}
 
 	@Override
-	public void run() {		
+	public Vector<Sortie> call() throws Exception {
+		PMC pmc = new PMC(texte, dirName);
 		pmc.compute(pdf);
 		Vector<Sortie> s = pmc.getSortie();
-		File f = new File(pdf.getName());
-		ClientView.addPane(f.getName(), s);
 		MainPane.incrementProgressBar();
-		
+		return s;
 	}
 
 }

@@ -17,6 +17,7 @@ import extraction.Feature;
 import misc.Const;
 import misc.PDF;
 import misc.ShutdownThreads;
+import reader.Reader;
 
 import com.sun.glass.ui.Size;
 
@@ -86,10 +87,10 @@ public class PMC {
 	 * Contructeur d'un PMC si l'apprentissage n'est pas necessaire
 	 * @param path Chemin des pdf
 	 */
-	public PMC(String path) {
+	public PMC(String path, List<String> directoryName) {
 		this.path = path;
 		ResourcesLoader.loadResourcesIn(path);
-		directoryName = ResourcesLoader.readFile(Const.MainPath + "directoryName.txt");
+		this.directoryName = directoryName;
 		loadWeightMatrix();
 	}
 
@@ -171,7 +172,7 @@ public class PMC {
 			Collections.shuffle(d);
 			
 			for (int k = 0; k < dataset.size(); k++) {//201 x 5ms -> 1sec
-				PDF currentPDF = ResourcesLoader.getPDFbyName((dataset.get(k).name));
+				PDF currentPDF = Reader.getPdfNamed(dataset.get(k).name, Const.StorePath);
 				
 				SimpleMatrix X = FeaturesToNeuron(currentPDF.getFeatures());
 				X = X.divide(1000);
@@ -238,15 +239,12 @@ public class PMC {
 		sortie = new Vector<Sortie>();
 		
 		for (int i = 0; i < S.numRows(); i++) {
-			sortie.add(new Sortie(directoryName.get(i), S.get(i)));
+			sortie.add(new Sortie(new File(pdf.getName()), directoryName.get(i), S.get(i)));
 			if (S.get(i) > maxi) {
 				maxi = S.get(i);
 				indMaxi = i;
 			}
 		}
-		
-		Collections.sort(sortie);
-		Collections.reverse(sortie);
 	
 		return indMaxi;
 	}
@@ -276,7 +274,7 @@ public class PMC {
 			learn(learningData);
 
 			for (Sample s : data.getData().get(currentTest)) {
-				int res = compute(ResourcesLoader.getPDFbyName(s.name));
+				int res = compute(Reader.getPdfNamed(s.name, Const.StorePath));
 				matriceConfusion.increment(s.number, res);
 			}
 		}
@@ -360,8 +358,8 @@ public class PMC {
 	@SuppressWarnings("static-access")
 	public void loadWeightMatrix() {
 		try {
-			W=W.loadCSV(Const.MainPath + "\\weightMatrixW.csv");
-			Z=Z.loadCSV(Const.MainPath + "\\weightMatrixZ.csv");
+			W=W.loadCSV(Const.WorkingDir + "\\weightMatrixW.csv");
+			Z=Z.loadCSV(Const.WorkingDir + "\\weightMatrixZ.csv");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -20,7 +20,6 @@ public class DataManager {
 	public DataManager(String path) {
 		data = new ArrayList<List<Sample>>();
 		this.path = path;
-		ResourcesLoader.loadResourcesIn(path);
 	}
 	
 	public List<List<Sample>> getData() {
