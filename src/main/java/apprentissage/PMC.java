@@ -89,7 +89,7 @@ public class PMC {
 	public PMC(String path) {
 		this.path = path;
 		ResourcesLoader.loadResourcesIn(path);
-		directoryName = ResourcesLoader.readFile(Const.MainPath + "directoryName.txt");
+		directoryName = ResourcesLoader.readFile(Const.WorkingDir + "\\directoryName.txt");
 		loadWeightMatrix();
 	}
 
@@ -360,8 +360,8 @@ public class PMC {
 	@SuppressWarnings("static-access")
 	public void loadWeightMatrix() {
 		try {
-			W=W.loadCSV(Const.MainPath + "\\weightMatrixW.csv");
-			Z=Z.loadCSV(Const.MainPath + "\\weightMatrixZ.csv");
+			W=W.loadCSV(Const.WorkingDir + "\\weightMatrixW.csv");
+			Z=Z.loadCSV(Const.WorkingDir + "\\weightMatrixZ.csv");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

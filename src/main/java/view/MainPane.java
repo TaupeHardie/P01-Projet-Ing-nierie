@@ -66,12 +66,13 @@ public class MainPane extends JPanel {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				fileChooser = new JFileChooser();
-				fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+				fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 				fileChooser.setCurrentDirectory(new java.io.File(Const.DesktopPath));
 				fileChooser.setDialogTitle(lblFileChooser);
 				fileChooser.setAcceptAllFileFilterUsed(false);
 				if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) { 
-					txtSelectionezUnDossier.setText(fileChooser.getSelectedFile().toString());
+					Const.WorkingDir = fileChooser.getSelectedFile().toString();
+					txtSelectionezUnDossier.setText(fileChooser.getSelectedFile().toString()+"/pdf");
 					txtSelectionezUnDossier.setForeground(Color.black);
 				}
 			}
@@ -93,8 +94,7 @@ public class MainPane extends JPanel {
 				lblTraitement.setVisible(true);
 				lblTraitement.setText(lblEnCours);				
 				
-				//launch the logic in a new thread here
-								
+				//launch the logic in a new thread here			
 				PMC pmc = new PMC(txtSelectionezUnDossier.getText());
 				
 				progressBar.setMinimum(0);
