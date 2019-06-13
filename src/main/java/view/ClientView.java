@@ -112,12 +112,6 @@ public class ClientView extends JFrame {
 		});
 		mnMenu.add(mntmFermerTous);
 		
-		JMenu mnAide = new JMenu(lblMenuAide);
-		menuBar.add(mnAide);
-		
-		JMenuItem mntmAPropos = new JMenuItem(lblMAideAPropos);
-		mnAide.add(mntmAPropos);
-		
 		//add the tabbedPane to have multiple pane
 		tabbedPane = new JTabbedPane();
 		setContentPane(tabbedPane);
