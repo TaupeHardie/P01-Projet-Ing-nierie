@@ -30,6 +30,7 @@ import Controller.ThreadLearnOnly;
 import Controller.ThreadlessLearnAndTest;
 import apprentissage.ConfusionMatrix;
 import misc.Const;
+import resources.ResourcesLoader;
 import writer.Writer;
 
 import javax.swing.JMenuBar;
@@ -101,15 +102,7 @@ public class LearningView extends JFrame {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
-		File f = new File(Const.MainPath);
-		if(!f.exists()) {
-			try {
-				Files.createDirectories(f.toPath());
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
+		ResourcesLoader.createWorkingDirectory();
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {

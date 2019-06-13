@@ -1,9 +1,15 @@
 package writer;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
+
+import extraction.Feature;
+import misc.Const;
+import misc.PDF;
 
 /**
  * Classe statique permetant de gerer les flux de sorties
@@ -33,6 +39,51 @@ public class Writer {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+	}
+	
+	public static void clearFile(String filename) {
+		File f = new File(filename);
+		if(f.exists()) {
+			f.delete();
+		}
+		try {
+			f.createNewFile();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+ 	public static void appendPdfTo(PDF pdf, String filename) {
+		File f = new File(filename);
+		if(f.exists()) {
+			BufferedWriter writer = null;
+			try {
+				writer = Files.newBufferedWriter(f.toPath(), StandardCharsets.UTF_8, StandardOpenOption.APPEND);
+				writer.newLine();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			try {
+				writer.write(pdf.getName());
+				writer.newLine();
+				for(Feature feature : pdf.getFeatures()) {
+					writer.write(feature.getPos()+Const.PosDelimiter+feature.getStr()+Const.StrDelimiter+feature.getType());
+					writer.newLine();
+				}
+				writer.write(Const.PdfDelimiter);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			try {
+				writer.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 }

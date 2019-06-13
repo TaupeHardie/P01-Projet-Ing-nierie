@@ -30,6 +30,8 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
+import com.sun.org.apache.xml.internal.serialize.TextSerializer;
+
 import Controller.ThreadCompute;
 import apprentissage.PMC;
 import apprentissage.Sortie;
@@ -103,7 +105,8 @@ public class MainPane extends JPanel {
 				lblTraitement.setVisible(true);
 				lblTraitement.setText(lblEnCours);				
 				
-				//launch the logic in a new thread here			
+				//launch the logic in a new thread here
+				ResourcesLoader.loadFileIn(txtSelectionezUnDossier.getText());
 				PMC pmc = new PMC(txtSelectionezUnDossier.getText());
 				String texte = txtSelectionezUnDossier.getText();
 				

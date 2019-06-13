@@ -43,6 +43,7 @@ public class ThreadlessLearnAndTest implements Callable<ConfusionMatrix>{
 	@Override
 	public ConfusionMatrix call() throws Exception {
     	long t1 = System.nanoTime();
+    	ResourcesLoader.turnPdfIntoFeatureFile(path);
 		PMC pmc = new PMC(path, k, nbCoucheCachee, nbSteps, lenMatrix, learningSpeed);
 		LearningView.setIndeterminate(false);
 		pmc.learnAndTest();

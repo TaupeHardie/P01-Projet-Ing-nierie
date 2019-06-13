@@ -17,6 +17,7 @@ import extraction.Feature;
 import misc.Const;
 import misc.PDF;
 import misc.ShutdownThreads;
+import reader.Reader;
 
 import com.sun.glass.ui.Size;
 
@@ -89,7 +90,7 @@ public class PMC {
 	public PMC(String path) {
 		this.path = path;
 		ResourcesLoader.loadResourcesIn(path);
-		directoryName = ResourcesLoader.readFile(Const.WorkingDir + "\\directoryName.txt");
+		directoryName = Reader.readFile(Const.WorkingDir + "\\directoryName.txt");
 		loadWeightMatrix();
 	}
 
@@ -171,7 +172,7 @@ public class PMC {
 			Collections.shuffle(d);
 			
 			for (int k = 0; k < dataset.size(); k++) {//201 x 5ms -> 1sec
-				PDF currentPDF = ResourcesLoader.getPDFbyName((dataset.get(k).name));
+				PDF currentPDF = Reader.getPdfNamed(dataset.get(k).name, Const.StorePath);
 				
 				SimpleMatrix X = FeaturesToNeuron(currentPDF.getFeatures());
 				X = X.divide(1000);
@@ -273,7 +274,7 @@ public class PMC {
 			learn(learningData);
 
 			for (Sample s : data.getData().get(currentTest)) {
-				int res = compute(ResourcesLoader.getPDFbyName(s.name));
+				int res = compute(Reader.getPdfNamed(s.name, Const.StorePath));
 				matriceConfusion.increment(s.number, res);
 			}
 		}
