@@ -8,6 +8,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -131,23 +133,25 @@ public class LearningView extends JFrame {
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
 		
-		JMenu mnFichier = new JMenu(lblMenuFichier);
-		menuBar.add(mnFichier);
-		
-		JMenuItem mntmFichierSauvegarder = new JMenuItem(lblMFichierSauvegarder);
-		mnFichier.add(mntmFichierSauvegarder);
-		
-		JMenuItem mntmFichierFermer = new JMenuItem(lblMFichierFermer);
-		mnFichier.add(mntmFichierFermer);
-		
-		JMenu mnOption = new JMenu(lblMenuOption);
-		menuBar.add(mnOption);
-		
 		JMenu mnAide = new JMenu(lblMenuAide);
 		menuBar.add(mnAide);
 		
-		JMenuItem mntmAPropos = new JMenuItem(lblMAideAPropos);
-		mnAide.add(mntmAPropos);
+		JMenuItem mntmOuvrirLaDocumentation = new JMenuItem("Ouvrir la documentation");
+		mntmOuvrirLaDocumentation.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				URI url;
+				try {
+					url = new URI("https://drive.google.com/file/d/1oxRQG8kxuLkfmAWoKNd5isgYyuaq52dQ/view?usp=sharing");
+					java.awt.Desktop.getDesktop().browse(url);
+				} catch (URISyntaxException e1) {
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+				
+			}
+		});
+		mnAide.add(mntmOuvrirLaDocumentation);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));
