@@ -29,11 +29,11 @@ public class ThreadCompute implements Callable<Vector<Sortie>> {
 
 	@Override
 	public Vector<Sortie> call() throws Exception {
+		PMC pmc = new PMC(texte);
 		pmc.compute(pdf);
 		Vector<Sortie> s = pmc.getSortie();
-		File f = new File(pdf.getName());
-		ClientView.addPane(f.getName(), s);
 		MainPane.incrementProgressBar();
+		return s;
 	}
 
 }

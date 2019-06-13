@@ -115,7 +115,7 @@ public class MainPane extends JPanel {
 				
 				sortieListe.clear();
 				for(PDF pdf:ResourcesLoader.getPDFs() ) {
-					executor.execute(new ThreadCompute(texte, pdf));
+					sortieListe.add(executor.submit(new ThreadCompute(texte, pdf)));
 				}
 				
 				executor.shutdown();
@@ -167,11 +167,11 @@ public class MainPane extends JPanel {
 									currVec.set(i, currVec.get(i).add(vecteur.get(i)));
 								}
 								
-								count.put(f.getPath(), count.get(f.getParent()) + 1);
+								count.put(f.getParent(), count.get(f.getParent()) + 1);
 							}
 							else {
 								sortieParDossier.put(f.getParent(), vecteur);
-								count.put(f.getPath(), 0);
+								count.put(f.getParent(), 0);
 							}
 						} catch (InterruptedException | ExecutionException e) {
 							e.printStackTrace();
